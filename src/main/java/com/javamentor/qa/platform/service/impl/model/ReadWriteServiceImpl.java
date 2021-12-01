@@ -2,7 +2,6 @@ package com.javamentor.qa.platform.service.impl.model;
 
 import com.javamentor.qa.platform.dao.abstracts.model.ReadWriteDao;
 import com.javamentor.qa.platform.exception.ConstrainException;
-import com.javamentor.qa.platform.models.entity.user.User;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
@@ -46,7 +45,6 @@ public abstract class ReadWriteServiceImpl<E, K> extends ReadOnlyServiceImpl<E, 
         readWriteDao.persistAll(entities);
     }
 
-
     @Transactional
     public void persistAll(Collection<E> entities) {
         if (entities == null || entities.isEmpty()) {
@@ -63,7 +61,6 @@ public abstract class ReadWriteServiceImpl<E, K> extends ReadOnlyServiceImpl<E, 
         readWriteDao.deleteAll(entities);
     }
 
-
     @Transactional
     public void updateAll(Iterable<? extends E> entities) {
         if (entities == null || !entities.iterator().hasNext()) {
@@ -71,6 +68,5 @@ public abstract class ReadWriteServiceImpl<E, K> extends ReadOnlyServiceImpl<E, 
         }
         readWriteDao.updateAll(entities);
     }
-
 
 }
