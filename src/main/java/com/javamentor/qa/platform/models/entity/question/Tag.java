@@ -1,10 +1,7 @@
 package com.javamentor.qa.platform.models.entity.question;
 
 import com.javamentor.qa.platform.exception.ConstrainException;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 
@@ -18,6 +15,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tag")
@@ -28,8 +26,8 @@ public class Tag implements Serializable {
     @GeneratedValue(generator = "Tag_seq")
     private Long id;
 
-    @NotNull
     @Column
+    @NotNull
     private String name;
 
     @Column
