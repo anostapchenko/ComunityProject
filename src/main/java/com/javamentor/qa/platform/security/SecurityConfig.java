@@ -34,8 +34,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         http
                 .authorizeRequests()
                 .antMatchers("/**").permitAll();
-
-
+        http
+                .formLogin()
+                .loginPage("/login")
+                .permitAll()
+                .and()
+                .logout()
+                .permitAll();
     }
 
     @Override
