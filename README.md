@@ -434,8 +434,11 @@ Swagger или OpenAPI framework состоит из 4 основных комп
 
 **Swagger Editor** - Позволяет писать документацию в YAML или JSON формата.
 
-### Документация находится по адресу: http://localhost:8091/swagger-ui.html
+### Документация ***Swagger UI*** находится по адресу: http://localhost:8091/swagger-ui.html
 
+## Swagger Editor - онлайн-редактор, позволяет писать документацию в YAML или JSON формата.(https://editor.swagger.io/)
+
+### URL для Swagger Editor: http://localhost:8091/v3/api-docs
 
 После добавление нужных нам зависимостей, у нас появятся новые аннотация с помощью которых можно документировать наш код.
 
