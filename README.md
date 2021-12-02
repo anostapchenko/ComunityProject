@@ -525,33 +525,42 @@ public class UserDto {
 ````
 @RestController
 @RequestMapping("/api/user")
-@Tag(name = "Пользователи", description = "Взаимодействие с пользователями")
+@Tag(name = "Пользователи", description = "Взаимодействие с пользователями") //@API - is deprecated
 public class UserController {
 
  @GetMapping 
- @ApiOperation("Получение списка всех пользователей") 
+ @Operation(summary = "Получение списка всех пользователей")
  public ResponseEntity<UserDto> getAll() { 
  //... 
  return new ResponseEntity<UserDto>(HttpStatus.OK); 
  } 
  
  @PostMapping 
- @ApiOperation("Создание нового пользователя") 
- public ResponseEntity<UserDto> addUser(@ApiParam(value = "Новый UserDto") @RequestBody UserDto userDto) { 
+ @Operation(summary = "Создание нового пользователя", description = "Позволяет зарегистрировать пользователя") 
+ public ResponseEntity<UserDto> addUser(
+    @ApiParam(
+        value = "Новый User")
+    @RequestBody UserDto userDto) { 
  //... 
  return new ResponseEntity<UserDto>(HttpStatus.CREATED); 
  } 
  
  @PutMapping 
- @ApiOperation("Обновление существующего пользователя") 
- public ResponseEntity<UserDto> editUser(@ApiParam(name = "Обновленный UserDto") @RequestBody UserDto userDto){ 
+ @Operation(summary = "Обновление пользователя", description = "Обновление данных пользователя") 
+ public ResponseEntity<UserDto> editUser(
+    @ApiParam(
+        name = "Обновленный User")
+    @RequestBody UserDto userDto){ 
  //... 
  return new ResponseEntity<UserDto>(HttpStatus.OK); 
  } 
  
  @DeleteMapping 
- @ApiOperation("Удаление пользователя") 
- public ResponseEntity<?> deleteUser(@ApiParam(name = "Удаление UserDto") @RequestBody UserDto userDto) 
+ @ApiOperation("Удаление пользователя", description = "Позволяет удалить пользователя полностью") 
+ public ResponseEntity<?> deleteUser(
+    @ApiParam(
+        name = "Удаление Userа")
+    @RequestBody UserDto userDto) 
 { 
  //... 
  return new ResponseEntity<UserDto>(HttpStatus.OK); 
