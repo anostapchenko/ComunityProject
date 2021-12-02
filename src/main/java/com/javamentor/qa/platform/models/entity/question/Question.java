@@ -4,10 +4,7 @@ import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.models.entity.user.UserFavoriteQuestion;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -23,6 +20,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "question")
@@ -37,8 +35,8 @@ public class Question implements Serializable {
     @NotNull
     private String title;
 
-    @NotNull
     @Column
+    @NotNull
     @Type(type = "org.hibernate.type.TextType")
     private String description;
 
