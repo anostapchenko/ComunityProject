@@ -570,16 +570,14 @@ public class UserController {
 
 
 # Разделение на два профиля dev и local
-- Создать две копии файла application.properties со следующими именами application-**local**.properties и **application-**dev**.properties**.
-- Затем указать Spring на нужный application.properties.
-- Для этого нужно перейти к настройкам конфигурации запуска приложения и в поле "Active profiles" указать имя профиля, в данном случае - local.
+- Создать две копии файла application.properties со следующими именами application-**local**.properties и application-**dev**.properties.
+- Затем указать Spring на нужный application.properties. Для этого нужно перейти к настройкам конфигурации запуска приложения и в поле "Active profiles" указать имя профиля, в данном случае - local.
 
   ![](src/main/resources/static/images/editConfiguration.jpg)
 
   ![](src/main/resources/static/images/profilesConfigurations.jpg)
 
 - Теперь все локальные настройки держим отдельно от серверных.
-- Также при разделении на профили можно используя аннотацию @ActiveProfile("local") указать спрингу, что нужно запускать с нашим профилем.  
-- Это можно использовать при написании тестов. Аннотация ставится перед объявлением класса.
+- Также при разделении на профили используя аннотацию @ActiveProfile("local") указываем спрингу, что нужно запускать с нашим профилем. Это используется при написании тестов. Аннотация ставится перед объявлением класса.
 - Если вы хотите запустить сервер из командной строки, вам понадобится команда: mvn spring-boot:run -Dspring-boot.run.profiles=имя профиля
 - Полное описание работы с профилями смотри здесь: https://www.baeldung.com/spring-profiles
