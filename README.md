@@ -571,11 +571,14 @@ public class UserController {
 
 # Разделение на два профиля dev и local
 - Создать две копии файла application.properties со следующими именами application-**local**.properties и application-**dev**.properties.
+- Внести в них изменения по скриншоту.
+  ![](src/main/resources/static/images/appprop2.jpg)
+
 - Затем указать Spring на нужный application.properties. Для этого нужно перейти к настройкам конфигурации запуска приложения и в поле "Active profiles" указать имя профиля, в данном случае - local.
 
-  ![](src/main/resources/static/images/editConfiguration.jpg)
-
-  ![](src/main/resources/static/images/profilesConfigurations.jpg)
+  ![](src/main/resources/static/images/EditConfig3.jpg)
+- 
+  ![](src/main/resources/static/images/EditConfig2.jpg)
 
 - Теперь все локальные настройки держим отдельно от серверных.
 - Также при разделении на профили используя аннотацию @ActiveProfile("local") указываем спрингу, что нужно запускать с нашим профилем. Это используется при написании тестов. Аннотация ставится перед объявлением класса.
