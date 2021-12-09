@@ -1,0 +1,11 @@
+user_entity:
+  - id: 12
+    about: "I'm Test user #14"
+    city: "Moscow"
+    full_name: "test 14"
+    password: "test12"
+    email: "test12@mail.ru"
+    nickname: "test12"
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id : 1
