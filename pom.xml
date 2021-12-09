@@ -16,6 +16,8 @@
     <properties>
         <java.version>11</java.version>
         <org.mapstruct.version>1.4.1.Final</org.mapstruct.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>
@@ -104,7 +106,8 @@
         <dependency>
             <groupId>com.github.database-rider</groupId>
             <artifactId>rider-junit5</artifactId>
-            <version>1.13.1</version>
+            <version>1.32.0</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-messaging -->
