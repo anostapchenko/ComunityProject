@@ -611,3 +611,26 @@ public class UserController {
 
 
 - Все классы для тестов находиться в папке .../api
+
+# Использование JWT авторизации в Postman
+- Открываем Postman
+  ![](src/main/resources/static/images/jwt_tutor/postman_1.png)
+1. Выбираем POST запрос
+2. Указываем http://server_address:port/api/auth/token
+3. Выбираем Body
+4. raw
+5. Тип данных JSON
+6. Указываем имя пользователя и пароль, для которого мы хотим получить токен
+7. Нажимаем Send
+8. Получаем token
+
+- Далее копируем содержимое "token" 
+
+![](src/main/resources/static/images/jwt_tutor/postman_2.png)
+
+1. Идем на вкладку Authorization
+2. Выбираем тип Bearer Token
+3. Вставляем наш токен в поле.
+
+После этого можно работать с сервисами, соответствующим привилегиям пользователя, под которым мы авторизовались.
+
