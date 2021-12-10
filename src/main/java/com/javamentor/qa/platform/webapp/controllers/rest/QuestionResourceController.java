@@ -1,7 +1,7 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.mappers.QuestionMapper;
-import com.javamentor.qa.platform.mappers.TagMapper;
+import com.javamentor.qa.platform.converters.QuestionConverter;
+import com.javamentor.qa.platform.converters.TagConverter;
 import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.user.User;
@@ -26,8 +26,8 @@ public class QuestionResourceController {
 
     @GetMapping("api/user/question/{id}")
     public QuestionDto getQuestion(@PathVariable Long id) {
-        QuestionDto questionDto = QuestionMapper.INSTANCE.questionToDto(questionService.getById(id).get());
-        TagDto tagDto = TagMapper.INSTANCE.tagToDto(tagService.getById(id).get());
+        QuestionDto questionDto = QuestionConverter.INSTANCE.questionToDto(questionService.getById(id).get());
+        TagDto tagDto = TagConverter.INSTANCE.tagToDto(tagService.getById(id).get());
         Question question = questionService.getById(id).get();
         User user = questionService.getById(id).get().getUser();
         List<TagDto> list = new ArrayList<>();
