@@ -1,6 +1,7 @@
 package com.javamentor.qa.platform.webapp.configs.initializer;
 
 import com.javamentor.qa.platform.service.impl.TestDataInitService;
+import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -21,6 +22,7 @@ public class TestEntityInit implements CommandLineRunner {
     }
 
     @Bean
+//    @Before
     public FlywayMigrationStrategy clean() {
         return flyway -> {
             flyway.clean();
