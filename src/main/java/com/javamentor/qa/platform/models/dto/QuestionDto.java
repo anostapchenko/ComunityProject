@@ -16,7 +16,7 @@ public class QuestionDto {
     private Long id;
     private String title;
     private Long authorId;
-    private Long authorReputation; //(можно подсчитать с помощью sql);;
+    private Long authorReputation; //(можно подсчитать с помощью sql);
     private String authorName;
     private String authorImage;
     private String description;
