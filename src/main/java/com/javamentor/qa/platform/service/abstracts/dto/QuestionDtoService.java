@@ -1,4 +1,8 @@
 package com.javamentor.qa.platform.service.abstracts.dto;
 
-public interface QuestionDtoService {
+import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.service.abstracts.model.ReadWriteService;
+
+
+public interface QuestionDtoService  {
 }
