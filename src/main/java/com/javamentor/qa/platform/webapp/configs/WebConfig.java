@@ -1,6 +1,8 @@
 package com.javamentor.qa.platform.webapp.configs;
 
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -12,4 +14,17 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addViewController("/login").setViewName("login");
 
     }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
+        // Access Bootstrap static resource:
+        registry.addResourceHandler("/js/jquery/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/jquery/3.6.0/");
+        registry.addResourceHandler("/js/popper/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/popper.js/1.16.0/umd/");
+        registry.addResourceHandler("/css/bootstrap/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/bootstrap/4.6.1/");
+    }
+
 }
