@@ -1,10 +1,7 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 
-import com.javamentor.qa.platform.converters.TagConverter;
-import com.javamentor.qa.platform.models.dto.TagDto;
-import com.javamentor.qa.platform.models.entity.question.Question;
-import com.javamentor.qa.platform.models.entity.user.User;
+
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.service.abstracts.model.TagService;
@@ -28,21 +25,6 @@ public class QuestionResourceController {
 
     @GetMapping("api/user/question/{id}")
     public QuestionDto getQuestion(@PathVariable Long id) {
-//        QuestionDto questionDto = QuestionConverter.INSTANCE.questionToDto(questionService.getById(id).get());
-//        TagDto tagDto = TagConverter.INSTANCE.tagToDto(tagService.getById(id).get());
-//        Question question = questionService.getById(id).get();
-//        User user = questionService.getById(id).get().getUser();
-//        List<TagDto> list = new ArrayList<>();
-//        list.add(tagDto);
-//        questionDto.setListTagDto(list);
-//        questionDto.setAuthorName(user.getFullName());
-//        questionDto.setAuthorId(user.getId());
-//        questionDto.setAuthorReputation(0l);  //(можно подсчитать с помощью sql);
-//        questionDto.setAuthorImage(user.getImageLink());
-//        questionDto.setViewCount(0); //(пока не считай это поле, как оно будет считаться решим позже, пусть пока будет 0)
-//        questionDto.setCountAnswer(0); // (можно подсчитать с помощью sql);
-//        questionDto.setCountValuable(0); // (Это голоса за ответ QuiestionVote);
         return questionDtoService.getQuestionDtoServiceById(id);
-//        return questionDto;
     }
 }

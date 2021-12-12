@@ -23,9 +23,7 @@ public class TagDtoDaoImpl implements QuestionDtoDao {
                         "t.id, t.name, t.description)" +
                         " FROM Tag t  WHERE t.id =: id ", TagDto.class);
         q.setParameter("id", id);
-
         List<TagDto> tagDto = q.getResultList();
-
         return tagDto;
     }
 }
