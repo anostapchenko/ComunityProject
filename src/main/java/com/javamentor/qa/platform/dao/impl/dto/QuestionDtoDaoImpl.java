@@ -24,13 +24,13 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                 "SELECT new com.javamentor.qa.platform.models.dto.QuestionDto(q.id, " +
                         "q.title, u.id, u.fullName, u.imageLink, q.description," +
                         "q.persistDateTime, q.lastUpdateDateTime)" +
-                        " FROM Question q JOIN q.user u WHERE q.id =: id ", QuestionDto.class);
+                        " FROM Question q JOIN q.user u  WHERE q.id =: id ", QuestionDto.class);
         q.setParameter("id", id);
         QuestionDto questionDto = q.getSingleResult();
-        questionDto.setAuthorReputation(666l);
-        questionDto.setViewCount(555);
-        questionDto.setCountAnswer(333);
-        questionDto.setCountValuable(444);
+        questionDto.setAuthorReputation(666l); // не понимаю, где брать и как считать
+        questionDto.setViewCount(0); //(пока не считай это поле, как оно будет считаться решим позже, пусть пока будет 0)
+        questionDto.setCountAnswer(333);  // не понимаю, где брать и как считать
+        questionDto.setCountValuable(444);  // не понимаю, где брать и как считать
         questionDto.setListTagDto(tagDtoDaoImpl.getTagDtoDaoById(id));
         return questionDto;
     }

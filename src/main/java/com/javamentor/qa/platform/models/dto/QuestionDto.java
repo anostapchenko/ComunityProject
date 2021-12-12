@@ -22,7 +22,7 @@ public class QuestionDto {
     private String description;
     private int viewCount; //(пока не считай это поле, как оно будет считаться решим позже, пусть пока будет 0)
     private int countAnswer;// (можно подсчитать с помощью sql);
-    private int countValuable; // (Это голоса за ответ QuiestionVote);
+    private int countValuable; // (Это голоса за ответ QuestionVote);
     private LocalDateTime persistDateTime;
     private LocalDateTime lastUpdateDateTime;
     private List<TagDto> listTagDto;
