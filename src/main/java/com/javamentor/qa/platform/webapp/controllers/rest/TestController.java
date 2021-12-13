@@ -1,13 +1,12 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class TestController {
     @RequestMapping("/home")
-    public @ResponseBody String greeting(){
+    public String greeting(){
         return "Hello";
     }
 }
