@@ -17,11 +17,13 @@ public class BRRiderMockMVCTest extends AbstractClassForDRRiderMockMVCTests {
     @Autowired
     private MockMvc mockMvc;
 
+    //Проверка количества пользователей в таблице User_Entity.
     @Test
+    //С помощью DBRider и файла users.yml создаём одного пользователя
     @DataSet(value = "dataset/users.yml", strategy = SeedStrategy.INSERT)
-    public void shouldReturnDefaultMessage() throws Exception {
-        this.mockMvc.perform(get("/home")).andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string(containsString("Hello")));
+    public void shouldReturnNumberOfUsers() throws Exception {
+        this.mockMvc.perform(get("/api/numberofusers")).andDo(print()).andExpect(status().isOk())
+                .andExpect(content().string(containsString("1")));
     }
 }
 

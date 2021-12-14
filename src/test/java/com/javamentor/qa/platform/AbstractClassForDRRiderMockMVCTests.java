@@ -13,5 +13,5 @@ import org.springframework.test.context.TestPropertySource;
 @SpringBootTest(classes = JmApplication.class)
 @DBUnit(cacheConnection = false, leakHunter = true,caseSensitiveTableNames = true,allowEmptyFields = true )
 public abstract class AbstractClassForDRRiderMockMVCTests {
-
+ // Класс конфигурации для теста
 }
