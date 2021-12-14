@@ -21,14 +21,16 @@ public class TestEntityInit implements CommandLineRunner {
         this.testDataInitService = testDataInitService;
     }
 
-    @Bean
-//    @Before
-    public FlywayMigrationStrategy clean() {
-        return flyway -> {
-            flyway.clean();
-            flyway.migrate();
-        };
-    }
+//    @Bean
+////    @Before
+//    public FlywayMigrationStrategy clean() {
+//        System.out.println("TestEntityInit - FlywayMigrationStrategy");
+//        return flyway -> {
+//            flyway.clean();
+//            flyway.migrate();
+//            flyway.clean();
+//        };
+//    }
 
     @Override
     public void run(String... args) {
