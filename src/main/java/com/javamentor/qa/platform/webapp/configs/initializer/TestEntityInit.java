@@ -26,7 +26,6 @@ public class TestEntityInit implements CommandLineRunner {
 //    @Bean
 ////    @Before
 //    public FlywayMigrationStrategy clean() {
-//        System.out.println("TestEntityInit - FlywayMigrationStrategy");
 //        return flyway -> {
 //            flyway.clean();
 //            flyway.migrate();
