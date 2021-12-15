@@ -191,8 +191,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>6.4.4</version>
-<!--            flyway выше 6 версии падает.-->
+            <version>8.2.2</version>
         </dependency>
 
     </dependencies>
