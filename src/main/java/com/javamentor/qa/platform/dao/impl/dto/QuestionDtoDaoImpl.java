@@ -30,12 +30,11 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                         " FROM Question q JOIN  q.user u  WHERE q.id =: id ", QuestionDto.class);
         q.setParameter("id", id);
         QuestionDto questionDto = q.getSingleResult();
-        Integer ID = (Integer) entityManager.createQuery("SELECT r.count FROM Reputation r").getSingleResult();
-        questionDto.setAuthorReputation(new Long(ID)); // тестовые данные в таблицу Reputation заводил в ручную
+//        Integer ID = (Integer) entityManager.createQuery("SELECT r.count FROM Reputation r").getSingleResult();
+//        questionDto.setAuthorReputation(new Long(ID)); // тестовые данные в таблицу Reputation заводил в ручную
         questionDto.setViewCount(0); //(пока не считай это поле, как оно будет считаться решим позже, пусть пока будет 0)
         questionDto.setCountAnswer(333);  // не понимаю, где брать и как считать
         questionDto.setCountValuable(444);  // не понимаю, где брать и как считать
-        questionDto.setListTagDto(tagDtoDaoImpl.getTagDtoDaoById(id));
         return questionDto;
     }
 }
