@@ -2,22 +2,24 @@ package com.javamentor.qa.platform.service.impl.dto;
 
 
 
-import com.javamentor.qa.platform.dao.abstracts.dto.QuestionDtoDao;
-import com.javamentor.qa.platform.dao.impl.dto.QuestionDtoDaoImpl;
+import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
-import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
+import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.service.abstracts.dto.TagDtoService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TagDtoServiceImpl implements TagDtoService {
-    public final QuestionDtoDao questionDtoDao;
+    public final TagDtoDao tagDtoDao;
 
-    public TagDtoServiceImpl(QuestionDtoDao questionDtoDao) {
-        this.questionDtoDao = questionDtoDao;
+    public TagDtoServiceImpl(TagDtoDao tagDtoDao) {
+        this.tagDtoDao = tagDtoDao;
     }
 
-    public QuestionDto getQuestionDtoServiceById(Long id){
-        return questionDtoDao.getQuestionDtoDaoById(id);
+    @Override
+    public List<TagDto> getTagDtoServiceById(Long id) {
+        return tagDtoDao.getTagDtoDaoById(id);
     }
 }

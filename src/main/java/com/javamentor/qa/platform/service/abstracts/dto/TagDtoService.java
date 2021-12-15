@@ -1,8 +1,9 @@
 package com.javamentor.qa.platform.service.abstracts.dto;
 
+import com.javamentor.qa.platform.models.dto.TagDto;
 
-import com.javamentor.qa.platform.models.dto.QuestionDto;
+import java.util.List;
 
 public interface TagDtoService {
-    QuestionDto getQuestionDtoServiceById(Long id);
+    List<TagDto> getTagDtoServiceById(Long id);
 }
