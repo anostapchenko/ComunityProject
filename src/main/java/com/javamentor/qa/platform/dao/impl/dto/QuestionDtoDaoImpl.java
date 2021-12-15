@@ -15,14 +15,8 @@ import java.util.Collections;
 public class QuestionDtoDaoImpl implements QuestionDtoDao {
     @PersistenceContext
     private EntityManager entityManager;
-    private EntityTransaction entityTransaction;
-
-    @Autowired
-    private TagDtoDaoImpl tagDtoDaoImpl;
 
     public QuestionDto getQuestionDtoDaoById(Long id) {
-
-
         TypedQuery<QuestionDto> q = entityManager.createQuery(
                 "SELECT new com.javamentor.qa.platform.models.dto.QuestionDto(q.id, " +
                         "q.title, u.id, u.fullName, u.imageLink, q.description," +

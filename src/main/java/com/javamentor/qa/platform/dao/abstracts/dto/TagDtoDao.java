@@ -5,5 +5,5 @@ import com.javamentor.qa.platform.models.dto.TagDto;
 import java.util.List;
 
 public interface TagDtoDao {
-    public List<TagDto> getTagDtoDaoById(Long id);
+    List<TagDto> getTagDtoDaoById(Long id);
 }
