@@ -45,7 +45,6 @@ public class Question implements Serializable {
     @Type(type = "org.hibernate.type.LocalDateTimeType")
     private LocalDateTime persistDateTime;
 
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id")
     private User user;
