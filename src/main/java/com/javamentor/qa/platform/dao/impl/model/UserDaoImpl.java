@@ -18,8 +18,8 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
     private EntityManager entityManager;
 
     @Override
-    public Optional<User> getByEmail(String email) {
-        String hql = "select u from User u where u.email = :email";
+    public Optional<User> getWithRoleByEmail(String email) {
+        String hql = "select u from User u join fetch u.role r where u.email = :email";
         TypedQuery<User> query = (TypedQuery<User>) entityManager.createQuery(hql).setParameter("email", email);
         return SingleResultUtil.getSingleResultOrNull(query);
     }

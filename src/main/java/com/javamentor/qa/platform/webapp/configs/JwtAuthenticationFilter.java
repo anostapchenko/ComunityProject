@@ -2,7 +2,10 @@ package com.javamentor.qa.platform.webapp.configs;
 
 import com.javamentor.qa.platform.security.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,17 +38,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
-                System.out.println("Authorized!");
             }
-        } catch (ExpiredJwtException e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
         } catch (BadCredentialsException e) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        } catch (Exception e) {
-            System.out.println(e);
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "Invalid credentials");
+            return;
+        } catch (ExpiredJwtException e) {
+            response.sendError(HttpStatus.FORBIDDEN.value(), "Token expired");
+            return;
+        } catch (SignatureException e) {
+            response.sendError(HttpStatus.BAD_REQUEST.value(), "Wrong token signature");
+            return;
+        } catch (JwtException e) {
+            response.sendError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+            return;
         }
 
         chain.doFilter(request, response);
+
     }
 
 }

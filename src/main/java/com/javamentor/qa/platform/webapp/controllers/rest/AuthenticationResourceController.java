@@ -7,6 +7,12 @@ import com.javamentor.qa.platform.security.JwtUtil;
 import com.javamentor.qa.platform.service.abstracts.model.RoleService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +28,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
+@Tag(name = "Authentication", description = "Аутентификация и авторизация пользователя")
 public class AuthenticationResourceController {
 
     private final AuthenticationManager authenticationManager;
@@ -29,6 +36,13 @@ public class AuthenticationResourceController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("token")
+    @Operation(summary = "Получение JWT токена для учетных данных пользователя")
+    @ApiResponse(responseCode = "200", description = "Пользователь авторизован", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = AuthenticationResponse.class))
+    })
+    @ApiResponse(responseCode = "400", description = "Неверные учетные данные", content = {
+            @Content(mediaType = "application/json")
+    })
     public ResponseEntity<?> createToken(@RequestBody AuthenticationRequest authenticationRequest) {
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(

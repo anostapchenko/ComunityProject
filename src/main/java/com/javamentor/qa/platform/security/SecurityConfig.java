@@ -15,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -34,28 +35,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     @Override
     public void configure(WebSecurity web) {
         web.ignoring()
-                .regexMatchers(HttpMethod.GET, ".+\\.html", ".+\\.js", ".+\\.css");
+                .antMatchers(HttpMethod.GET, "/html/**", "/js/**", "/css/**");
     }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.cors().disable();
+        http.formLogin().disable();
+        http.httpBasic().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        http.formLogin()
-                .loginPage("/login")
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .permitAll();
-        http.logout()
-                .permitAll();
         http.authorizeRequests()
-                .regexMatchers(HttpMethod.GET, ".+\\.html", ".+\\.js", ".+\\.css").permitAll()
                 .antMatchers("/api/auth/token").permitAll()
                 .antMatchers("/api/user/**").hasRole("USER")
-                .antMatchers("/**").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers("/api/**").authenticated()
+                .anyRequest().permitAll();
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedMethods("*");
     }
 
     @Bean

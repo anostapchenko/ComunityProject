@@ -25,18 +25,12 @@ public class JwtUtil {
     private String expirationTime;
 
     public Claims getClaimsFromToken(String authToken) {
-//        Claims claims;
-//        try {
-            String key = Base64.getEncoder().encodeToString(secret.getBytes());
-            return Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(authToken)
-                    .getBody();
-//        } catch (ExpiredJwtException e) {
-//            claims = e.getClaims();
-//        }
-//        return claims;
+        String key = Base64.getEncoder().encodeToString(secret.getBytes());
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(authToken)
+                .getBody();
     }
 
     public String extractUsername(String authToken) {
@@ -53,7 +47,7 @@ public class JwtUtil {
     public String resolveToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7, bearerToken.length());
+            return bearerToken.substring(7);
         }
         return null;
     }
