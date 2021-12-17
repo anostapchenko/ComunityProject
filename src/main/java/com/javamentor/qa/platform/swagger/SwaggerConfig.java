@@ -13,7 +13,7 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(
                         new Info()
-                                .title("Example Swagger API")
+                                .title("Kata Stack Overflow API")
                                 .version("1.0.0")
                                 .contact(
                                         new Contact()

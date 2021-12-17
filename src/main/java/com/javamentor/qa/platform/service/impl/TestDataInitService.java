@@ -60,6 +60,7 @@ public class TestDataInitService {
                     .about("I'm Test user #" + i)
                     .nickname("user_" + i)
                     .role(role)
+                    .isEnabled(true)
                     .build();
             users.add(user);
         }
