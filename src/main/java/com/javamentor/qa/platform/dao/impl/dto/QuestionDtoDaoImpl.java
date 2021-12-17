@@ -9,6 +9,7 @@ import com.javamentor.qa.platform.service.impl.model.TestFakeReputationData;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.util.List;
 
 @Repository
@@ -27,11 +28,18 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
         Integer ID = (Integer) entityManager.createQuery("SELECT r.count FROM Reputation r WHERE r.id =: id")
                 .setParameter("id", id)
                 .getSingleResult();
-// Пытаюсь взять объект Reputation из БД или через find или SQL запросом, выходит исключение java.lang.ArrayIndexOutOfBoundsException: Index 4 out of bounds for length 4
-//        Reputation rep = entityManager.find(Reputation.class,2L);
-//        Query query = entityManager.createQuery("select r from Reputation r WHERE r.id =: id", Reputation.class).setParameter("id", 2L);
-//        query.getResultList();
-//
+
+// Разобрался как правильно заполнять таблицу reputation, могу считать сумму по столбцу count
+        // для конкретного author. Но делать это получается только в NativeQuery если заводить
+        //значение author через setParameter. в обычной createQery setParameter у меня не работает.
+        // Так же сумма выходить в Object, а мне нужен Long как преобразовать не разобрался еще.
+        //Ниже пример подсчета суммы count который работает.
+        Object count = entityManager.createNativeQuery("select SUM(count) from reputation where author_id=:author ")
+                .setParameter("author", id)
+                .getSingleResult();
+        System.out.println("Count " + count);
+
+
         questionDto.setAuthorReputation(new Long(ID)); // тестовые данные в таблицу Reputation заводил в ручную
         questionDto.setViewCount(0); //(пока не считай это поле, как оно будет считаться решим позже, пусть пока будет 0)
         questionDto.setCountAnswer(333);  // не понимаю, где брать и как считать
