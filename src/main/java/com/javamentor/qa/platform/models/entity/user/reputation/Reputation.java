@@ -3,10 +3,7 @@ package com.javamentor.qa.platform.models.entity.user.reputation;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 
@@ -59,6 +56,13 @@ public class Reputation implements Serializable {
     @JoinColumn(name = "answer_id")
     private Answer answer;
 
+    public Reputation(User author, User sender, Integer count, ReputationType type, Question question) {
+        this.author = author;
+        this.sender = sender;
+        this.count = count;
+        this.type = type;
+        this.question = question;
+    }
 
     @Override
     public boolean equals(Object o) {
