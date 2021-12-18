@@ -16,7 +16,13 @@ public class UserDtoDaoImpl implements UserDtoDao {
     @Override
     public List<UserDto> findUserDto(Long id) {
         return entityManager.createQuery("SELECT NEW com.javamentor.qa.platform.models.dto.UserDto(" +
-                        "e.id, e.email, e.fullName, 'нет фото', e.city, 1) FROM User e where e.id ="+id)
+                        "rep.author.id, " +
+                        "rep.author.email, " +
+                        "rep.author.fullName, " +
+                        "rep.author.imageLink, " +
+                        "rep.author.city," +
+                        "rep.count) FROM Reputation rep where rep.author.id=:id")
+                .setParameter("id", id)
                 .getResultList();
     }
 }

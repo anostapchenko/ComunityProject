@@ -9,12 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user/")
 public class UserResourseController {
     final private UserDtoService userDtoService;
 
@@ -22,8 +20,8 @@ public class UserResourseController {
         this.userDtoService = userDtoService;
     }
 
-    @GetMapping("users/{id}")
-    public ResponseEntity<List<UserDto>> getUser (@PathVariable("id") long id) {
+    @GetMapping("{userId}")
+    public ResponseEntity<List<UserDto>> getUser (@PathVariable("userId") long id) {
         List<UserDto> userDto = userDtoService.findCategoryByName(id);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
