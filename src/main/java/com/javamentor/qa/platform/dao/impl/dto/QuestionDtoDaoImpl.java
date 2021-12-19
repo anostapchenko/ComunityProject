@@ -17,10 +17,10 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
 
     public QuestionDto getQuestionDtoDaoById(Long id) {
 
-        Query dto = entityManager.createQuery("select q.id, q.title, u.id, r.count," +
+        Query dto = entityManager.createQuery("select q.id, q.title, u.id," +
                         " u.fullName, u.imageLink, q.description, q.persistDateTime," +
-                        " q.lastUpdateDateTime from Question q, Reputation r" +
-                        " JOIN q.user u WHERE q.id =:id and r.author = q.user")
+                        " q.lastUpdateDateTime  from Question q" +
+                        " JOIN q.user u WHERE q.id =:id")
                 .setParameter("id", id)
                 .unwrap(org.hibernate.query.Query.class)
                 .setResultTransformer(new ResultTransformer() {
@@ -30,13 +30,19 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                         questionDto.setId((Long) tuple[0]);
                         questionDto.setTitle((String) tuple[1]);
                         questionDto.setAuthorId((Long) tuple[2]);
-                        questionDto.setAuthorReputation(((Number) tuple[3]).longValue());
-                        questionDto.setAuthorName((String) tuple[4]);
-                        questionDto.setAuthorImage((String) tuple[5]);
-                        questionDto.setDescription((String) tuple[6]);
-                        questionDto.setPersistDateTime((LocalDateTime) tuple[7]);
-                        questionDto.setLastUpdateDateTime((LocalDateTime) tuple[8]);
-//                        questionDto.setListTagDto((List<TagDto>) tuple[9]);
+                        questionDto.setAuthorName((String) tuple[3]);
+                        questionDto.setAuthorImage((String) tuple[4]);
+                        questionDto.setDescription((String) tuple[5]);
+                        questionDto.setPersistDateTime((LocalDateTime) tuple[6]);
+                        questionDto.setLastUpdateDateTime((LocalDateTime) tuple[7]);
+                        questionDto.setAuthorReputation((Long) entityManager.createQuery("select sum (r.count) " +
+                                        "from Question q, Reputation r where q.id =:id and r.author = q.user ")
+                                .setParameter("id", id)
+                                .getSingleResult());
+                        questionDto.setCountAnswer(((Number) entityManager.createQuery("select count (a.question)" +
+                                " from Answer a, Question q where q.id =:id and a.question = q")
+                                .setParameter("id", id)
+                                .getSingleResult()).intValue());
                         return questionDto;
                     }
                     @Override
