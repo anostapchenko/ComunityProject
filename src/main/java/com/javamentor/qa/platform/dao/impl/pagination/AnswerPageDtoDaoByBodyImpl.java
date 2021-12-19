@@ -3,14 +3,12 @@ package com.javamentor.qa.platform.dao.impl.pagination;
 import com.javamentor.qa.platform.dao.abstracts.pagination.AnswerPageDtoDao;
 import com.javamentor.qa.platform.models.dto.AnswerDTO;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
-import com.javamentor.qa.platform.models.entity.question.answer.Answer;
-import com.javamentor.qa.platform.webapp.converters.AnswerConverter;
-import org.mapstruct.factory.Mappers;
+import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -23,23 +21,35 @@ public class AnswerPageDtoDaoByBodyImpl implements AnswerPageDtoDao {
     public List<AnswerDTO> getPaginationItems(PaginationData properties) {
         int itemsOnPage = properties.getItemsOnPage();
         int offset = (properties.getCurrentPage() - 1) * itemsOnPage;
-        // Query
-        List<Answer> listAnswer =  entityManager.createQuery("from Answer order by htmlBody", Answer.class)
+        return (List<AnswerDTO>) entityManager
+                .createQuery("select a.id, a.persistDateTime, a.htmlBody from Answer a order by a.htmlBody")
                 .setFirstResult(offset)
                 .setMaxResults(itemsOnPage)
+                .unwrap(org.hibernate.query.Query.class)
+                .setResultTransformer(
+                        new ResultTransformer() {
+                            @Override
+                            public Object transformTuple(Object[] objects, String[] strings) {
+                                return new AnswerDTO(
+                                        ((Number) objects[0]).longValue(),
+                                        (LocalDateTime) objects[1],
+                                        (String) objects[2]
+                                );
+                            }
+
+                            @Override
+                            public List transformList(List list) {
+                                return list;
+                            }
+                        }
+                )
                 .getResultList();
-        // Converting Answer to AnswerDTO
-        List<AnswerDTO> list = new ArrayList<>();
-        AnswerConverter mapper = Mappers.getMapper(AnswerConverter.class);
-        for (Answer paginationItem : listAnswer) {
-            list.add(mapper.answerToAnswerDTO(paginationItem));
-        }
-        return list;
     }
 
     @Override
     public Long getTotalResultCount() {
-        return (Long) entityManager.createQuery("select count(a.id) from Answer a").getSingleResult();
+        return (Long) entityManager.createQuery("select count(a.id) from Answer a")
+                .getSingleResult();
     }
 
     @Override
