@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.dao.impl.dto;
 import com.javamentor.qa.platform.dao.abstracts.dto.QuestionDtoDao;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
+import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Repository;
 
@@ -41,6 +42,11 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                 .getSingleResult());
                         questionDto.setCountAnswer(((Number) entityManager.createQuery("select count (a.question)" +
                                 " from Answer a, Question q where q.id =:id and a.question = q")
+                                .setParameter("id", id)
+                                .getSingleResult()).intValue());
+                        questionDto.setCountValuable(((Number) entityManager.createQuery("select sum(case when v.vote =:upVote then 1" +
+                                " else -1 end) from VoteQuestion v, Question q where q.id =:id and v.question = q ")
+                                .setParameter("upVote", VoteType.UP_VOTE)
                                 .setParameter("id", id)
                                 .getSingleResult()).intValue());
                         return questionDto;

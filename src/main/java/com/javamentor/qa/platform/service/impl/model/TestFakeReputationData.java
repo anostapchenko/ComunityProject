@@ -19,19 +19,12 @@ import java.util.List;
 
 @Component
 @EnableTransactionManagement
-
 public class TestFakeReputationData {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    private final UserService userService;
-
-    public TestFakeReputationData(UserService userService) {
-        this.userService = userService;
-    }
-
-        @Transactional
+    @Transactional
     public void putFakeReputationData(){
 
             for (Long i = 1L; i <= 10L; i++) {
