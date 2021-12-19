@@ -28,14 +28,20 @@ public class QuestionDto {
     private List<TagDto> listTagDto;
 
 
-    public QuestionDto(Long id, String title, Long authorId, String authorName, String authorImage, String description, LocalDateTime persistDateTime, LocalDateTime lastUpdateDateTime) {
+    public QuestionDto(Long id, String title, Long authorId, Long authorReputation,
+                       String authorName, String authorImage, String description,
+                       LocalDateTime persistDateTime, LocalDateTime lastUpdateDateTime,
+                       List<TagDto> listTagDto) {
         this.id = id;
         this.title = title;
         this.authorId = authorId;
+        this.authorReputation = authorReputation;
         this.authorName = authorName;
         this.authorImage = authorImage;
         this.description = description;
         this.persistDateTime = persistDateTime;
         this.lastUpdateDateTime = lastUpdateDateTime;
+        this.listTagDto = listTagDto;
     }
+
 }
