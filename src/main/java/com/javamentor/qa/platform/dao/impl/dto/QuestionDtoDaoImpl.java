@@ -41,11 +41,11 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                 .setParameter("id", id)
                                 .getSingleResult());
                         questionDto.setCountAnswer(((Number) entityManager.createQuery("select count (a.question)" +
-                                " from Answer a, Question q where q.id =:id and a.question = q")
+                                " from Answer a, Question q where q.id =:id and a.question = q.user")
                                 .setParameter("id", id)
                                 .getSingleResult()).intValue());
                         questionDto.setCountValuable(((Number) entityManager.createQuery("select sum(case when v.vote =:upVote then 1" +
-                                " else -1 end) from VoteQuestion v, Question q where q.id =:id and v.question = q ")
+                                " else -1 end) from VoteQuestion v, Question q where q.id =:id and v.question = q.user ")
                                 .setParameter("upVote", VoteType.UP_VOTE)
                                 .setParameter("id", id)
                                 .getSingleResult()).intValue());
