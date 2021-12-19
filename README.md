@@ -678,3 +678,48 @@ public class UserController {
 - Validate. Проверка текущей схемы базы данных на соответствие доступным миграциям.
 - Repair. Восстановление таблицы метаданных.
 - Clean. Удаление всех объектов в схеме. Не используйте clean в продакшен базах данных!
+
+## Добавление пагинации для DTO
+При добавлении пагинациия для конкретного DTO необходимо в папке dao->abstracts->pagination создать интерфейс dtoNamePageDtoDao, где dtoName - название соответсвующей DTO, например AnswerDtoDao, если такой интерфейс уже не создан.Данный интерфейс необходимо унаследовать от PageDTO, в параметр которого передать соответствующую DTO, например AnswerDTO.
+
+Далее в этой же папке необходимо создать интерфейс dtoNamePageDtoDaoByProperty, в качестве Property используется имя свойства, по которому будет производиться пагинация, например AnswerPageDtoDaoById. Данынй интерфейс необходимо унаследовать от соответсвующего интерфейса, например AnswerPageDtoDao.
+
+В папке dao->impl->pagination необходимо создать реализацию интерфейса dtoNamePageDtoDaoByProperty.
+
+Далее в папке service->abstracts->pagination необходимо создать интерфейс dtoNamePageDtoService, если такой интерфейс уже не создан, например AnswerPageDtoService.
+
+В папке service->impl->pagination необходимо создать реализацию интерфейса dtoNamePageDtoService.
+
+При использовании пагинации стоит учитывать, что такие параметры, как количество элементов на странице (itemsOnPage), номер текущей страницы(currentPage) передаются в service и dao с помощью объекта класса PaginationData. Также в классе PaginationData есть Map<String, Object> для передачи дополнительных параметров, применяемых во время пагинации.
+
+## Header, Side-Bar, Footer
+Для добавления header, side-bar и footer на веб-страницу необходимо в вашем html файле внутри тэга body создать элемент с тэгом div и присвоить ему класс "main" (Определён в файле utilCss.css).
+В данном элементе (div с классом main) необходимо распологать ваш html код, который должен быть отображён на вашей странице.
+Также перед закрывающимся тэгом body необходимо добавить:
+````
+<script type="text/javascript" src="/js/scriptName.js"></script>
+````
+В качестве "scriptName" необходимо использовать имя скрипта из перечисленных ниже:
+- initScriptAuthorized - добавляет на страницу side-bar, footer и heading (для авторизованного пользователя)
+- initScriptUnauthorized - добавляет на страницу side-bar, footer и heading (для НЕавторизованного пользователя, имеются кнопки Log in и Registration)
+
+HTML код страницы с добавленными heading, side-bar, footer:
+````
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="main">
+  Your content
+</div>
+<script type="text/javascript" src="/js/initScriptAuthorized.js"></script>
+</body>
+</html>
+````
+
+Элементу с тэгом div и классом main при инициализации страницы динамически будет присвоен параметр "width", таким образом, чтобы он занимал всё оставшееся пространство на странице.
+
+Если возникнет необходимость изменить ширину side-bar, необходимо изменить переменную "side_bar_width" в initScriptAuthorized.js и initScriptUnauthorized.js и присвоить ей текущую ширину side-bar.
