@@ -33,5 +33,4 @@ public class QuestionResourceController {
         QuestionDto questionDto = questionDtoService.getQuestionDtoServiceById(id);
         return new ResponseEntity<>(questionDto, HttpStatus.OK);
     }
-
 }
