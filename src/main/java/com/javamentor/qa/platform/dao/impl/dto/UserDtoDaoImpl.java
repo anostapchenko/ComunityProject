@@ -16,7 +16,7 @@ public class UserDtoDaoImpl implements UserDtoDao {
 
     @Override
     public List<UserDto> findUserDto(Long id) {
-        List<Long> sql = entityManager.createQuery("select SUM(r.count+r.sender) from Reputation r WHERE r.author.id=:id")
+        List<Long> sql = entityManager.createQuery("select SUM(r.count) from Reputation r WHERE r.author.id=:id")
                 .setParameter("id", id)
                 .getResultList();
 

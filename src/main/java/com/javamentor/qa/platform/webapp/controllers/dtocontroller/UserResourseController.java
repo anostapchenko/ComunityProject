@@ -21,8 +21,8 @@ public class UserResourseController {
     }
 
     @GetMapping("{userId}")
-    public ResponseEntity<List<UserDto>> getUser (@PathVariable("userId") long id) {
-        List<UserDto> userDto = userDtoService.findCategoryByName(id);
+    public ResponseEntity<List<UserDto>> getUserDtoId(@PathVariable("userId") long id) {
+        List<UserDto> userDto = userDtoService.findUserDtoId(id);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 }

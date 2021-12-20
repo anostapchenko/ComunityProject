@@ -19,7 +19,7 @@ public class UserDtoServiceImpl implements UserDtoService {
     }
 
     @Override
-    public List<UserDto> findCategoryByName(Long id) {
+    public List<UserDto> findUserDtoId(Long id) {
         return userDtoDao.findUserDto(id);
     }
 }
