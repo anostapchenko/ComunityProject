@@ -1,6 +1,6 @@
 role:
   - id: 1
-    name: "ROLE_ROLE1"
+    name: "ROLE_USER"
 user_entity:
   - id: 1
     about: "I'm Test user #15"

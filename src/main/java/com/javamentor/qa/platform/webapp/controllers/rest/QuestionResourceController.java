@@ -2,11 +2,11 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.User;
-import com.javamentor.qa.platform.service.impl.SetVoteReputationOfQuestionService;
-import com.javamentor.qa.platform.service.impl.model.TestServiceNumberOfUsers;
+import com.javamentor.qa.platform.service.impl.model.QuestionServiceImpl;
+import com.javamentor.qa.platform.service.impl.model.ReputationServiceImpl;
+import com.javamentor.qa.platform.service.impl.model.VoteQuestionServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -19,8 +19,20 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Question Resource Controller", description = "Управление сущностями, которые связаны с вопросами")
 public class QuestionResourceController {
 
-    @Autowired
-    SetVoteReputationOfQuestionService setVoteReputationOfQuestionService;
+    final
+    QuestionServiceImpl questionService;
+
+    final
+    VoteQuestionServiceImpl voteQuestionService;
+
+    final
+    ReputationServiceImpl reputationService;
+
+    public QuestionResourceController(QuestionServiceImpl questionService, VoteQuestionServiceImpl voteQuestionService, ReputationServiceImpl reputationService) {
+        this.questionService = questionService;
+        this.voteQuestionService = voteQuestionService;
+        this.reputationService = reputationService;
+    }
 
     @PostMapping("api/user/question/{id}/upVote")
     @Operation(
@@ -28,18 +40,16 @@ public class QuestionResourceController {
             description = "Устанавливает голос +1 за вопрос и +10 к репутации автора вопроса"
     )
     public ResponseEntity<?> upVote(@PathVariable("id") Long id) {
-//        Заготовка когда появится секьюрити
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        User user =(User)auth.getPrincipal();
-//        Long userId = user.getId();
-        Long userId = 1L;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user =(User)auth.getPrincipal();
+        Long userId = user.getId();
         int countUpVote = 10;
-        if (setVoteReputationOfQuestionService.validateQuestion(id)) return new ResponseEntity<>("Can't find question with id:"+ id , HttpStatus.NOT_FOUND);
-        if (setVoteReputationOfQuestionService.validateUserVote(id, userId)) {
-            setVoteReputationOfQuestionService.setVote(userId, id, VoteType.UP_VOTE);
-            setVoteReputationOfQuestionService.setReputation(userId, id, countUpVote);
+        if (questionService.validateQuestion(id)) return new ResponseEntity<>("Can't find question with id:"+ id , HttpStatus.NOT_FOUND);
+        if (voteQuestionService.validateUserVote(id, userId)) {
+            voteQuestionService.setVote(userId, id, VoteType.UP_VOTE);
+            reputationService.setReputation(userId, id, countUpVote);
         }
-        return new ResponseEntity<>((long) setVoteReputationOfQuestionService.getVote(id), HttpStatus.OK);
+        return new ResponseEntity<>((long) voteQuestionService.getVote(id), HttpStatus.OK);
     }
 
     @PostMapping("api/user/question/{id}/downVote")
@@ -48,18 +58,16 @@ public class QuestionResourceController {
             description = "Устанавливает голос -1 за вопрос и -5 к репутации автора вопроса"
     )
     public ResponseEntity<?> downVote(@PathVariable("id") Long id) {
-//        Заготовка когда появится секьюрити
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        User user =(User)auth.getPrincipal();
-//        Long userId = user.getId();
-        Long userId = 1L;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user =(User)auth.getPrincipal();
+        Long userId = user.getId();
         int countDownVote = -5;
-        if (setVoteReputationOfQuestionService.validateQuestion(id)) return new ResponseEntity<>("Can't find question with id:"+ id , HttpStatus.NOT_FOUND);
-        if (setVoteReputationOfQuestionService.validateUserVote(id, userId)) {
-            setVoteReputationOfQuestionService.setVote(userId, id, VoteType.DOWN_VOTE);
-            setVoteReputationOfQuestionService.setReputation(userId, id, countDownVote);
+        if (questionService.validateQuestion(id)) return new ResponseEntity<>("Can't find question with id:"+ id , HttpStatus.NOT_FOUND);
+        if (voteQuestionService.validateUserVote(id, userId)) {
+            voteQuestionService.setVote(userId, id, VoteType.DOWN_VOTE);
+            reputationService.setReputation(userId, id, countDownVote);
         }
-        return new ResponseEntity<>((long) setVoteReputationOfQuestionService.getVote(id), HttpStatus.OK);
+        return new ResponseEntity<>((long) voteQuestionService.getVote(id), HttpStatus.OK);
     }
 }
 

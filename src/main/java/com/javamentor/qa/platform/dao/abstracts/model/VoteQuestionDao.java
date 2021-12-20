@@ -5,4 +5,6 @@ import com.javamentor.qa.platform.models.entity.user.User;
 
 public interface VoteQuestionDao extends ReadWriteDao<VoteQuestion, Long>{
 
+    boolean validateUserVote(Long id, Long userId);
+    int getVote(Long id);
 }
