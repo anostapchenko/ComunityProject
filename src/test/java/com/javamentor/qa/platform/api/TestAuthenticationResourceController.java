@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.api;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.javamentor.qa.platform.AbstractClassForDRRiderMockMVCTests;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
+import com.javamentor.qa.platform.models.dto.AuthenticationResponse;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.security.JwtUtil;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
@@ -52,8 +53,8 @@ public class TestAuthenticationResourceController extends AbstractClassForDRRide
                 .andExpect(jsonPath("$.token").exists())
                 .andReturn();
 
-        String token = mapper.readTree(result.getResponse().getContentAsByteArray()).get("token").asText();
-        mockMvc.perform(get("/api/numberofusers").header("Authorization", "Bearer " + token))
+        AuthenticationResponse response = mapper.readValue(result.getResponse().getContentAsByteArray(), AuthenticationResponse.class);
+        mockMvc.perform(get("/api/numberofusers").header("Authorization", "Bearer " + response.getToken()))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
