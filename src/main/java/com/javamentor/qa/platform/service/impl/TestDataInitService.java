@@ -22,7 +22,6 @@ public class TestDataInitService {
     private final QuestionService questionService;
     private final AnswerService answerService;
 
-    private final long NUM_OF_ROLES = 3L;
     private final long NUM_OF_USERS = 10L;
     private final long NUM_OF_TAGS = 5L;
     private final long NUM_OF_QUESTIONS = 10L;
@@ -38,13 +37,8 @@ public class TestDataInitService {
 
     public void createRoles() {
         List<Role> roles = new ArrayList<>();
-        for (int i = 1; i <= NUM_OF_ROLES; i++) {
-            Role role = Role.builder()
-                    .name("ROLE_ROLE" + i)
-                    .build();
-            roles.add(role);
-        }
-
+        roles.add(new Role("ROLE_ADMIN"));
+        roles.add(new Role("ROLE_USER"));
         roleService.persistAll(roles);
     }
 
@@ -62,6 +56,8 @@ public class TestDataInitService {
                     .nickname("user_" + i)
                     .role(role)
                     .isEnabled(true)
+                    .isDeleted(false)
+                    .imageLink("/images/noUserAvatar.png")
                     .build();
             users.add(user);
         }
