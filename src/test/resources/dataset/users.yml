@@ -6,7 +6,7 @@ user_entity:
     about: "I'm Test user #15"
     city: "Moscow"
     full_name: "test 15"
-    password: "test15"
+    password: "$2a$10$p94zVhwJKsg6CzDQAg1tPOwgUUa66.ITiPyhvJbYKIIZQ1i86UEpm"
     email: "test15@mail.ru"
     nickname: "test15"
     is_enabled: true
