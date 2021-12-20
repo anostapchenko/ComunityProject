@@ -21,6 +21,15 @@ public class TestFakeVoteQuestionData {
     public void putFakeVoteQuestionData(){
         for (Long i = 1L; i <=10 ; i++) {
             VoteQuestion vq = VoteQuestion.builder()
+                    .question(entityManager.find(Question.class, 11L - i))
+                    .vote(i % 2 == 0 ? VoteType.UP_VOTE : VoteType.DOWN_VOTE)
+                    .localDateTime(LocalDateTime.now())
+                    .user(entityManager.find(User.class, i))
+                    .build();
+            entityManager.persist(vq);
+        }
+        for (Long i = 1L; i <=10 ; i++) {
+            VoteQuestion vq = VoteQuestion.builder()
                     .question(entityManager.find(Question.class, i))
                     .vote(i % 2 == 0 ? VoteType.UP_VOTE : VoteType.DOWN_VOTE)
                     .localDateTime(LocalDateTime.now())

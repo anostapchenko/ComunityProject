@@ -39,5 +39,17 @@ public class TestFakeReputationData {
                         .build();
                 entityManager.persist(rep);
             }
+        for (Long i = 1L; i <= 10L; i++) {
+            Reputation rep = Reputation.builder()
+                    .persistDate(LocalDateTime.now())
+                    .author(entityManager.find(User.class, i))
+                    .sender(null)
+                    .count(((Number) (i * 100)).intValue())
+                    .type(ReputationType.Question)
+                    .question(entityManager.find(Question.class, i))
+                    .answer(null)
+                    .build();
+            entityManager.persist(rep);
+        }
     }
 }
