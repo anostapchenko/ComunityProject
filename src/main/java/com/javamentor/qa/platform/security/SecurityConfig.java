@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.authorizeRequests()
                 .antMatchers("/api/auth/token").permitAll()
-                .antMatchers("/api/user/**").hasRole("ROLE3")
+                .antMatchers("/api/user/**").hasRole("USER")
                 .antMatchers("/api/**").authenticated()
                 .anyRequest().permitAll();
     }
