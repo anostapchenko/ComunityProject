@@ -39,15 +39,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
-
-        } catch (BadCredentialsException e) {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "Invalid credentials");
-            return;
         } catch (ExpiredJwtException e) {
             response.sendError(HttpStatus.FORBIDDEN.value(), "Token expired");
             return;
         } catch (SignatureException e) {
-            response.sendError(HttpStatus.BAD_REQUEST.value(), "Wrong token signature");
+            response.sendError(HttpStatus.FORBIDDEN.value(), "Wrong token signature");
             return;
         } catch (JwtException e) {
             response.sendError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
