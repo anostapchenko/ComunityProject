@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.util.List;
 
 @Repository
@@ -15,19 +14,19 @@ public class UserDtoDaoImpl implements UserDtoDao {
     EntityManager entityManager;
 
     @Override
-    public List<UserDto> findUserDto(Long id) {
+    public UserDto findUserDto(Long id) {
         List<Long> sql = entityManager.createQuery("select SUM(r.count) from Reputation r WHERE r.author.id=:id")
                 .setParameter("id", id)
                 .getResultList();
 
-        return entityManager.createQuery("SELECT NEW com.javamentor.qa.platform.models.dto.UserDto(" +
-                        "rep.author.id, " +
-                        "rep.author.email, " +
-                        "rep.author.fullName, " +
-                        "rep.author.imageLink, " +
-                        "rep.author.city," +
-                        sql.get(0)+") FROM Reputation rep where rep.author.id=:id")
+        return (UserDto) entityManager.createQuery("SELECT NEW com.javamentor.qa.platform.models.dto.UserDto(" +
+                        "u.id," +
+                        "u.email," +
+                        "u.fullName," +
+                        "u.imageLink," +
+                        "u.city," +
+                        sql.get(0)+") FROM User u  where u.id=:id")
                 .setParameter("id", id)
-                .getResultList();
+                .getSingleResult();
     }
 }

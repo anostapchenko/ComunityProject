@@ -34,6 +34,14 @@ public class BRRiderMockMVCTest extends AbstractClassForDRRiderMockMVCTests {
                 .andExpect(content().string(containsString("1")));
     }
 
+//    @Test
+//    //С помощью DBRider и файла users.yml создаём одного пользователя
+//    @DataSet(value = "dataset/users.yml", strategy = SeedStrategy.INSERT)
+//    public void shouldReturnCountQuestion() throws Exception {
+//        this.mockMvc.perform(get("/api/user/question/count")).andDo(print()).andExpect(status().isOk())
+//                .andExpect(content().string(containsString("1")));
+//    }
+
 }
 
 

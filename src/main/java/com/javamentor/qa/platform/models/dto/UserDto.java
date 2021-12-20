@@ -1,5 +1,8 @@
 package com.javamentor.qa.platform.models.dto;
 
+import lombok.Data;
+
+@Data
 public class UserDto {
     private Long id;
     private String email;
@@ -17,27 +20,4 @@ public class UserDto {
         this.reputation = reputation;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public String getLinkImage() {
-        return linkImage;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public int getReputation() {
-        return reputation;
-    }
 }

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class UserDtoServiceImpl implements UserDtoService {
     private final UserDtoDao userDtoDao;
 
@@ -19,7 +18,7 @@ public class UserDtoServiceImpl implements UserDtoService {
     }
 
     @Override
-    public List<UserDto> findUserDtoId(Long id) {
+    public UserDto findUserDtoById(Long id) {
         return userDtoDao.findUserDto(id);
     }
 }
