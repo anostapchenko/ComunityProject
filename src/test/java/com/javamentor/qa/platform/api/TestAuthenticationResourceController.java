@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DataSet(value = "dataset/users.yml")
+@DataSet(value = "dataset/AuthenticationResourceController/users.yml")
 public class TestAuthenticationResourceController extends AbstractClassForDRRiderMockMVCTests {
 
     @Autowired
