@@ -15,5 +15,6 @@ public class PaginationData {
     private int currentPage;
     private int itemsOnPage;
     private Map<String, Object> props;
+    private String daoName;
 
 }

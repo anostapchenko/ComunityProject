@@ -1,6 +1,6 @@
 package com.javamentor.qa.platform.dao.impl.pagination;
 
-import com.javamentor.qa.platform.dao.abstracts.pagination.AnswerPageDtoDao;
+import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.AnswerDTO;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import org.hibernate.transform.ResultTransformer;
@@ -11,8 +11,8 @@ import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Repository
-public class AnswerPageDtoDaoByBodyImpl implements AnswerPageDtoDao {
+@Repository("AnswerPageDtoDaoByBodyImpl")
+public class AnswerPageDtoDaoByBodyImpl implements PageDtoDao<AnswerDTO> {
 
     @PersistenceContext
     private EntityManager entityManager;
