@@ -12,24 +12,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class BRRiderMockMVCTest extends AbstractClassForDRRiderMockMVCTests {
+public class UserDtoMVCTest extends AbstractClassForDRRiderMockMVCTests {
 
     @Autowired
     private MockMvc mockMvc;
 
-    //Проверка количества пользователей в таблице User_Entity.
     @Test
     //С помощью DBRider и файла users.yml создаём одного пользователя
     @DataSet(value = "dataset/users.yml", strategy = SeedStrategy.INSERT)
-    public void shouldReturnNumberOfUsers() throws Exception {
-        this.mockMvc.perform(get("/api/numberofusers")).andDo(print()).andExpect(status().isOk())
+    public void shouldReturnIdUsers() throws Exception {
+        this.mockMvc.perform(get("/api/user/1")).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("1")));
     }
-
-
-
-
-
 }
-
-

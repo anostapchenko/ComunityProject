@@ -9,9 +9,9 @@ public class UserDto {
     private String fullName;
     private String linkImage;
     private String city;
-    private int reputation;
+    private Long reputation;
 
-    public UserDto(Long id, String email, String fullName, String linkImage, String city, int reputation) {
+    public UserDto(Long id, String email, String fullName, String linkImage, String city, Long reputation) {
         this.id = id;
         this.email = email;
         this.fullName = fullName;

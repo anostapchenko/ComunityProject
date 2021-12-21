@@ -15,9 +15,6 @@ public class UserDtoDaoImpl implements UserDtoDao {
 
     @Override
     public UserDto findUserDto(Long id) {
-        List<Long> sql = entityManager.createQuery("select SUM(r.count) from Reputation r WHERE r.author.id=:id")
-                .setParameter("id", id)
-                .getResultList();
 
         return (UserDto) entityManager.createQuery("SELECT NEW com.javamentor.qa.platform.models.dto.UserDto(" +
                         "u.id," +
@@ -25,7 +22,7 @@ public class UserDtoDaoImpl implements UserDtoDao {
                         "u.fullName," +
                         "u.imageLink," +
                         "u.city," +
-                        sql.get(0)+") FROM User u  where u.id=:id")
+                        "(select sum(r.count) from Reputation r where r.author.id=u.id)) FROM User u where u.id=:id")
                 .setParameter("id", id)
                 .getSingleResult();
     }
