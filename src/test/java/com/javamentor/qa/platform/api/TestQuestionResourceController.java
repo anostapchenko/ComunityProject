@@ -18,7 +18,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
 
     @Test
     //Голосуем ПРОТИВ вопроса (-1) и получаем ответ с количеством голосов: -1 и репутацией -5
-    @DataSet(cleanBefore = true, value = "dataset/users.yml", strategy = SeedStrategy.REFRESH )
+    @DataSet(cleanBefore = true, value = "dataset/questionresourcecontroller/data.yml", strategy = SeedStrategy.REFRESH )
     public void shouldReturnSetupDownVoteDownReputation() throws Exception {
         this.mockMvc.perform(post("/api/user/question/2/downVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("-1")));
@@ -30,7 +30,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     }
 
     @Test
-    @DataSet(cleanBefore = true, value = "dataset/users.yml", strategy = SeedStrategy.REFRESH )
+    @DataSet(cleanBefore = true, value = "dataset/questionresourcecontroller/data.yml", strategy = SeedStrategy.REFRESH )
     //Голосуем ЗА вопрос (+1) и получаем ответ с количеством голосов: 1 и репутация увеличена на +10.
     public void shouldReturnSetupUpVoteUpReputation() throws Exception {
         this.mockMvc.perform(post("/api/user/question/1/upVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isOk())
@@ -44,7 +44,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     //Повторно голосуем ПРОТИВ вопроса (-1) и получаем ответ с количеством голосов: -1. Т.к.
     // повторный голос не учитывается.
-    @DataSet(cleanBefore = true, value = "dataset/users.yml", strategy = SeedStrategy.REFRESH )
+    @DataSet(cleanBefore = true,value = "dataset/questionresourcecontroller/data2.yml", strategy = SeedStrategy.REFRESH )
     public void shouldValidateUserVoteDownVote() throws Exception {
         this.mockMvc.perform(post("/api/user/question/2/downVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("-1")));
@@ -52,7 +52,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     //Повторно голосуем ЗА вопроса (+1) и получаем ответ с количеством голосов: 1. Т.к.
     // повторный голос не учитывается.
-    @DataSet(cleanBefore = true, value = "dataset/users.yml", strategy = SeedStrategy.REFRESH )
+    @DataSet(cleanBefore = true, value = "dataset/questionresourcecontroller/data2.yml", strategy = SeedStrategy.REFRESH )
     public void shouldValidateUserVoteUpVote() throws Exception {
         this.mockMvc.perform(post("/api/user/question/1/upVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("1")));
@@ -60,7 +60,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     //Голосуем ЗА вопрос с неверным ID вопроса 3 и получаем ответ "Can't find question with id:3".
     // повторный голос не учитывается.
-    @DataSet(cleanBefore = true, value = "dataset/users.yml", strategy = SeedStrategy.REFRESH )
+    @DataSet(cleanBefore = true, value = "dataset/questionresourcecontroller/data.yml", strategy = SeedStrategy.REFRESH )
     public void shouldValidateQuestion() throws Exception {
         this.mockMvc.perform(post("/api/user/question/3/upVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isNotFound())
                 .andExpect(content().string(containsString("Can't find question with id:3")));

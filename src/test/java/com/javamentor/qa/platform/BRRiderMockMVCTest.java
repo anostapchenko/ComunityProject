@@ -19,12 +19,12 @@ public class BRRiderMockMVCTest extends AbstractClassForDRRiderMockMVCTests {
     @Autowired
     private MockMvc mockMvc;
 
-    protected BRRiderMockMVCTest() throws MalformedURLException {
+    protected BRRiderMockMVCTest() {
     }
 
     //Проверка количества пользователей в таблице User_Entity.
     @Test
-    //С помощью DBRider и файла users.yml создаём одного пользователя
+    //С помощью DBRider и файла data.yml создаём одного пользователя
     @DataSet(value = "dataset/users.yml", strategy = SeedStrategy.INSERT)
     public void shouldReturnNumberOfUsers() throws Exception {
         this.mockMvc.perform(get("/api/numberofusers")).andDo(print()).andExpect(status().isOk())
