@@ -19,12 +19,4 @@ public class QuestionDaoImpl extends ReadWriteDaoImpl<Question, Long> implements
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Override
-    @Transactional
-    public boolean validateQuestion(Long id){
-        Query queryValidateQuestion = entityManager.createQuery("select v from Question v where v.id in : id", Question.class);
-        queryValidateQuestion.setParameter("id",id);
-        return queryValidateQuestion.getResultList().size() == 0;
-    }
-
 }

@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface QuestionDao extends ReadWriteDao<Question, Long> {
 
-    boolean validateQuestion(Long id);
+
 }
