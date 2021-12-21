@@ -18,8 +18,7 @@ public class QuestionServiceImpl extends ReadWriteServiceImpl<Question, Long> im
     }
 
     @Override
-    public boolean validateQuestion2(Long id) {
-        System.out.println(questionDao.getById(id).isPresent());
+    public boolean validateQuestion(Long id) {
         return !questionDao.getById(id).isPresent();
     }
 }
