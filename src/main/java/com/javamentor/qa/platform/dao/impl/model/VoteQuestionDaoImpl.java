@@ -18,8 +18,7 @@ public class VoteQuestionDaoImpl extends ReadWriteDaoImpl<VoteQuestion,Long> imp
     private EntityManager entityManager;
 
     @Override
-    @Transactional
-    public boolean validateUserVote(Long id, Long userId){
+    public boolean isUserVoteByQuestionIdAndUserId(Long id, Long userId){
         Query queryValidateUserVote = entityManager.createQuery("select v from VoteQuestion v join fetch v.question join fetch v.user where (v.user.id in :userId) and (v.question.id in : id )  ", VoteQuestion.class);
         queryValidateUserVote.setParameter("userId",userId);
         queryValidateUserVote.setParameter("id",id);
@@ -27,7 +26,6 @@ public class VoteQuestionDaoImpl extends ReadWriteDaoImpl<VoteQuestion,Long> imp
     }
 
     @Override
-    @Transactional
     public int getVote(Long id){
         Query queryDownVote = entityManager.createQuery("select v from VoteQuestion v join fetch v.question join fetch v.user where (v.question.id in :id) and (v.vote = 'DOWN_VOTE')  ", VoteQuestion.class);
         queryDownVote.setParameter("id",id);

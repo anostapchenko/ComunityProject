@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DBUnit(cacheConnection = false, leakHunter = true,caseSensitiveTableNames = true,allowEmptyFields = true )
 public abstract class AbstractClassForDRRiderMockMVCTests {
 
-    private final String url = "http://localhost:8091/api/auth/token";
+    private final String url = "/api/auth/token";
 
     @Autowired
     public MockMvc mockMvc;

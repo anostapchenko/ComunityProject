@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@EnableTransactionManagement
 public class VoteQuestionServiceImpl extends ReadWriteServiceImpl<VoteQuestion,Long> implements VoteQuestionService {
 
     final
@@ -39,7 +38,7 @@ public class VoteQuestionServiceImpl extends ReadWriteServiceImpl<VoteQuestion,L
 
     @Override
     public boolean validateUserVote(Long id, Long userId) {
-        return voteQuestionDao.validateUserVote(id, userId);
+        return voteQuestionDao.isUserVoteByQuestionIdAndUserId(id, userId);
     }
 
     @Override

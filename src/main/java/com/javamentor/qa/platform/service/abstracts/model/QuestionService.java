@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface QuestionService extends ReadWriteService<Question, Long> {
 
-    boolean validateQuestion(Long id);
+    boolean isQuestionValidate(Long id);
 }

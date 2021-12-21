@@ -44,7 +44,7 @@ public class QuestionResourceController {
         User user =(User)auth.getPrincipal();
         Long userId = user.getId();
         int countUpVote = 10;
-        if (questionService.validateQuestion(id)) return new ResponseEntity<>("Can't find question with id:"+ id , HttpStatus.NOT_FOUND);
+        if (questionService.isQuestionValidate(id)) return new ResponseEntity<>("Can't find question with id:"+ id , HttpStatus.NOT_FOUND);
         if (voteQuestionService.validateUserVote(id, userId)) {
             voteQuestionService.setVote(userId, id, VoteType.UP_VOTE);
             reputationService.setReputation(userId, id, countUpVote);
@@ -62,7 +62,7 @@ public class QuestionResourceController {
         User user =(User)auth.getPrincipal();
         Long userId = user.getId();
         int countDownVote = -5;
-        if (questionService.validateQuestion(id)) return new ResponseEntity<>("Can't find question with id:"+ id , HttpStatus.NOT_FOUND);
+        if (questionService.isQuestionValidate(id)) return new ResponseEntity<>("Can't find question with id:"+ id , HttpStatus.NOT_FOUND);
         if (voteQuestionService.validateUserVote(id, userId)) {
             voteQuestionService.setVote(userId, id, VoteType.DOWN_VOTE);
             reputationService.setReputation(userId, id, countDownVote);
