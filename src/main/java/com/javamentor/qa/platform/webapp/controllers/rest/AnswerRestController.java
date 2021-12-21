@@ -28,7 +28,7 @@ public class AnswerRestController {
             data.setDaoName(AnswerPageDtoDaoByIdImpl.class.getSimpleName());
             return new ResponseEntity<>(answerDtoService.getPageDto(data), HttpStatus.OK);
         } catch (NoSuchDaoException e) {
-            return new ResponseEntity<>("Wrong dao name",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Wrong dao name",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -38,7 +38,7 @@ public class AnswerRestController {
             data.setDaoName(AnswerPageDtoDaoByBodyImpl.class.getSimpleName());
             return new ResponseEntity<>(answerDtoService.getPageDto(data), HttpStatus.OK);
         } catch (NoSuchDaoException e) {
-            return new ResponseEntity<>("Wrong dao name",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Wrong dao name",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
