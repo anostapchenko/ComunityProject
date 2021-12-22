@@ -1,8 +1,10 @@
 package com.javamentor.qa.platform.service.impl;
 
+import com.javamentor.qa.platform.models.entity.question.IgnoredTag;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.Tag;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
+import com.javamentor.qa.platform.models.entity.question.TrackedTag;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.Role;
@@ -10,42 +12,41 @@ import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
 import com.javamentor.qa.platform.models.entity.user.reputation.ReputationType;
 import com.javamentor.qa.platform.service.abstracts.model.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class TestDataInitService {
 
     private final RoleService roleService;
     private final UserService userService;
     private final TagService tagService;
+    private final TrackedTagService trackedTagService;
+    private final IgnoredTagService ignoredTagService;
     private final QuestionService questionService;
     private final AnswerService answerService;
-    private final ReputationService reputationService;
-    private final VoteQuestionService voteQuestionService;
 
     private final long NUM_OF_USERS = 10L;
     private final long NUM_OF_TAGS = 5L;
-    private final long NUM_OF_QUESTIONS = 20L;
+    private final long NUM_OF_QUESTIONS = 10L;
     private final long NUM_OF_ANSWERS = 50L;
+    private final int MAX_TRACKED_TAGS = 3;
+    private final int MAX_IGNORED_TAGS = 3;
     private final long NUM_OF_REPUTATIONS = 10L;
-    private final long NUM_OF_VOTEQUESTIONS = 20L;
+    private final long NUM_OF_VOTEQUESTIONS = 10L;
 
-
-    public TestDataInitService(RoleService roleService, UserService userService, TagService tagService, QuestionService questionService, AnswerService answerService, ReputationService reputationService, VoteQuestionService voteQuestionService) {
-        this.roleService = roleService;
-        this.userService = userService;
-        this.tagService = tagService;
-        this.questionService = questionService;
-        this.answerService = answerService;
-        this.reputationService = reputationService;
-        this.voteQuestionService = voteQuestionService;
+    public void init() {
+        createRoles();
+        createUsers();
+        createTags();
+        createTrackedAndIgnoredTags();
+        createQuestions();
+        createAnswers();
+        createReputations();
+        createVoteQuestion();
     }
 
     public void createRoles() {
@@ -89,6 +90,39 @@ public class TestDataInitService {
         }
 
         tagService.persistAll(tags);
+    }
+
+    public void createTrackedAndIgnoredTags() {
+        List<TrackedTag> trackedTags = new ArrayList<>();
+        List<IgnoredTag> ignoredTags = new ArrayList<>();
+        List<Tag> tags = tagService.getAll();
+        List<User> users = userService.getAll();
+        users.remove(0);
+
+        for (User user : users) {
+            Collections.shuffle(tags);
+            int numOfTrackedTags = new Random().nextInt(MAX_TRACKED_TAGS);
+            int numOfIgnoredTags = new Random().nextInt(MAX_IGNORED_TAGS);
+            int numOfTags = Math.min((numOfTrackedTags + numOfIgnoredTags), tags.size());
+            for (int i = 0; i < numOfTags; i++) {
+                if (i < numOfTrackedTags) {
+                    TrackedTag trackedTag = TrackedTag.builder()
+                            .user(user)
+                            .trackedTag(tags.get(i))
+                            .build();
+                    trackedTags.add(trackedTag);
+                } else {
+                    IgnoredTag ignoredTag = IgnoredTag.builder()
+                            .user(user)
+                            .ignoredTag(tags.get(i))
+                            .build();
+                    ignoredTags.add(ignoredTag);
+                }
+            }
+        }
+
+        trackedTagService.persistAll(trackedTags);
+        ignoredTagService.persistAll(ignoredTags);
     }
 
     public void createQuestions() {
@@ -171,14 +205,5 @@ public class TestDataInitService {
         return questions.get(new Random().nextInt(questions.size()));
     }
 
-    public void init() {
-        createRoles();
-        createUsers();
-        createTags();
-        createQuestions();
-        createAnswers();
-        createReputations();
-        createVoteQuestion();
-    }
 
 }
