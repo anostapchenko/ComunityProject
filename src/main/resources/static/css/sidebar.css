@@ -12,11 +12,11 @@
     font-weight: 100;
     font-size: small
 }
-.mfield:hover{
-    cursor: pointer;
-}
-.active{
-    background-color: #ebebeb;
-    font-weight: bold;
-    border-right: 3px solid #89e1f3;
-}
+/*.mfield:hover{*/
+/*    cursor: pointer;*/
+/*}*/
+/*.active{*/
+/*    background-color: #ebebeb;*/
+/*    font-weight: bold;*/
+/*    border-right: 3px solid #89e1f3;*/
+/*}*/

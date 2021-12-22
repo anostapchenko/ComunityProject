@@ -9,22 +9,22 @@ function loadCss() {
 
     const heading = document.createElement("link")
     heading.rel = "stylesheet"
-    heading.href = "/css/headingCss.css"
+    heading.href = "/css/header.css"
     heading.type = "text/css"
 
     const footer = document.createElement("link")
     footer.rel = "stylesheet"
-    footer.href = "/css/footerCss.css"
+    footer.href = "/css/footer.css"
     footer.type = "text/css"
 
     const sideBar = document.createElement("link")
     sideBar.rel = "stylesheet"
-    sideBar.href = "/css/side_barCss.css"
+    sideBar.href = "/css/sidebar.css"
     sideBar.type = "text/css"
 
     const util = document.createElement("link")
     util.rel = "stylesheet"
-    util.href = "/css/utilCss.css"
+    util.href = "/css/util.css"
     util.type = "text/css"
 
     const bootstrap = document.createElement("link")

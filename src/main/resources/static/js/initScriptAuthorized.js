@@ -1,64 +1,31 @@
 const side_bar_width = 120
+const head = document.querySelector("head")
 
 loadCss()
 loadScripts()
 start()
 
 function loadCss() {
-    const head = document.querySelector("head")
+    let sheets = Array("/css/header.css", "/css/footer.css", "/css/sidebar.css", "/css/util.css", "/css/bootstrap/css/bootstrap.min.css")
 
-    const heading = document.createElement("link")
-    heading.rel = "stylesheet"
-    heading.href = "/css/headingCss.css"
-    heading.type = "text/css"
-
-    const footer = document.createElement("link")
-    footer.rel = "stylesheet"
-    footer.href = "/css/footerCss.css"
-    footer.type = "text/css"
-
-    const sideBar = document.createElement("link")
-    sideBar.rel = "stylesheet"
-    sideBar.href = "/css/side_barCss.css"
-    sideBar.type = "text/css"
-
-    const util = document.createElement("link")
-    util.rel = "stylesheet"
-    util.href = "/css/utilCss.css"
-    util.type = "text/css"
-
-    const bootstrap = document.createElement("link")
-    bootstrap.rel = "stylesheet"
-    bootstrap.href = "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    bootstrap.type = "text/css"
-    bootstrap.integrity = "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-    bootstrap.crossOrigin = "anonymous"
-
-    head.appendChild(heading)
-    head.appendChild(footer)
-    head.appendChild(sideBar)
-    head.appendChild(util)
-    head.appendChild(bootstrap)
+    sheets.forEach((href) => {
+        let link = document.createElement("link")
+        link.rel = "stylesheet"
+        link.type = "text/css"
+        link.href = href
+        head.appendChild(link)
+    });
 }
 
 function loadScripts() {
-    const head = document.querySelector("body")
+    let scripts = Array("/js/header.js", "/js/footer.js", "/js/sidebar.js")
 
-    const heading = document.createElement("script")
-    heading.src = "/js/headingJS.js"
-    heading.type = "text/javascript"
-
-    const footer = document.createElement("script")
-    footer.src = "/js/footerJS.js"
-    footer.type = "text/javascript"
-
-    const sideBar = document.createElement("script")
-    sideBar.src = "/js/side_barJS.js"
-    sideBar.type = "text/javascript"
-
-    head.appendChild(heading)
-    head.appendChild(footer)
-    head.appendChild(sideBar)
+    scripts.forEach((src) => {
+        let script = document.createElement("script")
+        script.type = "text/javascript"
+        script.src = src
+        head.appendChild(script)
+    });
 }
 
 function start() {
@@ -92,64 +59,39 @@ function createFooter() {
     const footer = document.createElement("div")
     footer.innerHTML =
         `
-        <div class="block">
-            <div class="title">
-                BLOCK1
+        <div class="row">
+            <div class="col">
+                <h6>BLOCK 1</h6>
+                <p class="small">Item 1</p>
+                <p class="small">Item 2</p>
+                <p class="small">Item 3</p>
+                <p class="small">Item 4</p>
             </div>
-            <div class="mdiv">
-                item1
+            <div class="col">
+                <h6>BLOCK 2</h6>
+                <p class="small">Item 1</p>
+                <p class="small">Item 2</p>
+                <p class="small">Item 3</p>
+                <p class="small">Item 4</p>
             </div>
-            <div class="mdiv">
-                item2
+            <div class="col">
+                <h6>BLOCK 3</h6>
+                <p class="small">Item 1</p>
+                <p class="small">Item 2</p>
+                <p class="small">Item 3</p>
+                <p class="small">Item 4</p>
             </div>
-            <div class="mdiv">
-                item3
-            </div>
-        </div>
-        <div class="block">
-            <div class="title">
-                BLOCK2
-            </div>
-            <div class="mdiv">
-                item1
-            </div>
-            <div class="mdiv">
-                item2
-            </div>
-            <div class="mdiv">
-                item3
-            </div>
-        </div>
-        <div class="block">
-            <div class="title">
-                BLOCK3
-            </div>
-            <div class="mdiv">
-                item1
-            </div>
-            <div class="mdiv">
-                item2
-            </div>
-            <div class="mdiv">
-                item3
-            </div>
-        </div>
-        <div class="block">
-            <div class="title">
-                CONTACT US
-            </div>
-            <div class="mdiv">
-                item1
-            </div>
-            <div class="mdiv">
-                item2
-            </div>
-            <div class="mdiv">
-                item3
+            <div class="col">
+                <h6>CONTACT US</h6>
+                <p class="small">Item 1</p>
+                <p class="small">Item 2</p>
+                <p class="small">Item 3</p>
+                <p class="small">Item 4</p>
             </div>
         </div>
     `
-    footer.classList.add("main_block")
+    footer.classList.add("footer")
+    footer.classList.add("bg-dark")
     return footer
 }
 

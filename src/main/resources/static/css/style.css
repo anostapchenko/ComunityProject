@@ -2,11 +2,6 @@
     padding-top: 70px;
 }
 
-.footer {
-    height: 400px;
-    color: white;
-}
-
 .user-card {
     display: flex;
     flex: 1 1 auto;
