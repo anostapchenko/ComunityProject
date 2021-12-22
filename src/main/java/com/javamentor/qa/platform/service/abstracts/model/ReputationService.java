@@ -4,5 +4,4 @@ import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
 
 public interface ReputationService extends ReadWriteService<Reputation, Long>{
 
-    void setReputation (long userId, long questionId, int count);
 }

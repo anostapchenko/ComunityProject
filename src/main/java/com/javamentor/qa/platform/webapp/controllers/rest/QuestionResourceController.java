@@ -2,9 +2,9 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.User;
-import com.javamentor.qa.platform.service.impl.model.QuestionServiceImpl;
-import com.javamentor.qa.platform.service.impl.model.ReputationServiceImpl;
-import com.javamentor.qa.platform.service.impl.model.VoteQuestionServiceImpl;
+import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
+import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
+import com.javamentor.qa.platform.service.abstracts.model.VoteQuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -20,15 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class QuestionResourceController {
 
     final
-    QuestionServiceImpl questionService;
+    QuestionService questionService;
 
     final
-    VoteQuestionServiceImpl voteQuestionService;
+    VoteQuestionService voteQuestionService;
 
     final
-    ReputationServiceImpl reputationService;
+    ReputationService reputationService;
 
-    public QuestionResourceController(QuestionServiceImpl questionService, VoteQuestionServiceImpl voteQuestionService, ReputationServiceImpl reputationService) {
+    public QuestionResourceController(QuestionService questionService, VoteQuestionService voteQuestionService, ReputationService reputationService) {
         this.questionService = questionService;
         this.voteQuestionService = voteQuestionService;
         this.reputationService = reputationService;
@@ -46,10 +46,9 @@ public class QuestionResourceController {
         int countUpVote = 10;
         if (questionService.isQuestionValidate(id)) return new ResponseEntity<>("Can't find question with id:"+ id , HttpStatus.NOT_FOUND);
         if (voteQuestionService.validateUserVote(id, userId)) {
-            voteQuestionService.setVote(userId, id, VoteType.UP_VOTE);
-            reputationService.setReputation(userId, id, countUpVote);
+            voteQuestionService.setVoteAndSetReputation(userId, id, VoteType.UP_VOTE,countUpVote);
         }
-        return new ResponseEntity<>((long) voteQuestionService.getVote(id), HttpStatus.OK);
+        return new ResponseEntity<>(voteQuestionService.getVote(id), HttpStatus.OK);
     }
 
     @PostMapping("api/user/question/{id}/downVote")
@@ -64,10 +63,9 @@ public class QuestionResourceController {
         int countDownVote = -5;
         if (questionService.isQuestionValidate(id)) return new ResponseEntity<>("Can't find question with id:"+ id , HttpStatus.NOT_FOUND);
         if (voteQuestionService.validateUserVote(id, userId)) {
-            voteQuestionService.setVote(userId, id, VoteType.DOWN_VOTE);
-            reputationService.setReputation(userId, id, countDownVote);
+            voteQuestionService.setVoteAndSetReputation(userId, id, VoteType.DOWN_VOTE,countDownVote);
         }
-        return new ResponseEntity<>((long) voteQuestionService.getVote(id), HttpStatus.OK);
+        return new ResponseEntity<>(voteQuestionService.getVote(id), HttpStatus.OK);
     }
 }
 

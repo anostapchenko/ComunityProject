@@ -17,11 +17,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TestQuestionResourceController extends AbstractClassForDRRiderMockMVCTests {
 
     @Test
-    //Голосуем ПРОТИВ вопроса (-1) и получаем ответ с количеством голосов: -1 и репутацией -5
+    //Голосуем ПРОТИВ вопроса (DOWN_VOTE) и получаем ответ с количеством голосов: 1 и репутацией -5
     @DataSet(cleanBefore = true, value = "dataset/questionresourcecontroller/data.yml", strategy = SeedStrategy.REFRESH )
     public void shouldReturnSetupDownVoteDownReputation() throws Exception {
         this.mockMvc.perform(post("/api/user/question/2/downVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string(containsString("-1")));
+                .andExpect(content().string(containsString("1")));
         Query queryValidateUserVote = entityManager.createQuery("select v from Reputation v join fetch v.question join fetch v.sender where (v.sender.id in :userId) and (v.question.id in : id )  ", Reputation.class);
         queryValidateUserVote.setParameter("userId",15L);
         queryValidateUserVote.setParameter("id",2L);
@@ -31,7 +31,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
 
     @Test
     @DataSet(cleanBefore = true, value = "dataset/questionresourcecontroller/data.yml", strategy = SeedStrategy.REFRESH )
-    //Голосуем ЗА вопрос (+1) и получаем ответ с количеством голосов: 1 и репутация увеличена на +10.
+    //Голосуем ЗА вопрос (UP_VOTE) и получаем ответ с количеством голосов: 1 и репутация увеличена на +10.
     public void shouldReturnSetupUpVoteUpReputation() throws Exception {
         this.mockMvc.perform(post("/api/user/question/1/upVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("1")));
@@ -42,15 +42,15 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         assertThat(reputation.getCount()).isEqualTo(10);
     }
     @Test
-    //Повторно голосуем ПРОТИВ вопроса (-1) и получаем ответ с количеством голосов: -1. Т.к.
+    //Повторно голосуем ПРОТИВ вопроса (DOWN_VOTE) и получаем ответ с количеством голосов: 1. Т.к.
     // повторный голос не учитывается.
     @DataSet(cleanBefore = true,value = "dataset/questionresourcecontroller/data2.yml", strategy = SeedStrategy.REFRESH )
     public void shouldValidateUserVoteDownVote() throws Exception {
         this.mockMvc.perform(post("/api/user/question/2/downVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string(containsString("-1")));
+                .andExpect(content().string(containsString("1")));
     }
     @Test
-    //Повторно голосуем ЗА вопроса (+1) и получаем ответ с количеством голосов: 1. Т.к.
+    //Повторно голосуем ЗА вопроса (UP_VOTE) и получаем ответ с количеством голосов: 1. Т.к.
     // повторный голос не учитывается.
     @DataSet(cleanBefore = true, value = "dataset/questionresourcecontroller/data2.yml", strategy = SeedStrategy.REFRESH )
     public void shouldValidateUserVoteUpVote() throws Exception {

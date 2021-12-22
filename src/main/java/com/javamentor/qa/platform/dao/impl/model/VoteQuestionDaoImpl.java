@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.List;
 
 @Repository
 public class VoteQuestionDaoImpl extends ReadWriteDaoImpl<VoteQuestion,Long> implements VoteQuestionDao {
@@ -19,20 +20,16 @@ public class VoteQuestionDaoImpl extends ReadWriteDaoImpl<VoteQuestion,Long> imp
 
     @Override
     public boolean isUserVoteByQuestionIdAndUserId(Long id, Long userId){
-        Query queryValidateUserVote = entityManager.createQuery("select v from VoteQuestion v join fetch v.question join fetch v.user where (v.user.id in :userId) and (v.question.id in : id )  ", VoteQuestion.class);
-        queryValidateUserVote.setParameter("userId",userId);
-        queryValidateUserVote.setParameter("id",id);
-        return queryValidateUserVote.getResultList().size() == 0;
+        return entityManager.createQuery("select count (v.id) from VoteQuestion v where (v.user.id=:userId) and (v.question.id=: id )", Long.class)
+                .setParameter("userId", userId)
+                .setParameter("id", id)
+                .getSingleResult() == 0;
     }
-
-    @Override
-    public int getVote(Long id){
-        Query queryDownVote = entityManager.createQuery("select v from VoteQuestion v join fetch v.question join fetch v.user where (v.question.id in :id) and (v.vote = 'DOWN_VOTE')  ", VoteQuestion.class);
-        queryDownVote.setParameter("id",id);
-        int downVote = queryDownVote.getResultList().size() * -1;
-        Query queryUpVote = entityManager.createQuery("select v from VoteQuestion v join fetch v.question join fetch v.user where (v.question.id in :id) and (v.vote = 'UP_VOTE')  ", VoteQuestion.class);
-        queryUpVote.setParameter("id",id);
-        int upVote = queryUpVote.getResultList().size();
-        return downVote+upVote;
-    }
+@Override
+public Long getVote(Long questionId) {
+    return entityManager.createQuery(
+                    "select count(v.id) from VoteQuestion v where v.question.id=:ID", Long.class)
+            .setParameter("ID", questionId)
+            .getSingleResult();
+}
 }

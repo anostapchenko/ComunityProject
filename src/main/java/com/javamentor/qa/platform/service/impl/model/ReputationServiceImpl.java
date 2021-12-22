@@ -25,14 +25,4 @@ public class ReputationServiceImpl extends ReadWriteServiceImpl<Reputation, Long
         this.questionDao = questionDao;
     }
 
-    @Override
-    @Transactional
-    public void setReputation (long userId, long questionId, int count){
-        User sender = userDao.getById(userId).orElse(new User());
-        Question question = questionDao.getById(questionId).orElse(new Question());
-        User authorQuestion = question.getUser();
-        Reputation reputation = new Reputation(authorQuestion,sender,count, ReputationType.VoteQuestion,question);
-        reputationDao.persistAll(reputation);
     }
-
-}

@@ -5,7 +5,7 @@ import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 
 public interface VoteQuestionService extends ReadWriteService<VoteQuestion, Long>{
 
-    void setVote(long userId, long questionId, VoteType vote);
     boolean validateUserVote(Long id, Long userId);
-    int getVote(Long id);
+    Long getVote(Long id);
+    void setVoteAndSetReputation(long userId, long questionId, VoteType vote, int count);
 }
