@@ -6,6 +6,7 @@ import com.javamentor.qa.platform.models.entity.question.Tag;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.TrackedTag;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
+import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.Role;
 import com.javamentor.qa.platform.models.entity.user.User;
@@ -15,6 +16,7 @@ import com.javamentor.qa.platform.service.abstracts.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -28,6 +30,9 @@ public class TestDataInitService {
     private final IgnoredTagService ignoredTagService;
     private final QuestionService questionService;
     private final AnswerService answerService;
+    private final ReputationService reputationService;
+    private final VoteQuestionService voteQuestionService;
+    private final VoteAnswerService voteAnswerService;
 
     private final long NUM_OF_USERS = 10L;
     private final long NUM_OF_TAGS = 5L;
@@ -37,6 +42,7 @@ public class TestDataInitService {
     private final int MAX_IGNORED_TAGS = 3;
     private final long NUM_OF_REPUTATIONS = 10L;
     private final long NUM_OF_VOTEQUESTIONS = 10L;
+    private final long NUM_OF_VOTEANSWERS = 10L;
 
     public void init() {
         createRoles();
@@ -47,6 +53,7 @@ public class TestDataInitService {
         createAnswers();
         createReputations();
         createVoteQuestion();
+        createVoteAnswer();
     }
 
     public void createRoles() {
@@ -184,6 +191,20 @@ public class TestDataInitService {
             voteQuestions.add(voteQuestion);
         }
         voteQuestionService.persistAll(voteQuestions);
+    }
+
+    public void createVoteAnswer() {
+        List<VoteAnswer> voteAnswers = new ArrayList<>();
+        for (long i = 1; i <= NUM_OF_VOTEANSWERS; i++) {
+            VoteAnswer voteAnswer = VoteAnswer.builder()
+                    .answer(answerService.getById(i).get())
+                    .vote(new Random().nextInt(100) % 2 == 0 ? VoteType.UP_VOTE : VoteType.DOWN_VOTE)
+                    .persistDateTime(LocalDateTime.now())
+                    .user(getRandomUser())
+                    .build();
+            voteAnswers.add(voteAnswer);
+        }
+        voteAnswerService.persistAll(voteAnswers);
     }
 
     private List<Tag> getRandomTagList() {

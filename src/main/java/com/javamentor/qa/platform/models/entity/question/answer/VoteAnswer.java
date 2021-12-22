@@ -1,10 +1,7 @@
 package com.javamentor.qa.platform.models.entity.question.answer;
 
 import com.javamentor.qa.platform.models.entity.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 
@@ -16,6 +13,7 @@ import java.time.LocalDateTime;
 @Table(name = "votes_on_answers")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class VoteAnswer {
