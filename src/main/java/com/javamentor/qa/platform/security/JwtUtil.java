@@ -53,10 +53,14 @@ public class JwtUtil {
     }
 
     public String generateToken(User user) {
+        Long expirationSeconds = Long.parseLong(expirationTime);
+        return generateToken(user, expirationSeconds);
+    }
+
+    public String generateToken(User user, Long expirationSeconds) {
         HashMap<String, Object> claims = new HashMap<>();
         claims.put("role", user.getRole().getName());
 
-        long expirationSeconds = Long.parseLong(expirationTime);
         Date creationDate = new Date();
         Date expirationDate = new Date(creationDate.getTime() + expirationSeconds * 1000);
 
