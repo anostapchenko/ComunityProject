@@ -29,6 +29,8 @@ public class TestDataInitService {
     private final long NUM_OF_TAGS = 5L;
     private final long NUM_OF_QUESTIONS = 10L;
     private final long NUM_OF_ANSWERS = 50L;
+    private final int MAX_TRACKED_TAGS = 3;
+    private final int MAX_IGNORED_TAGS = 3;
 
     public void init() {
         createRoles();
@@ -91,8 +93,8 @@ public class TestDataInitService {
 
         for (User user : users) {
             Collections.shuffle(tags);
-            int numOfTrackedTags = new Random().nextInt(3);
-            int numOfIgnoredTags = new Random().nextInt(3);
+            int numOfTrackedTags = new Random().nextInt(MAX_TRACKED_TAGS);
+            int numOfIgnoredTags = new Random().nextInt(MAX_IGNORED_TAGS);
             int numOfTags = Math.min((numOfTrackedTags + numOfIgnoredTags), tags.size());
             for (int i = 0; i < numOfTags; i++) {
                 if (i < numOfTrackedTags) {
@@ -114,27 +116,6 @@ public class TestDataInitService {
         trackedTagService.persistAll(trackedTags);
         ignoredTagService.persistAll(ignoredTags);
     }
-
-//    public void createIgnoredTags() {
-//        List<IgnoredTag> ignoredTag = new ArrayList<>();
-//        List<Tag> tags = tagService.getAll();
-//        List<User> users = userService.getAll();
-//        users.remove(0);
-//
-//        for (User user : users) {
-//            Collections.shuffle(tags);
-//            int numOfTags = new Random().nextInt(3);
-//            for (int i = 0; i < numOfTags; i++) {
-//                TrackedTag trackedTag = TrackedTag.builder()
-//                        .user(user)
-//                        .trackedTag(tags.get(i))
-//                        .build();
-//                trackedTags.add(trackedTag);
-//            }
-//        }
-//
-//        trackedTagService.persistAll(trackedTags);
-//    }
 
     public void createQuestions() {
         List<Question> questions = new ArrayList<>();
