@@ -11,7 +11,7 @@ public class TagServiceImpl extends ReadWriteServiceImpl<Tag, Long> implements T
 
     private final TagDao tagDao;
 
-    public TagServiceImpl(AnswerDao answerDao, TagDao tagDao) {
+    public TagServiceImpl(TagDao tagDao) {
         super(tagDao);
         this.tagDao = tagDao;
     }
