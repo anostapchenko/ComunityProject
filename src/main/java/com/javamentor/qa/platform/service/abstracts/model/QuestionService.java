@@ -5,5 +5,4 @@ import com.javamentor.qa.platform.models.entity.question.Question;
 import java.util.List;
 
 public interface QuestionService extends ReadWriteService<Question, Long> {
-    List<Question> getCountQuest();
 }
