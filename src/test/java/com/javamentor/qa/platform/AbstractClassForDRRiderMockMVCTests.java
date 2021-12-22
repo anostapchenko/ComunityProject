@@ -1,13 +1,11 @@
 package com.javamentor.qa.platform;
 
-<<<<<<< HEAD
 import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.junit5.api.DBRider;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-=======
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.junit5.api.DBRider;
@@ -26,7 +24,6 @@ import javax.persistence.PersistenceContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
->>>>>>> dev
 
 @AutoConfigureMockMvc
 @DBRider
@@ -35,8 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DBUnit(cacheConnection = false, leakHunter = true,caseSensitiveTableNames = true,allowEmptyFields = true )
 public abstract class AbstractClassForDRRiderMockMVCTests {
  // Класс конфигурации для теста
-<<<<<<< HEAD
-=======
+
  private final String url = "/api/auth/token";
 
     @Autowired
@@ -65,5 +61,5 @@ public abstract class AbstractClassForDRRiderMockMVCTests {
         }
         return response.getToken();
     }
->>>>>>> dev
+
 }
