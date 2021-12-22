@@ -9,9 +9,9 @@ import java.util.List;
 
 @Getter
 @Setter
-//@Builder
+@Builder
 @NoArgsConstructor
-//@AllArgsConstructor
+@AllArgsConstructor
 public class QuestionDto {
     private Long id;
     private String title;
@@ -31,7 +31,7 @@ public class QuestionDto {
     public QuestionDto(Long id, String title, Long authorId, Long authorReputation,
                        String authorName, String authorImage, String description,
                        LocalDateTime persistDateTime, LocalDateTime lastUpdateDateTime,
-                       List<TagDto> listTagDto) {
+                       int countAnswer, List<TagDto> listTagDto) {
         this.id = id;
         this.title = title;
         this.authorId = authorId;
@@ -41,6 +41,7 @@ public class QuestionDto {
         this.description = description;
         this.persistDateTime = persistDateTime;
         this.lastUpdateDateTime = lastUpdateDateTime;
+        this.countAnswer = countAnswer;
         this.listTagDto = listTagDto;
     }
 
