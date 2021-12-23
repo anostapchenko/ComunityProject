@@ -36,12 +36,8 @@ public class VoteQuestionServiceImpl extends ReadWriteServiceImpl<VoteQuestion,L
 
     @Override
     @Transactional
-    public void setVoteAndSetReputation(long userId, long questionId, VoteType vote, int count){
-        User user = userDao.getById(userId).orElseThrow(() -> new ConstrainException("Can't find user with id: "+ userId));
-        Question question = questionDao.getById(questionId).orElseThrow(() -> new ConstrainException("Can't find question with id: "+ questionId));
-        VoteQuestion voteQuestion = new VoteQuestion(user,question,vote);
-        User authorQuestion = question.getUser();
-        Reputation reputation = new Reputation(authorQuestion, user,count, ReputationType.VoteQuestion,question);
+    public void persistVoteAndReputation(VoteQuestion voteQuestion, Question question, User user,int count, User authorQuestion){
+        Reputation reputation = new Reputation(authorQuestion,user,count, ReputationType.VoteQuestion,question);
         voteQuestionDao.persist(voteQuestion);
         reputationDao.persist(reputation);
     }

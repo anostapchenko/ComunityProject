@@ -42,20 +42,20 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         assertThat(reputation.getCount()).isEqualTo(10);
     }
     @Test
-    //Повторно голосуем ПРОТИВ вопроса (DOWN_VOTE) и получаем ответ с количеством голосов: 1. Т.к.
+    //Повторно голосуем ПРОТИВ вопроса (DOWN_VOTE) и получаем ответ: "User was voting"
     // повторный голос не учитывается.
     @DataSet(cleanBefore = true,value = "dataset/questionresourcecontroller/data2.yml", strategy = SeedStrategy.REFRESH )
     public void shouldValidateUserVoteDownVote() throws Exception {
-        this.mockMvc.perform(post("/api/user/question/2/downVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string(containsString("1")));
+        this.mockMvc.perform(post("/api/user/question/2/downVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("User was voting")));
     }
     @Test
-    //Повторно голосуем ЗА вопроса (UP_VOTE) и получаем ответ с количеством голосов: 1. Т.к.
+    //Повторно голосуем ЗА вопроса (UP_VOTE) и получаем ответ: "User was voting"
     // повторный голос не учитывается.
     @DataSet(cleanBefore = true, value = "dataset/questionresourcecontroller/data2.yml", strategy = SeedStrategy.REFRESH )
     public void shouldValidateUserVoteUpVote() throws Exception {
-        this.mockMvc.perform(post("/api/user/question/1/upVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string(containsString("1")));
+        this.mockMvc.perform(post("/api/user/question/1/upVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("User was voting")));
     }
     @Test
     //Голосуем ЗА вопрос с неверным ID вопроса 3 и получаем ответ "Can't find question with id:3".

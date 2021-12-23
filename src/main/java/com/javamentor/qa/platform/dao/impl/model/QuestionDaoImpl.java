@@ -19,4 +19,10 @@ public class QuestionDaoImpl extends ReadWriteDaoImpl<Question, Long> implements
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Override
+    public Optional<Question> getQuestionById(Long id){
+        return SingleResultUtil.getSingleResultOrNull(entityManager.createQuery(
+                "select q from Question q join fetch q.user where q.id=:id",Question.class)
+                .setParameter("id", id));
+    }
 }

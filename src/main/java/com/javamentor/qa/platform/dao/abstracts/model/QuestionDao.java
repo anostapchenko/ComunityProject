@@ -6,5 +6,6 @@ import java.util.Optional;
 
 public interface QuestionDao extends ReadWriteDao<Question, Long> {
 
+    Optional<Question> getQuestionById (Long id);
 
 }
