@@ -66,9 +66,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
-    }
+
 
 }
