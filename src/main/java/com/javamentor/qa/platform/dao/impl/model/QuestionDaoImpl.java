@@ -14,7 +14,7 @@ public class QuestionDaoImpl extends ReadWriteDaoImpl<Question, Long> implements
 
     @Override
     public Long getCountQuestion() {
-        return (Long) entityManager.createQuery("SELECT COUN(q.id) FROM Question q where q.isDeleted=false")
+        return (Long) entityManager.createQuery("SELECT COUNT(q.id) FROM Question q where q.isDeleted=false")
                 .getSingleResult();
     }
 }
