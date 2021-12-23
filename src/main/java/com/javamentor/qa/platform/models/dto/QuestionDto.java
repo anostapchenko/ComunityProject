@@ -27,22 +27,4 @@ public class QuestionDto {
     private LocalDateTime lastUpdateDateTime;
     private List<TagDto> listTagDto;
 
-
-    public QuestionDto(Long id, String title, Long authorId, Long authorReputation,
-                       String authorName, String authorImage, String description,
-                       LocalDateTime persistDateTime, LocalDateTime lastUpdateDateTime,
-                       int countAnswer, List<TagDto> listTagDto) {
-        this.id = id;
-        this.title = title;
-        this.authorId = authorId;
-        this.authorReputation = authorReputation;
-        this.authorName = authorName;
-        this.authorImage = authorImage;
-        this.description = description;
-        this.persistDateTime = persistDateTime;
-        this.lastUpdateDateTime = lastUpdateDateTime;
-        this.countAnswer = countAnswer;
-        this.listTagDto = listTagDto;
-    }
-
 }
