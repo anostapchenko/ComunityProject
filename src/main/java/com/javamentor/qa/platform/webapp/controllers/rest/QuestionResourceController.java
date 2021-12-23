@@ -35,9 +35,6 @@ public class QuestionResourceController {
     @ApiResponse(responseCode = "200", description = "Информация по вопросу", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponce.class))
     })
-    @ApiResponse(responseCode = "500", description = "Не верный номер вопроса", content = {
-            @Content(mediaType = "application/json")
-    })
     public ResponseEntity<Object> getQuestion(@PathVariable Long id){
         if (questionService.isQuestionValidate(id)) return new ResponseEntity<>("Can't find question with id:"+ id , HttpStatus.NOT_FOUND); //+
         return new ResponseEntity<>(questionDtoService.getQuestionDtoServiceById(id), HttpStatus.OK);
