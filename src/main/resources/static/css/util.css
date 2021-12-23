@@ -1,8 +1,9 @@
-.side_bar{
-    display: inline-block;
+.col-main, .col-sidebar>.sidebar>.sticky-top {
+    padding-top: 70px;
 }
-.main{
-    display: inline-block;
-    vertical-align: top;
-    width: calc(100% - 150px)
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1264px;
+    }
 }

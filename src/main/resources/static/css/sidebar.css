@@ -1,7 +1,3 @@
-.col-main, .col-sidebar>.sidebar>.sticky-top {
-    padding-top: 70px;
-}
-
 .sidebar {
     border-right: 1px solid #2e2e35;
     height: 100%;
