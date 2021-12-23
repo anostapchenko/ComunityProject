@@ -38,7 +38,6 @@ class QuestionResourceControllerTest extends AbstractClassForDRRiderMockMVCTests
                 .andExpect(jsonPath("$.countAnswer").value(1))
                 .andExpect(jsonPath("$.persistDateTime").value("2021-12-13T18:09:52.716"))
                 .andExpect(jsonPath("$.lastUpdateDateTime").value("2021-12-13T18:09:52.716"));
-//                .andExpect(jsonPath("$.list[0].id").value(1)); //Сравнение по полям так же не работает
-//                .andExpect(jsonPath("$.listTagDto").value("{id=1, name=test, description=test}")); Последняя строка не стартует, не могу подставить тествое значение
+//                .andExpect(jsonPath("$.listTagDto").value();
     }
 }
