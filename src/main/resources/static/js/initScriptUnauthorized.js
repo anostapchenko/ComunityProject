@@ -149,7 +149,7 @@ function createFooter() {
             </div>
         </div>
     `
-    footer.classList.add("main_block")
+    footer.classList.add("footer")
     return footer
 }
 

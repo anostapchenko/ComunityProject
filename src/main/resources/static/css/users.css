@@ -1,7 +1,3 @@
-.main-context, .sidebar-menu-offset {
-    padding-top: 70px;
-}
-
 .user-card {
     display: flex;
     flex: 1 1 auto;
