@@ -10,12 +10,4 @@ import java.util.List;
 
 @Repository
 public class QuestionDaoImpl extends ReadWriteDaoImpl<Question, Long> implements QuestionDao {
-    @PersistenceContext
-    EntityManager entityManager;
-
-    @Override
-    public List<Question> getCountList() {
-        return entityManager.createQuery("SELECT COUNT(q.id) from Question q")
-                .getResultList();
-    }
 }
