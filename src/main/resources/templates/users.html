@@ -7,274 +7,257 @@
 </head>
 <body>
 
-<!-- Main menu -->
-<!--<div class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">-->
-<!--    <a class="navbar-brand" href="#">Fixed navbar</a>-->
-<!--</div>-->
+<div id="main">
+    <h1>Users</h1>
+    <form class="form-inline justify-content-between">
 
-<!--<div class="container main">-->
-<!--    <div class="row">-->
-        <!-- Side bar -->
-<!--        <div class="col-3" id="sticky-sidebar">-->
-<!--            <div class="sticky-top sidebar-menu-offset">-->
-<!--                there <br /><br /> will be <br /><br /> sticky <br /><br /> sidebar-->
-<!--            </div>-->
-<!--        </div>-->
-        <!-- Main block -->
-        <div class="col main-context" id="main">
-            <h1>Users</h1>
-            <form class="form-inline justify-content-between">
-                <!-- User filter -->
-                <div class="form-group">
-                    <input type="text" class="form-control" id="filterByUser" placeholder="Filter by user">
-                </div>
-                <!-- Category menu -->
-                <div class="form-group">
-                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-secondary active">
-                            <input type="radio" name="options" id="reputation" checked> Reputation
-                        </label>
-                        <label class="btn btn-secondary">
-                            <input type="radio" name="options" id="new_users"> New users
-                        </label>
-                        <label class="btn btn-secondary">
-                            <input type="radio" name="options" id="voters"> Voters
-                        </label>
-                        <label class="btn btn-secondary">
-                            <input type="radio" name="options" id="editors"> Editors
-                        </label>
-                        <label class="btn btn-secondary">
-                            <input type="radio" name="options" id="moderators"> Moderators
-                        </label>
-                    </div>
-                </div>
-            </form>
-            <!-- Period menu -->
-            <ul class="nav justify-content-end">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">week</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">month</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">quarter</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">year</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">all</a>
-                </li>
-            </ul>
-            <!-- Users grid -->
-            <div class="card-deck">
-                <div class="card border-0">
-                    <div class="user-card">
-                        <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
-                        <div class="card-body">
-                            <div class="card-title"><a href="#">Username</a></div>
-                            <div class="card-text small">City</div>
-                            <div class="card-text font-weight-bolder small">250</div>
-                            <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card border-0">
-                    <div class="user-card">
-                        <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
-                        <div class="card-body">
-                            <div class="card-title"><a href="#">Username</a></div>
-                            <div class="card-text small">City</div>
-                            <div class="card-text font-weight-bolder small">250</div>
-                            <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card border-0">
-                    <div class="user-card">
-                        <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
-                        <div class="card-body">
-                            <div class="card-title"><a href="#">Username</a></div>
-                            <div class="card-text small">City</div>
-                            <div class="card-text font-weight-bolder small">250</div>
-                            <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card border-0">
-                    <div class="user-card">
-                        <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
-                        <div class="card-body">
-                            <div class="card-title"><a href="#">Username</a></div>
-                            <div class="card-text small">City</div>
-                            <div class="card-text font-weight-bolder small">250</div>
-                            <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-deck">
-                <div class="card border-0">
-                    <div class="user-card">
-                        <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
-                        <div class="card-body">
-                            <div class="card-title"><a href="#">Username</a></div>
-                            <div class="card-text small">City</div>
-                            <div class="card-text font-weight-bolder small">250</div>
-                            <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card border-0">
-                    <div class="user-card">
-                        <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
-                        <div class="card-body">
-                            <div class="card-title"><a href="#">Username</a></div>
-                            <div class="card-text small">City</div>
-                            <div class="card-text font-weight-bolder small">250</div>
-                            <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card border-0">
-                    <div class="user-card">
-                        <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
-                        <div class="card-body">
-                            <div class="card-title"><a href="#">Username</a></div>
-                            <div class="card-text small">City</div>
-                            <div class="card-text font-weight-bolder small">250</div>
-                            <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card border-0">
-                    <div class="user-card">
-                        <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
-                        <div class="card-body">
-                            <div class="card-title"><a href="#">Username</a></div>
-                            <div class="card-text small">City</div>
-                            <div class="card-text font-weight-bolder small">250</div>
-                            <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-deck">
-                <div class="card border-0">
-                    <div class="user-card">
-                        <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
-                        <div class="card-body">
-                            <div class="card-title"><a href="#">Username</a></div>
-                            <div class="card-text small">City</div>
-                            <div class="card-text font-weight-bolder small">250</div>
-                            <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card border-0">
-                    <div class="user-card">
-                        <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
-                        <div class="card-body">
-                            <div class="card-title"><a href="#">Username</a></div>
-                            <div class="card-text small">City</div>
-                            <div class="card-text font-weight-bolder small">250</div>
-                            <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card border-0">
-                    <div class="user-card">
-                        <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
-                        <div class="card-body">
-                            <div class="card-title"><a href="#">Username</a></div>
-                            <div class="card-text small">City</div>
-                            <div class="card-text font-weight-bolder small">250</div>
-                            <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card border-0">
-                    <div class="user-card">
-                        <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
-                        <div class="card-body">
-                            <div class="card-title"><a href="#">Username</a></div>
-                            <div class="card-text small">City</div>
-                            <div class="card-text font-weight-bolder small">250</div>
-                            <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-deck">
-                <div class="card border-0">
-                    <div class="user-card">
-                        <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
-                        <div class="card-body">
-                            <div class="card-title"><a href="#">Username</a></div>
-                            <div class="card-text small">City</div>
-                            <div class="card-text font-weight-bolder small">250</div>
-                            <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card border-0">
-                    <div class="user-card">
-                        <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
-                        <div class="card-body">
-                            <div class="card-title"><a href="#">Username</a></div>
-                            <div class="card-text small">City</div>
-                            <div class="card-text font-weight-bolder small">250</div>
-                            <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card border-0">
-                    <div class="user-card">
-                        <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
-                        <div class="card-body">
-                            <div class="card-title"><a href="#">Username</a></div>
-                            <div class="card-text small">City</div>
-                            <div class="card-text font-weight-bolder small">250</div>
-                            <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card border-0">
-                    <div class="user-card">
-                        <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
-                        <div class="card-body">
-                            <div class="card-title"><a href="#">Username</a></div>
-                            <div class="card-text small">City</div>
-                            <div class="card-text font-weight-bolder small">250</div>
-                            <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Pagination -->
-            <nav>
-                <ul class="pagination justify-content-end">
-                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                </ul>
-            </nav>
-
+        <!-- User filter -->
+        <div class="form-group">
+            <input type="text" class="form-control" id="filterByUser" placeholder="Filter by user">
         </div>
-<!--    </div>-->
-<!--</div>-->
 
-<!-- Footer -->
-<!--<div class="footer bg-dark">-->
-<!--    Our beautiful footer-->
-<!--</div>-->
+        <!-- Category menu -->
+        <div class="form-group">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary active">
+                    <input type="radio" name="options" id="reputation" checked> Reputation
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="new_users"> New users
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="voters"> Voters
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="editors"> Editors
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="moderators"> Moderators
+                </label>
+            </div>
+        </div>
+    </form>
+
+    <!-- Period menu -->
+    <ul class="nav justify-content-end">
+        <li class="nav-item">
+            <a class="nav-link active" href="#">week</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">month</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">quarter</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">year</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">all</a>
+        </li>
+    </ul>
+
+    <!-- Users grid -->
+    <div class="card-deck">
+        <div class="card border-0">
+            <div class="user-card">
+                <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
+                <div class="card-body">
+                    <div class="card-title"><a href="#">Username</a></div>
+                    <div class="card-text small">City</div>
+                    <div class="card-text font-weight-bolder small">250</div>
+                    <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="card border-0">
+            <div class="user-card">
+                <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
+                <div class="card-body">
+                    <div class="card-title"><a href="#">Username</a></div>
+                    <div class="card-text small">City</div>
+                    <div class="card-text font-weight-bolder small">250</div>
+                    <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="card border-0">
+            <div class="user-card">
+                <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
+                <div class="card-body">
+                    <div class="card-title"><a href="#">Username</a></div>
+                    <div class="card-text small">City</div>
+                    <div class="card-text font-weight-bolder small">250</div>
+                    <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="card border-0">
+            <div class="user-card">
+                <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
+                <div class="card-body">
+                    <div class="card-title"><a href="#">Username</a></div>
+                    <div class="card-text small">City</div>
+                    <div class="card-text font-weight-bolder small">250</div>
+                    <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-deck">
+        <div class="card border-0">
+            <div class="user-card">
+                <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
+                <div class="card-body">
+                    <div class="card-title"><a href="#">Username</a></div>
+                    <div class="card-text small">City</div>
+                    <div class="card-text font-weight-bolder small">250</div>
+                    <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="card border-0">
+            <div class="user-card">
+                <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
+                <div class="card-body">
+                    <div class="card-title"><a href="#">Username</a></div>
+                    <div class="card-text small">City</div>
+                    <div class="card-text font-weight-bolder small">250</div>
+                    <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="card border-0">
+            <div class="user-card">
+                <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
+                <div class="card-body">
+                    <div class="card-title"><a href="#">Username</a></div>
+                    <div class="card-text small">City</div>
+                    <div class="card-text font-weight-bolder small">250</div>
+                    <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="card border-0">
+            <div class="user-card">
+                <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
+                <div class="card-body">
+                    <div class="card-title"><a href="#">Username</a></div>
+                    <div class="card-text small">City</div>
+                    <div class="card-text font-weight-bolder small">250</div>
+                    <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-deck">
+        <div class="card border-0">
+            <div class="user-card">
+                <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
+                <div class="card-body">
+                    <div class="card-title"><a href="#">Username</a></div>
+                    <div class="card-text small">City</div>
+                    <div class="card-text font-weight-bolder small">250</div>
+                    <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="card border-0">
+            <div class="user-card">
+                <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
+                <div class="card-body">
+                    <div class="card-title"><a href="#">Username</a></div>
+                    <div class="card-text small">City</div>
+                    <div class="card-text font-weight-bolder small">250</div>
+                    <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="card border-0">
+            <div class="user-card">
+                <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
+                <div class="card-body">
+                    <div class="card-title"><a href="#">Username</a></div>
+                    <div class="card-text small">City</div>
+                    <div class="card-text font-weight-bolder small">250</div>
+                    <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="card border-0">
+            <div class="user-card">
+                <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
+                <div class="card-body">
+                    <div class="card-title"><a href="#">Username</a></div>
+                    <div class="card-text small">City</div>
+                    <div class="card-text font-weight-bolder small">250</div>
+                    <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-deck">
+        <div class="card border-0">
+            <div class="user-card">
+                <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
+                <div class="card-body">
+                    <div class="card-title"><a href="#">Username</a></div>
+                    <div class="card-text small">City</div>
+                    <div class="card-text font-weight-bolder small">250</div>
+                    <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="card border-0">
+            <div class="user-card">
+                <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
+                <div class="card-body">
+                    <div class="card-title"><a href="#">Username</a></div>
+                    <div class="card-text small">City</div>
+                    <div class="card-text font-weight-bolder small">250</div>
+                    <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="card border-0">
+            <div class="user-card">
+                <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
+                <div class="card-body">
+                    <div class="card-title"><a href="#">Username</a></div>
+                    <div class="card-text small">City</div>
+                    <div class="card-text font-weight-bolder small">250</div>
+                    <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="card border-0">
+            <div class="user-card">
+                <div><img src="/images/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
+                <div class="card-body">
+                    <div class="card-title"><a href="#">Username</a></div>
+                    <div class="card-text small">City</div>
+                    <div class="card-text font-weight-bolder small">250</div>
+                    <div class="card-text small"><a href="#">python</a>, <a href="#">java</a>, <a href="#">c#</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination justify-content-end">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>
+
+</div>
 
 <script type="text/javascript" src="/js/initScriptAuthorized.js"></script>
 

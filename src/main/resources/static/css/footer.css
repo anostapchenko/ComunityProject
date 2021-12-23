@@ -1,32 +1,17 @@
 .footer {
     background-color: #2e2e35;
-    width: 100%;
-    padding-top: 15px;
+    padding-top: 40px;
     padding-bottom: 40px;
-    /*height: 300px;*/
-    /*color: white;*/
-}
-
-.footer .row {
-    padding: 20px 15%;
-}
-
-.block {
-    width: 22%;
-    display: inline-block;
-    vertical-align: top;
     color: white;
     font-family: Arial, sans-serif;
-    font-weight: 100;
     font-size: small;
-    padding-left: 15px;
-    padding-right: 15px;
-}
-.mdiv{
-    margin-bottom: 5px;
 }
 
 .footer h6 {
     font-weight: bold;
     margin-bottom:10px;
+}
+
+.footer div {
+    margin-bottom: 5px;
 }

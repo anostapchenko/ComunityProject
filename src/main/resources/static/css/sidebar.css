@@ -1,4 +1,4 @@
-.main-context, .sidebar-menu-offset {
+.col-main, .col-sidebar>.sidebar>.sticky-top {
     padding-top: 70px;
 }
 
