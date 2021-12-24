@@ -29,7 +29,7 @@ public class SwaggerConfig {
                 )
                 .info(
                         new Info()
-                                .title("Kata Stack Overflow API")
+                                .title("Kata StackOverflow API")
                                 .version("1.0.0")
                                 .contact(
                                         new Contact()
