@@ -28,14 +28,14 @@ public class VoteQuestionServiceImpl extends ReadWriteServiceImpl<VoteQuestion,L
         this.voteQuestionDao = voteQuestionDao;
         this.reputationDao = reputationDao;
     }
-
     @Override
     @Transactional
-    public void persistVoteAndReputation(VoteQuestion voteQuestion, int count){
+    public void persist(VoteQuestion voteQuestion){
         Question question = voteQuestion.getQuestion();
         User user = voteQuestion.getUser();
         User authorQuestion = question.getUser();
-        Reputation reputation = new Reputation(authorQuestion,user,count, ReputationType.VoteQuestion,question);
+        int countVq = voteQuestion.getCountVQ();
+        Reputation reputation = new Reputation(authorQuestion,user,countVq, ReputationType.VoteQuestion,question);
         voteQuestionDao.persist(voteQuestion);
         reputationDao.persist(reputation);
     }

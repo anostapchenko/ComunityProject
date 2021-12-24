@@ -9,5 +9,5 @@ public interface VoteQuestionService extends ReadWriteService<VoteQuestion, Long
 
     boolean validateUserVoteByQuestionIdAndUserId(Long questionId, Long userId);
     Long getVoteByQuestionId(Long questionId);
-    void persistVoteAndReputation(VoteQuestion voteQuestion, int count);
+    void persist(VoteQuestion voteQuestion);
 }

@@ -51,8 +51,8 @@ public class QuestionResourceController {
                 .orElseThrow(() -> new ConstrainException("Can't find question with id:" + questionId));
         int countUpVote = 10;
         if (voteQuestionService.validateUserVoteByQuestionIdAndUserId(questionId, userId)) {
-            VoteQuestion voteQuestion = new VoteQuestion(user,question,VoteType.UP_VOTE);
-            voteQuestionService.persistVoteAndReputation(voteQuestion,countUpVote);
+            VoteQuestion voteQuestion = new VoteQuestion(user,question,VoteType.UP_VOTE,countUpVote);
+            voteQuestionService.persist(voteQuestion);
             return new ResponseEntity<>(voteQuestionService.getVoteByQuestionId(questionId), HttpStatus.OK);
         }
         return new ResponseEntity<>("User was voting", HttpStatus.BAD_REQUEST);
@@ -72,8 +72,8 @@ public class QuestionResourceController {
                 .orElseThrow(() -> new ConstrainException("Can't find question with id:" + questionId));
         int countDownVote = -5;
         if (voteQuestionService.validateUserVoteByQuestionIdAndUserId(questionId, userId)) {
-            VoteQuestion voteQuestion = new VoteQuestion(user,question,VoteType.DOWN_VOTE);
-            voteQuestionService.persistVoteAndReputation(voteQuestion, countDownVote);
+            VoteQuestion voteQuestion = new VoteQuestion(user,question,VoteType.DOWN_VOTE,countDownVote);
+            voteQuestionService.persist(voteQuestion);
             return new ResponseEntity<>(voteQuestionService.getVoteByQuestionId(questionId), HttpStatus.OK);
         }
         return new ResponseEntity<>("User was voting", HttpStatus.BAD_REQUEST);
