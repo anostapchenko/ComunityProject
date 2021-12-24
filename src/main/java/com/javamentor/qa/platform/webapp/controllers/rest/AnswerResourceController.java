@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class AnswerRestController {
+public class AnswerResourceController {
 
     private final AnswerPageDtoService answerDtoService;
 
     @Autowired
-    public AnswerRestController(AnswerPageDtoService answerDtoService) {
+    public AnswerResourceController(AnswerPageDtoService answerDtoService) {
         this.answerDtoService = answerDtoService;
     }
 
