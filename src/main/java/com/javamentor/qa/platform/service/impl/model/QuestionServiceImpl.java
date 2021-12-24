@@ -18,7 +18,7 @@ public class QuestionServiceImpl extends ReadWriteServiceImpl<Question, Long> im
     }
 
     @Override
-    public Question getQuestionByIdWithAuthor(Long id){
+    public Optional<Question> getQuestionByIdWithAuthor(Long id){
         return questionDao.getQuestionByIdWithAuthor(id);
     }
 }

@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
@@ -45,12 +46,11 @@ public class QuestionResourceController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user =(User) auth.getPrincipal();
         Long userId = user.getId();
+        Question question = questionService
+                .getQuestionByIdWithAuthor(questionId)
+                .orElseThrow(() -> new ConstrainException("Can't find question with id:" + questionId));
         int countUpVote = 10;
-        if (!questionService.getById(questionId).isPresent()) {
-            return new ResponseEntity<>("Can't find question with id:" + questionId, HttpStatus.NOT_FOUND);
-        }
         if (voteQuestionService.validateUserVoteByQuestionIdAndUserId(questionId, userId)) {
-            Question question = questionService.getQuestionByIdWithAuthor(questionId);
             VoteQuestion voteQuestion = new VoteQuestion(user,question,VoteType.UP_VOTE);
             voteQuestionService.persistVoteAndReputation(voteQuestion,countUpVote);
             return new ResponseEntity<>(voteQuestionService.getVoteByQuestionId(questionId), HttpStatus.OK);
@@ -67,12 +67,11 @@ public class QuestionResourceController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user =(User) auth.getPrincipal();
         Long userId = user.getId();
+        Question question = questionService
+                .getQuestionByIdWithAuthor(questionId)
+                .orElseThrow(() -> new ConstrainException("Can't find question with id:" + questionId));
         int countDownVote = -5;
-        if (!questionService.getById(questionId).isPresent()) {
-            return new ResponseEntity<>("Can't find question with id:" + questionId, HttpStatus.NOT_FOUND);
-        }
         if (voteQuestionService.validateUserVoteByQuestionIdAndUserId(questionId, userId)) {
-            Question question = questionService.getQuestionByIdWithAuthor(questionId);
             VoteQuestion voteQuestion = new VoteQuestion(user,question,VoteType.DOWN_VOTE);
             voteQuestionService.persistVoteAndReputation(voteQuestion, countDownVote);
             return new ResponseEntity<>(voteQuestionService.getVoteByQuestionId(questionId), HttpStatus.OK);
