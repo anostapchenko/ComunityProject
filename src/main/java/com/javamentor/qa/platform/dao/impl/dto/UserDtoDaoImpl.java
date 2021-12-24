@@ -21,6 +21,7 @@ public class UserDtoDaoImpl implements UserDtoDao {
                         "u.city," +
                         "(select sum(r.count) from Reputation r where r.author.id=u.id)) FROM User u where u.id=:id and u.isDeleted=false ")
                 .setParameter("id", id)
-                .getSingleResult();
+                .getResultList()
+                .stream().findFirst().orElse(null);
     }
 }
