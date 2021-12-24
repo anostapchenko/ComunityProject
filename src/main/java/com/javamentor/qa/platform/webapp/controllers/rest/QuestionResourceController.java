@@ -1,12 +1,9 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.User;
-import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
-import com.javamentor.qa.platform.models.entity.user.reputation.ReputationType;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
 import com.javamentor.qa.platform.service.abstracts.model.VoteQuestionService;
@@ -24,13 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Question Resource Controller", description = "Управление сущностями, которые связаны с вопросами")
 public class QuestionResourceController {
 
-    final
+    private final
     QuestionService questionService;
 
-    final
+    private final
     VoteQuestionService voteQuestionService;
 
-    final
+    private final
     ReputationService reputationService;
 
     public QuestionResourceController(QuestionService questionService, VoteQuestionService voteQuestionService, ReputationService reputationService) {
@@ -39,57 +36,48 @@ public class QuestionResourceController {
         this.reputationService = reputationService;
     }
 
-    @PostMapping("api/user/question/{id}/upVote")
+    @PostMapping("api/user/question/{questionId}/upVote")
     @Operation(
             summary = "Голосование ЗА вопрос",
             description = "Устанавливает голос +1 за вопрос и +10 к репутации автора вопроса"
     )
-    public ResponseEntity<?> upVote(@PathVariable("id") Long id) {
+    public ResponseEntity<?> upVote(@PathVariable("questionId") Long questionId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user =(User) auth.getPrincipal();
         Long userId = user.getId();
         int countUpVote = 10;
-        if (!questionService.getById(id).isPresent()) {
-            return new ResponseEntity<>("Can't find question with id:" + id, HttpStatus.NOT_FOUND);
+        if (!questionService.getById(questionId).isPresent()) {
+            return new ResponseEntity<>("Can't find question with id:" + questionId, HttpStatus.NOT_FOUND);
         }
-        if (voteQuestionService.validateUserVote(id, userId)) {
-            Question question = questionService
-                    .getQuestionById(id)
-                    .orElseThrow(() -> new ConstrainException("Can't find question with id: "+ id));
-            User authorQuestion = question.getUser();
+        if (voteQuestionService.validateUserVoteByQuestionIdAndUserId(questionId, userId)) {
+            Question question = questionService.getQuestionByIdWithAuthor(questionId);
             VoteQuestion voteQuestion = new VoteQuestion(user,question,VoteType.UP_VOTE);
-            voteQuestionService.persistVoteAndReputation(voteQuestion, question,user,countUpVote,authorQuestion);
-            return new ResponseEntity<>(voteQuestionService.getVote(id), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("User was voting", HttpStatus.BAD_REQUEST);
+            voteQuestionService.persistVoteAndReputation(voteQuestion,countUpVote);
+            return new ResponseEntity<>(voteQuestionService.getVoteByQuestionId(questionId), HttpStatus.OK);
         }
-
+        return new ResponseEntity<>("User was voting", HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("api/user/question/{id}/downVote")
+    @PostMapping("api/user/question/{questionId}/downVote")
     @Operation(
             summary = "Голосование ПРОТИВ вопроса",
             description = "Устанавливает голос -1 за вопрос и -5 к репутации автора вопроса"
     )
-    public ResponseEntity<?> downVote(@PathVariable("id") Long id) {
+    public ResponseEntity<?> downVote(@PathVariable("questionId") Long questionId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user =(User) auth.getPrincipal();
         Long userId = user.getId();
         int countDownVote = -5;
-        if (!questionService.getById(id).isPresent()) {
-            return new ResponseEntity<>("Can't find question with id:" + id, HttpStatus.NOT_FOUND);
+        if (!questionService.getById(questionId).isPresent()) {
+            return new ResponseEntity<>("Can't find question with id:" + questionId, HttpStatus.NOT_FOUND);
         }
-        if (voteQuestionService.validateUserVote(id, userId)) {
-            Question question = questionService
-                    .getQuestionById(id)
-                    .orElseThrow(() -> new ConstrainException("Can't find question with id: "+ id));
-            User authorQuestion = question.getUser();
+        if (voteQuestionService.validateUserVoteByQuestionIdAndUserId(questionId, userId)) {
+            Question question = questionService.getQuestionByIdWithAuthor(questionId);
             VoteQuestion voteQuestion = new VoteQuestion(user,question,VoteType.DOWN_VOTE);
-            voteQuestionService.persistVoteAndReputation(voteQuestion, question,user,countDownVote,authorQuestion);
-            return new ResponseEntity<>(voteQuestionService.getVote(id), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("User was voting", HttpStatus.BAD_REQUEST);
+            voteQuestionService.persistVoteAndReputation(voteQuestion, countDownVote);
+            return new ResponseEntity<>(voteQuestionService.getVoteByQuestionId(questionId), HttpStatus.OK);
         }
+        return new ResponseEntity<>("User was voting", HttpStatus.BAD_REQUEST);
     }
 }
 

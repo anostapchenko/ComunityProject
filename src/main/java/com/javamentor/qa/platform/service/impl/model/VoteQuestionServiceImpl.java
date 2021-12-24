@@ -20,36 +20,34 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class VoteQuestionServiceImpl extends ReadWriteServiceImpl<VoteQuestion,Long> implements VoteQuestionService {
 
-    final
-    VoteQuestionDao voteQuestionDao;
-    UserDao userDao;
-    QuestionDao questionDao;
-    ReputationDao reputationDao;
+    private  final VoteQuestionDao voteQuestionDao;
+    private  final ReputationDao reputationDao;
 
-    public VoteQuestionServiceImpl(VoteQuestionDao voteQuestionDao, UserDao userDao, QuestionDao questionDao, ReputationDao reputationDao  ){
+    public VoteQuestionServiceImpl(VoteQuestionDao voteQuestionDao, ReputationDao reputationDao  ){
         super(voteQuestionDao);
         this.voteQuestionDao = voteQuestionDao;
-        this.questionDao = questionDao;
-        this.userDao = userDao;
         this.reputationDao = reputationDao;
     }
 
     @Override
     @Transactional
-    public void persistVoteAndReputation(VoteQuestion voteQuestion, Question question, User user,int count, User authorQuestion){
+    public void persistVoteAndReputation(VoteQuestion voteQuestion, int count){
+        Question question = voteQuestion.getQuestion();
+        User user = voteQuestion.getUser();
+        User authorQuestion = question.getUser();
         Reputation reputation = new Reputation(authorQuestion,user,count, ReputationType.VoteQuestion,question);
         voteQuestionDao.persist(voteQuestion);
         reputationDao.persist(reputation);
     }
 
     @Override
-    public boolean validateUserVote(Long id, Long userId) {
-        return voteQuestionDao.isUserVoteByQuestionIdAndUserId(id, userId);
+    public boolean validateUserVoteByQuestionIdAndUserId(Long questionId, Long userId) {
+        return voteQuestionDao.isUserNotVoteByQuestionIdAndUserId(questionId, userId);
     }
 
     @Override
-    public Long getVote(Long id) {
-        return voteQuestionDao.getVote(id);
+    public Long getVoteByQuestionId(Long questionId) {
+        return voteQuestionDao.getVoteByQuestionId(questionId);
     }
 
 

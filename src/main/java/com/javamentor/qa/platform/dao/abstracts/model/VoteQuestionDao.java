@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface VoteQuestionDao extends ReadWriteDao<VoteQuestion, Long>{
 
-    boolean isUserVoteByQuestionIdAndUserId(Long id, Long userId);
-    Long getVote(Long id);
+    boolean isUserNotVoteByQuestionIdAndUserId(Long id, Long userId);
+    Long getVoteByQuestionId(Long questionId);
 }

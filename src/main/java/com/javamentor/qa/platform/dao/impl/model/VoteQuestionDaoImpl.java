@@ -19,14 +19,14 @@ public class VoteQuestionDaoImpl extends ReadWriteDaoImpl<VoteQuestion,Long> imp
     private EntityManager entityManager;
 
     @Override
-    public boolean isUserVoteByQuestionIdAndUserId(Long id, Long userId){
+    public boolean isUserNotVoteByQuestionIdAndUserId(Long id, Long userId){
         return entityManager.createQuery("select count (v.id) from VoteQuestion v where (v.user.id=:userId) and (v.question.id=: id )", Long.class)
                 .setParameter("userId", userId)
                 .setParameter("id", id)
                 .getSingleResult() == 0;
     }
 @Override
-public Long getVote(Long questionId) {
+public Long getVoteByQuestionId(Long questionId) {
     return entityManager.createQuery(
                     "select count(v.id) from VoteQuestion v where v.question.id=:ID", Long.class)
             .setParameter("ID", questionId)
