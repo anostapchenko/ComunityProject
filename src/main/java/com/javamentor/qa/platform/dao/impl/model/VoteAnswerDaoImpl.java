@@ -46,7 +46,7 @@ public class VoteAnswerDaoImpl extends ReadWriteDaoImpl<VoteAnswer, Long> implem
     @Override
     public boolean existsVoteAnswerByAnswerIdAndUserId(long answerId, long currentUserId) {
         return entityManager.createQuery(
-                "SELECT COUNT(v) FROM VoteAnswer v WHERE v.answer.id = :answerId AND  v.user.id = :currentUserId",
+                "SELECT COUNT(v.id) FROM VoteAnswer v WHERE v.answer.id = :answerId AND v.user.id = :currentUserId",
                 Long.class
         )
                 .setParameter("answerId", answerId)
