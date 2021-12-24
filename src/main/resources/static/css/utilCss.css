@@ -1,8 +1,0 @@
-.side_bar{
-    display: inline-block;
-}
-.main{
-    display: inline-block;
-    vertical-align: top;
-    width: calc(100% - 150px)
-}
