@@ -15,6 +15,6 @@ public class TagDtoImpl extends ReadWriteDaoImpl<TagDto, Long> implements TagDto
     @PersistenceContext
     private EntityManager entityManager;
 
-//    List<TagDto> tagDtos = entityManager.createQuery("select new com.javamentor.qa.platform.models.dto.TagDTO(t.id, t.name) from Tag t", CityDto.class)
+//    List<TagDto> tagDtos = entityManager.createQuery("select new com.javamentor.qa.platform.models.dto.TagDTO(t.id ) from Tag t", TagDTO.class)
 //            .getResultList();
-}
+//}
