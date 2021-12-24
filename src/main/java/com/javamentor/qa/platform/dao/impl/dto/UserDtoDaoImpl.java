@@ -19,9 +19,8 @@ public class UserDtoDaoImpl implements UserDtoDao {
                         "u.fullName," +
                         "u.imageLink," +
                         "u.city," +
-                        "(select sum(r.count) from Reputation r where r.author.id=u.id)) FROM User u where u.id=:id")
+                        "(select sum(r.count) from Reputation r where r.author.id=u.id)) FROM User u where u.id=:id and u.isDeleted=false ")
                 .setParameter("id", id)
                 .getSingleResult();
     }
 }
-//fsagasgasga
