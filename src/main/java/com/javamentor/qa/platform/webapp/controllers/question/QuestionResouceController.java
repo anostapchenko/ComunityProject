@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "QuestionCount", description = "Количество всего вопросов в бд")
-@RestController("api/user/")
+@RestController
 public class QuestionResouceController {
     final private QuestionService questionService;
 
@@ -21,7 +21,7 @@ public class QuestionResouceController {
         this.questionService = questionService;
     }
 
-    @GetMapping("question/count")
+    @GetMapping("api/user/question/count")
     @Operation(summary = "Количество всего вопросов в бд")
     @ApiResponse(responseCode = "200", description = "OK", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = Question.class))
