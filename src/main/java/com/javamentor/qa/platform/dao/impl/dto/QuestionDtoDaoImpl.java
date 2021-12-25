@@ -1,16 +1,16 @@
 package com.javamentor.qa.platform.dao.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.QuestionDtoDao;
+import com.javamentor.qa.platform.dao.util.SingleResultUtil;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
-import com.javamentor.qa.platform.models.dto.TagDto;
-import com.javamentor.qa.platform.models.entity.question.answer.Answer;
-import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Repository
 public class QuestionDtoDaoImpl implements QuestionDtoDao {
@@ -19,7 +19,7 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
 
     public QuestionDto getQuestionDtoDaoById(Long id) {
 
-        Query dto = entityManager.createQuery("select q.id, q.title, u.id," +
+        TypedQuery<QuestionDto> dto = entityManager.createQuery("select q.id, q.title, u.id," +
                         " u.fullName, u.imageLink, q.description, q.persistDateTime," +
                         " q.lastUpdateDateTime, (select sum(r.count) from Reputation r where r.author.id =u.id), " +
                         "(select count (a.id) from Question q JOIN Answer a ON a.question.id = q.id WHERE q.id =:id)," +
@@ -49,7 +49,6 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                         return list;
                     }
                 });
-        return (QuestionDto) dto.getSingleResult();
-
+        return SingleResultUtil.getSingleResultOrNull(dto).orElseThrow(() -> new NoSuchElementException("No such question!"));
     }
 }
