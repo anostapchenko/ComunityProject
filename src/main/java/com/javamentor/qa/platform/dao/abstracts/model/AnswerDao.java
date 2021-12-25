@@ -4,4 +4,5 @@ import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 
 public interface AnswerDao extends ReadWriteDao<Answer, Long> {
 
+    Object[] getUser0AndAnswer1ByAnswerId(long answerId);
 }

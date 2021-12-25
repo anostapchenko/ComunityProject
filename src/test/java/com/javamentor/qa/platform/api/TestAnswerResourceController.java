@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.*;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -70,6 +70,37 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string("1"));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/testAnswerResourceController/roles.yml",
+            "dataset/testAnswerResourceController/users.yml",
+            "dataset/testAnswerResourceController/questions.yml",
+            "dataset/testAnswerResourceController/answers.yml",
+            "dataset/testAnswerResourceController/rep.yml",
+            "dataset/testAnswerResourceController/voteAnswer.yml"},
+            tableOrdering = {
+                    "role",
+                    "user_entity",
+                    "question",
+                    "comment_answer",
+                    "answer",
+                    "votes_on_answers",
+                    "reputation"
+            },
+            cleanBefore = true,
+            strategy = SeedStrategy.INSERT)
+    public void shouldBeNotFound() throws Exception {
+        mvc.perform(MockMvcRequestBuilders
+                .post("http://localhost:8091/api/user/question/100/answer/999/upVote")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization",
+                        "Bearer " + getTokens("user101@mail.ru"))
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     @Test
