@@ -154,7 +154,7 @@ function createSideBar() {
     const sideBar = document.createElement("div")
     sideBar.innerHTML = `
         <div class="sticky-top">
-            <a class="nav-link active" href="#">Вопросы</a>
+            <a class="nav-link active" href="/questions">Вопросы</a>
             <a class="nav-link" href="/tags">Метки</a>
             <a class="nav-link" href="/users">Участники</a>
             <a class="nav-link" href="#">Неотвеченные</a>

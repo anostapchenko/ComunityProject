@@ -1,0 +1,123 @@
+.nav_btn {
+    border-color: #2e2e35;
+    border-width: 1px;
+    border-right: none;
+    margin: 0;
+    background-color: white;
+    padding: 3px 8px;
+}
+
+.left_nav_btn {
+    border-bottom-left-radius: 2px;
+    border-top-left-radius: 2px;
+    border: 1px solid #2e2e35;
+    border-right: none;
+    margin: 0;
+    background-color: white;
+    padding: 3px 8px;
+}
+
+.right_nav_btn {
+    border-bottom-right-radius: 2px;
+    border-top-right-radius: 2px;
+    border: 1px solid #2e2e35;
+    background-color: white;
+    padding: 3px 8px;
+}
+
+.active_nav_btn {
+    background-color: #2e2e35;
+    color: white;
+}
+
+.nav_btn:hover, .right_nav_btn:hover, .left_nav_btn:hover {
+    background-color: lightgray;
+}
+
+.nav_btn:focus, .right_nav_btn:focus, .left_nav_btn:focus,
+.nav_btn:active, .right_nav_btn:active, .left_nav_btn:active {
+    outline: none;
+}
+
+.question_info {
+    padding: 5px;
+    text-align: center;
+    margin: 5px
+}
+
+.question_info_green {
+    padding: 5px;
+    text-align: center;
+    margin: 5px;
+    background-color: forestgreen;
+    border-radius: 5px;
+}
+
+.question_info .number {
+    font-weight: 300;
+}
+
+.question_info .text {
+    font-size: small;
+}
+
+.question_info_green .number {
+    font-weight: 200;
+    color: white;
+}
+
+.question_info_green .text {
+    font-size: small;
+    color: white;
+}
+
+.tag_form {
+    padding: 3px 5px;
+    background-color: #e1ecf4;
+    border-radius: 3px;
+    color: mediumblue;
+    font-weight: 300
+}
+
+.tag_form:hover {
+    background-color: #d0e3f1;
+    cursor: pointer;
+}
+
+.question_title {
+    font-size: large;
+    color: mediumblue;
+    margin-bottom: 10px;
+}
+
+.question_title:hover {
+    color: dodgerblue;
+    cursor: pointer;
+}
+
+.username_form {
+    color: mediumblue;
+    font-size: small;
+    margin-bottom: 5px;
+}
+
+.username_form:hover {
+    color: dodgerblue;
+    cursor: pointer;
+}
+
+.reputation_form {
+    font-size: small;
+    color: dimgray;
+    font-weight: bold;
+}
+
+.inline_block_top {
+    display: inline-block;
+    vertical-align: top
+}
+
+.tag_form_list {
+    display: inline-block;
+    margin: 5px 5px 5px 0
+}

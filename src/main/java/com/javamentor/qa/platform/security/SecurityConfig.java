@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     @Override
     public void configure(WebSecurity web) {
         web.ignoring()
-                .antMatchers(HttpMethod.GET, "/html/**", "/js/**", "/css/**");
+                .antMatchers(HttpMethod.GET, "/html/**", "/js/**", "/css/**", "/images/**");
     }
 
     @Override
