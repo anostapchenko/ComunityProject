@@ -567,7 +567,19 @@ public class UserController {
  } 
 }
 ````
-
+### Дополнение в OpenAPI 3.0/Swagger - авторизация JWT.
+ В OpenAPI добавлена JWT аутентификация. Для использования нужно получить токен и внести его в данные аутентификации, как на скриншотах:
+1. Используя API аутентификации проекта, нажать "Try it out".
+![](src/main/resources/static/images/openapi-jwt/OpenAPI-JWT-001.jpg)
+2. Исправить логин и пароль на необходимые и нажать "Execute".
+![](src/main/resources/static/images/openapi-jwt/OpenAPI-JWT-002.jpg)
+3. Ниже в поле "Server response" - "Response body" скопировать полученный токен.
+![](src/main/resources/static/images/openapi-jwt/OpenAPI-JWT-003.jpg)
+4. Затем нажать кнопку "Authorize"
+![](src/main/resources/static/images/openapi-jwt/OpenAPI-JWT-004.jpg)
+5. Внести скопированный токен в поле Value.
+![](src/main/resources/static/images/openapi-jwt/OpenAPI-JWT-005.jpg)
+Теперь можно использовать все API, которые отображаются в OpenAPI (Swagger).
 
 # Разделение на два профиля dev и local
 - Создать две копии файла application.properties со следующими именами application-**local**.properties и application-**dev**.properties.
