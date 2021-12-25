@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.NoSuchElementException;
+
 @RestController
 @RequestMapping("/api/user")
 @Tag(name = "User question information", description = "Информация по вопросу пользователя")
@@ -32,6 +34,11 @@ public class QuestionResourceController {
             @Content(mediaType = "application/json")
     })
     public ResponseEntity<Object> getQuestion(@PathVariable Long id){
-        return new ResponseEntity<>(questionDtoService.getQuestionDtoServiceById(id), HttpStatus.OK);
+        try{
+            return new ResponseEntity<>(questionDtoService.getQuestionDtoServiceById(id), HttpStatus.OK);
+        } catch (NoSuchElementException e){
+            return new ResponseEntity<>("Wrong question number!",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

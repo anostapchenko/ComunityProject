@@ -25,25 +25,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest(classes = JmApplication.class)
-@DataSet(value = "dataset/QuestionResourceController/questions.yml", strategy = SeedStrategy.INSERT)
 class QuestionResourceControllerTest extends AbstractClassForDRRiderMockMVCTests  {
-
 
     @Autowired
     private MockMvc mockMvc;
 
-//    public String getTokens(String email) throws Exception {
-//        String tokenJS = mockMvc.perform(MockMvcRequestBuilders
-//                .post("/api/auth/token")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content("{\"username\" : \"" + email + "\"," +
-//                        " \"password\" : \"password\"}")
-//        ).andReturn().getResponse().getContentAsString();
-//        return new JSONObject(tokenJS).getString("token");
-//    }
-
     @Test
-    public void getQuestionDtoByIdTest() throws Exception {
+    @DataSet(value = "dataset/QuestionResourceController/questions.yml", strategy = SeedStrategy.INSERT)
+    public void getCorrectQuestionDtoByIdTest() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         AuthenticationRequest request = new AuthenticationRequest();
         request.setUsername("test15@mail.ru");
@@ -73,5 +62,21 @@ class QuestionResourceControllerTest extends AbstractClassForDRRiderMockMVCTests
                 .andExpect(jsonPath("$.persistDateTime").value("2021-12-13T18:09:52.716"))
                 .andExpect(jsonPath("$.lastUpdateDateTime").value("2021-12-13T18:09:52.716"));
         //                .andExpect(jsonPath("$.listTagDto").value();
+    }
+    @Test
+    public void getWrongQuestionDtoByIdTest() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        AuthenticationRequest request = new AuthenticationRequest();
+        request.setUsername("test15@mail.ru");
+        request.setPassword("test15");
+        MvcResult result = mockMvc.perform(post("/api/auth/token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsBytes(request)))
+                .andReturn();
+
+        AuthenticationResponse response = mapper.readValue(result.getResponse().getContentAsByteArray(), AuthenticationResponse.class);
+        mockMvc.perform(get("http://localhost:8091/api/user/question/2").header("Authorization", "Bearer " + response.getToken()))
+                .andDo(print())
+                .andExpect(status().is5xxServerError());
     }
 }
