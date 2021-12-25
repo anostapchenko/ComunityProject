@@ -17,4 +17,9 @@ public class PaginationData {
     private Map<String, Object> props;
     private String daoName;
 
+    public PaginationData(int currentPage, int itemsOnPage, String daoName) {
+        this.currentPage = currentPage;
+        this.itemsOnPage = itemsOnPage;
+        this.daoName = daoName;
+    }
 }
