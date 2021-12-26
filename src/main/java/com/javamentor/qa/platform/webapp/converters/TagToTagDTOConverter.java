@@ -14,5 +14,5 @@ public abstract class TagToTagDTOConverter {
     @Mapping(source = "tag.id", target = "id")
     @Mapping(source = "tag.name", target = "name")
     @Mapping(source = "tag.persistDateTime", target = "persistDateTime")
-    public abstract TagDTO tagToTagDTONotQuestAndDescr(Tag tag);
+    public abstract TagDTO tagToTagDTONotQuestAndDescription(Tag tag);
 }

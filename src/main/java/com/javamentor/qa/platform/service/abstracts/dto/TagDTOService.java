@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface TagDTOService {
 
-    public List<TagDTO> getTagsDTOByUserIdFromTrackedTag(Long currentUserId);
+    List<TagDTO> getTagsDTOByUserIdFromTrackedTag(Long currentUserId);
 
 }

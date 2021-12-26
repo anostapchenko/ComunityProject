@@ -17,7 +17,7 @@ public class TagDTODaoImpl implements TagDTODao {
 
     @Override
     public List<TagDTO> getTagDTOListByUserIdFromTrackedTag(Long currentUserId) {
-        List<TagDTO> tagsDTO = entityManager.createQuery(
+        return entityManager.createQuery(
                 "SELECT t.id as id, t.name as name, t.persistDateTime as persistDateTime " +
                         "FROM Tag t JOIN TrackedTag tr " +
                         "ON tr.trackedTag.id = t.id " +
@@ -27,6 +27,5 @@ public class TagDTODaoImpl implements TagDTODao {
                 .unwrap(org.hibernate.query.Query.class)
                 .setResultTransformer(Transformers.aliasToBean(TagDTO.class))
                 .getResultList();
-        return tagsDTO;
     }
 }

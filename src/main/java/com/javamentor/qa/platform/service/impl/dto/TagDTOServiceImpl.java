@@ -1,7 +1,6 @@
 package com.javamentor.qa.platform.service.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.TagDTODao;
-import com.javamentor.qa.platform.dao.abstracts.model.TagDao;
 import com.javamentor.qa.platform.models.dto.question.TagDTO;
 import com.javamentor.qa.platform.service.abstracts.dto.TagDTOService;
 import org.springframework.beans.factory.annotation.Autowired;
