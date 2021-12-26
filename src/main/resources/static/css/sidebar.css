@@ -1,21 +1,22 @@
-.mbody {
-    width: 120px;
+.sidebar {
     border-right: 1px solid #2e2e35;
-    margin: 0;
-    padding-top: 15px;
+    height: 100%;
 }
 
-.mfield {
+.sidebar .nav-link {
     padding: 10px 10px 10px 15px;
     color: #2e2e35;
     font-family: Arial,sans-serif;
     font-weight: 100;
     font-size: small
 }
-.mfield:hover{
-    cursor: pointer;
+
+.sidebar .nav-link:hover{
+    color: #2e2e35;
+    opacity: 70%;
 }
-.active{
+
+.sidebar .nav-link.active{
     background-color: #ebebeb;
     font-weight: bold;
     border-right: 3px solid #89e1f3;

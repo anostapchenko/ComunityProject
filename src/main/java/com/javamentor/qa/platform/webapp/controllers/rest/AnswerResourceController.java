@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class AnswerRestController {
+public class AnswerResourceController {
 
     private final AnswerPageDtoService answerDtoService;
 
     @Autowired
-    public AnswerRestController(AnswerPageDtoService answerDtoService) {
+    public AnswerResourceController(AnswerPageDtoService answerDtoService) {
         this.answerDtoService = answerDtoService;
     }
 
@@ -28,7 +28,7 @@ public class AnswerRestController {
             data.setDaoName(AnswerPageDtoDaoByIdImpl.class.getSimpleName());
             return new ResponseEntity<>(answerDtoService.getPageDto(data), HttpStatus.OK);
         } catch (NoSuchDaoException e) {
-            return new ResponseEntity<>("Wrong dao name",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Wrong dao name", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -38,7 +38,7 @@ public class AnswerRestController {
             data.setDaoName(AnswerPageDtoDaoByBodyImpl.class.getSimpleName());
             return new ResponseEntity<>(answerDtoService.getPageDto(data), HttpStatus.OK);
         } catch (NoSuchDaoException e) {
-            return new ResponseEntity<>("Wrong dao name",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Wrong dao name", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
