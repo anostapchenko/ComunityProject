@@ -20,11 +20,11 @@ import java.util.NoSuchElementException;
 @RestController
 @RequestMapping("/api/user")
 @Tag(name = "User question information", description = "Информация по вопросу пользователя")
-public class QuestionResourceController {
+public class QuestionGetResourceController {
 
     public final QuestionDtoService questionDtoService;
 
-    public QuestionResourceController(QuestionDtoService questionDtoService) {
+    public QuestionGetResourceController(QuestionDtoService questionDtoService) {
         this.questionDtoService = questionDtoService;
     }
 
