@@ -5,6 +5,8 @@ import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class QuestionServiceImpl extends ReadWriteServiceImpl<Question, Long> implements QuestionService {
 
@@ -13,5 +15,10 @@ public class QuestionServiceImpl extends ReadWriteServiceImpl<Question, Long> im
     public QuestionServiceImpl(QuestionDao questionDao) {
         super(questionDao);
         this.questionDao = questionDao;
+    }
+
+    @Override
+    public Optional<Question> getQuestionByIdWithAuthor(Long id){
+        return questionDao.getQuestionByIdWithAuthor(id);
     }
 }
