@@ -48,10 +48,10 @@ class QuestionResourceControllerTest extends AbstractClassForDRRiderMockMVCTests
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.title").value("test"))
-                .andExpect(jsonPath("$.authorId").value(15L))
-                .andExpect(jsonPath("$.authorReputation").value(100L))
+                .andExpect(jsonPath("$.authorId").value(15))
+                .andExpect(jsonPath("$.authorReputation").value(100))
                 .andExpect(jsonPath("$.authorName").value("test 15"))
                 .andExpect(jsonPath("$.authorImage").value("photo"))
                 .andExpect(jsonPath("$.description").value("test"))
@@ -60,8 +60,10 @@ class QuestionResourceControllerTest extends AbstractClassForDRRiderMockMVCTests
                 .andExpect(jsonPath("$.countValuable").value(-1))
                 .andExpect(jsonPath("$.countAnswer").value(1))
                 .andExpect(jsonPath("$.persistDateTime").value("2021-12-13T18:09:52.716"))
-                .andExpect(jsonPath("$.lastUpdateDateTime").value("2021-12-13T18:09:52.716"));
-        //                .andExpect(jsonPath("$.listTagDto").value();
+                .andExpect(jsonPath("$.lastUpdateDateTime").value("2021-12-13T18:09:52.716"))
+                .andExpect(jsonPath("$.listTagDto[0].description").value("testDescriptionTag"))
+                .andExpect(jsonPath("$.listTagDto[0].name").value("testNameTag"))
+                .andExpect(jsonPath("$.listTagDto[0].id").value(1));
     }
     @Test
     public void getWrongQuestionDtoByIdTest() throws Exception {
