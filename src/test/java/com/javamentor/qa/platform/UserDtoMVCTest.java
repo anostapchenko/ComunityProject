@@ -19,7 +19,7 @@ public class UserDtoMVCTest extends AbstractClassForDRRiderMockMVCTests {
 
     @Test
     //С помощью DBRider и файла users.yml создаём одного пользователя
-    @DataSet(value = "dataset/users.yml", strategy = SeedStrategy.INSERT)
+    @DataSet(value = "dataset/AuthenticationResourceController/users.yml", strategy = SeedStrategy.INSERT)
     public void shouldReturnIdUsers() throws Exception {
         this.mockMvc.perform(get("/api/user/1")).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("1")));

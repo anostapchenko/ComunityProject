@@ -34,7 +34,7 @@ public class TestAuthenticationResourceController extends AbstractClassForDRRide
 
     @Test
     public void forbiddenWhenNotAuthorized() throws Exception {
-        mockMvc.perform(get("/api/numberofusers"))
+        mockMvc.perform(get("/api/user"))
                 .andDo(print())
                 .andExpect(status().isForbidden())
                 .andExpect(status().reason("Access Denied"));
@@ -54,7 +54,7 @@ public class TestAuthenticationResourceController extends AbstractClassForDRRide
                 .andReturn();
 
         AuthenticationResponse response = mapper.readValue(result.getResponse().getContentAsByteArray(), AuthenticationResponse.class);
-        mockMvc.perform(get("/api/numberofusers").header("Authorization", "Bearer " + response.getToken()))
+        mockMvc.perform(get("/api/user").header("Authorization", "Bearer " + response.getToken()))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -77,7 +77,7 @@ public class TestAuthenticationResourceController extends AbstractClassForDRRide
         User user = userService.getByEmail("test15@mail.ru").get();
         String token = jwtUtil.generateToken(user, -1L);
 
-        mockMvc.perform(get("/api/numberofusers").header("Authorization", "Bearer " + token))
+        mockMvc.perform(get("/api/user").header("Authorization", "Bearer " + token))
                 .andDo(print())
                 .andExpect(status().isForbidden())
                 .andExpect(status().reason("Token expired"));
