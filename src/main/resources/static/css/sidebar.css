@@ -17,7 +17,11 @@
 }
 
 .sidebar .nav-link.active{
-    background-color: #ebebeb;
+    color: white;
+    /*background-color: #343a40;*/
+    background-color: #545b62;
     font-weight: bold;
-    border-right: 3px solid #89e1f3;
+    border-right: 3px solid #17a2b8;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
 }
