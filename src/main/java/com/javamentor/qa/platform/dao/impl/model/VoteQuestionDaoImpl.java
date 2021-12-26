@@ -5,5 +5,5 @@ import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class VoteQuestionImpl extends ReadWriteDaoImpl<VoteQuestion, Long> implements VoteQuestionDao {
+public class VoteQuestionDaoImpl extends ReadWriteDaoImpl<VoteQuestion, Long> implements VoteQuestionDao {
 }
