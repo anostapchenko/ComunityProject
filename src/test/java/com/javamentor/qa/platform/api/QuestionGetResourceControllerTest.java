@@ -14,13 +14,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@AutoConfigureMockMvc
-@SpringBootTest(classes = JmApplication.class)
 class QuestionGetResourceControllerTest extends AbstractClassForDRRiderMockMVCTests  {
 
     @Autowired
@@ -28,18 +28,10 @@ class QuestionGetResourceControllerTest extends AbstractClassForDRRiderMockMVCTe
 
     @Test
     @DataSet(value = "dataset/QuestionResourceController/questions.yml", strategy = SeedStrategy.INSERT)
+    // Получение json по существующему вопросу
     public void getCorrectQuestionDtoByIdTest() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        AuthenticationRequest request = new AuthenticationRequest();
-        request.setUsername("test15@mail.ru");
-        request.setPassword("test15");
-        MvcResult result = mockMvc.perform(post("/api/auth/token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsBytes(request)))
-                .andReturn();
-
-        AuthenticationResponse response = mapper.readValue(result.getResponse().getContentAsByteArray(), AuthenticationResponse.class);
-        mockMvc.perform(get("http://localhost:8091/api/user/question/1").header("Authorization", "Bearer " + response.getToken()))
+        mockMvc.perform(get("http://localhost:8091/api/user/question/1")
+                        .header("Authorization", "Bearer " + getToken("test15@mail.ru","test15")))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -62,19 +54,12 @@ class QuestionGetResourceControllerTest extends AbstractClassForDRRiderMockMVCTe
                 .andExpect(jsonPath("$.listTagDto[0].id").value(1));
     }
     @Test
+    @DataSet(cleanBefore = true, value = "dataset/QuestionResourceController/questions.yml", strategy = SeedStrategy.INSERT)
+    // получение ответа по не существующему в тестовой базе вопросу
     public void getWrongQuestionDtoByIdTest() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        AuthenticationRequest request = new AuthenticationRequest();
-        request.setUsername("test15@mail.ru");
-        request.setPassword("test15");
-        MvcResult result = mockMvc.perform(post("/api/auth/token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsBytes(request)))
-                .andReturn();
-
-        AuthenticationResponse response = mapper.readValue(result.getResponse().getContentAsByteArray(), AuthenticationResponse.class);
-        mockMvc.perform(get("http://localhost:8091/api/user/question/2").header("Authorization", "Bearer " + response.getToken()))
+        mockMvc.perform(get("http://localhost:8091/api/user/question/2")
+                        .header("Authorization", "Bearer " + getToken("test15@mail.ru","test15")))
                 .andDo(print())
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isBadRequest());
     }
 }

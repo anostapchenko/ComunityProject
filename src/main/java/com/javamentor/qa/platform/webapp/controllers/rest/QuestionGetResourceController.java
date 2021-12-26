@@ -37,8 +37,7 @@ public class QuestionGetResourceController {
         try{
             return new ResponseEntity<>(questionDtoService.getQuestionDtoServiceById(id), HttpStatus.OK);
         } catch (NoSuchElementException e){
-            return new ResponseEntity<>("Wrong question number!",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Wrong question number!",HttpStatus.BAD_REQUEST);
         }
-
     }
 }
