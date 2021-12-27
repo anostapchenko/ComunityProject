@@ -6,6 +6,4 @@ import java.util.List;
 
 public interface QuestionDao extends ReadWriteDao<Question, Long> {
 
-    Optional<Question> getQuestionByIdWithAuthor (Long id);
-
 }
