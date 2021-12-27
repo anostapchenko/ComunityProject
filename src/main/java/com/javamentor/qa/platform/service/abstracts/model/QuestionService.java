@@ -7,5 +7,4 @@ import java.util.Optional;
 public interface QuestionService extends ReadWriteService<Question, Long> {
     Optional<Long> getCountByQuestion();
 
-    Optional<Question> getQuestionByIdWithAuthor (Long id);
 }
