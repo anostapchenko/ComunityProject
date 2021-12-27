@@ -4,6 +4,5 @@ import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
 
 public interface VoteAnswerDao extends ReadWriteDao<VoteAnswer, Long> {
     long getVoteCount(long answerId);
-    boolean existsVoteAnswerByAnswerIdAndUserId(long answerId, long currentUserId);
-    VoteAnswer getVoteAnswerByAnswerIdAndUserId(long answerId, long currentUserId);
+    boolean existsVoteByAnswerAndUser(long answerId, long currentUserId);
 }

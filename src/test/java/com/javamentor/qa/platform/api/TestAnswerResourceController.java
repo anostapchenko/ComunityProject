@@ -218,8 +218,8 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
             strategy = SeedStrategy.INSERT)
     @ExpectedDataSet(
             value = {
-                    "dataset/testAnswerResourceController/expected/reputation-5.yml",
-                    "dataset/testAnswerResourceController/expected/voteAnswerDown.yml",
+                    "dataset/testAnswerResourceController/expected/reputation10.yml",
+                    "dataset/testAnswerResourceController/expected/voteAnswerUp.yml",
     },
             ignoreCols = {"id","persist_date"})
     public void shouldBeVoteUpAndVoteDownSameUser() throws Exception {
@@ -242,7 +242,7 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
         )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string("-1"));
+                .andExpect(content().string("1"));
     }
 
     @Test

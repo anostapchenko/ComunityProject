@@ -4,7 +4,6 @@ import com.javamentor.qa.platform.dao.impl.pagination.AnswerPageDtoDaoByBodyImpl
 import com.javamentor.qa.platform.dao.impl.pagination.AnswerPageDtoDaoByIdImpl;
 import com.javamentor.qa.platform.exception.NoSuchDaoException;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
-import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
@@ -111,26 +110,18 @@ public class AnswerResourceController {
         return upDownVoteEvent(VoteType.DOWN_VOTE, answerId, currentUser);
     }
 
-    @Operation(summary = "Проверка, добавление, изменение голоса за ответ", description =
+    @Operation(summary = "Проверка и добавление голоса за ответ, возврат суммы голосов", description =
             "Проверяет, существует ли Answer по id, " +
                     "если нет - NotFound, " +
                     "если да - проверяет, есть ли голос текущего пользователя," +
                     "если нет - добавляет и возвращает Ok + votes count," +
-                    "если да - проверят, совпадает ли принятый голос с существующим," +
-                    "если нет - изменяет и возвращает Ok + votes count," +
                     "если да - возвращает Ok + votes count")
     private ResponseEntity<Long> upDownVoteEvent(VoteType vote, long answerId, User currentUser) {
         if (!answerService.existsById(answerId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if (!voteAnswerService.existsVoteAnswerByAnswerIdAndUserId(answerId, currentUser.getId())) {
+        if (!voteAnswerService.existsVoteByAnswerAndUser(answerId, currentUser.getId())) {
             voteAnswerService.addVoteAnswer(vote, answerId, currentUser);
-        } else {
-            VoteAnswer voteAnswer = voteAnswerService.getVoteAnswerByAnswerIdAndUserId(answerId, currentUser.getId());
-            if (!voteAnswer.getVote().equals(vote)) {
-                voteAnswer.setVote(vote);
-                voteAnswerService.updateVoteAnswer(voteAnswer, answerId, currentUser.getId());
-            }
         }
         return new ResponseEntity<>(voteAnswerService.getVoteCount(answerId), HttpStatus.OK);
     }

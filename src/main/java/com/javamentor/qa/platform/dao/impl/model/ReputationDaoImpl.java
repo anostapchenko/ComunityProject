@@ -10,17 +10,4 @@ import javax.persistence.PersistenceContext;
 @Repository
 public class ReputationDaoImpl extends ReadWriteDaoImpl<Reputation, Long> implements ReputationDao {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Override
-    public void updateReputationByAnswerIdAndSenderId(int count, long answerId, long senderId) {
-        entityManager.createQuery(
-                "UPDATE Reputation r SET r.count = r.count + :deltaCount WHERE r.answer.id = :answerId AND r.sender.id = :currentUserId"
-        )
-                .setParameter("deltaCount", count)
-                .setParameter("answerId", answerId)
-                .setParameter("currentUserId", senderId)
-                .executeUpdate();
-    }
 }

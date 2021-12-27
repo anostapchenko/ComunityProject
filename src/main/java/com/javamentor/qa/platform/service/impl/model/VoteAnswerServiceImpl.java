@@ -40,13 +40,8 @@ public class VoteAnswerServiceImpl extends ReadWriteServiceImpl<VoteAnswer, Long
     }
 
     @Override
-    public boolean existsVoteAnswerByAnswerIdAndUserId(long answerId, long currentUserId) {
-        return voteAnswerDao.existsVoteAnswerByAnswerIdAndUserId(answerId, currentUserId);
-    }
-
-    @Override
-    public VoteAnswer getVoteAnswerByAnswerIdAndUserId(long answerId, long currentUserId) {
-        return voteAnswerDao.getVoteAnswerByAnswerIdAndUserId(answerId, currentUserId);
+    public boolean existsVoteByAnswerAndUser(long answerId, long currentUserId) {
+        return voteAnswerDao.existsVoteByAnswerAndUser(answerId, currentUserId);
     }
 
     @Transactional
@@ -64,14 +59,5 @@ public class VoteAnswerServiceImpl extends ReadWriteServiceImpl<VoteAnswer, Long
                 .author((User) list[0])
                 .sender(currentUser)
                 .build());
-    }
-
-    @Transactional
-    @Override
-    public void updateVoteAnswer(VoteAnswer voteAnswer, long answerId, long currentUserId) {
-        int deltaCount = -15;
-        if (voteAnswer.getVote().equals(VoteType.UP_VOTE)) deltaCount = 15;
-        voteAnswerDao.update(voteAnswer);
-        reputationDao.updateReputationByAnswerIdAndSenderId(deltaCount, answerId, currentUserId);
     }
 }

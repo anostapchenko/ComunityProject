@@ -28,7 +28,7 @@ public class VoteAnswerDaoImpl extends ReadWriteDaoImpl<VoteAnswer, Long> implem
     }
 
     @Override
-    public boolean existsVoteAnswerByAnswerIdAndUserId(long answerId, long currentUserId) {
+    public boolean existsVoteByAnswerAndUser(long answerId, long currentUserId) {
         return entityManager.createQuery(
                 "SELECT COUNT(v.id) FROM VoteAnswer v WHERE v.answer.id = :answerId AND v.user.id = :currentUserId",
                 Long.class
@@ -36,15 +36,5 @@ public class VoteAnswerDaoImpl extends ReadWriteDaoImpl<VoteAnswer, Long> implem
                 .setParameter("answerId", answerId)
                 .setParameter("currentUserId", currentUserId)
                 .getSingleResult() > 0;
-    }
-
-    @Override
-    public VoteAnswer getVoteAnswerByAnswerIdAndUserId(long answerId, long currentUserId) {
-        return entityManager.createQuery(
-                "SELECT v FROM VoteAnswer v WHERE v.answer.id = :answerId AND v.user.id = :currentUserId",
-                VoteAnswer.class)
-                .setParameter("answerId", answerId)
-                .setParameter("currentUserId", currentUserId)
-                .getSingleResult();
     }
 }
