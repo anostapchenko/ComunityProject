@@ -5,18 +5,24 @@ import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.User;
+import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
 import com.javamentor.qa.platform.service.abstracts.model.VoteQuestionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.NoSuchElementException;
 
 @RestController
 @Tag(name = "Question Resource Controller", description = "Управление сущностями, которые связаны с вопросами")
@@ -31,10 +37,14 @@ public class QuestionResourceController {
     private final
     ReputationService reputationService;
 
-    public QuestionResourceController(QuestionService questionService, VoteQuestionService voteQuestionService, ReputationService reputationService) {
+    public final
+    QuestionDtoService questionDtoService;
+
+    public QuestionResourceController(QuestionService questionService, VoteQuestionService voteQuestionService, ReputationService reputationService, QuestionDtoService questionDtoService) {
         this.questionService = questionService;
         this.voteQuestionService = voteQuestionService;
         this.reputationService = reputationService;
+        this.questionDtoService = questionDtoService;
     }
 
     @PostMapping("api/user/question/{questionId}/upVote")
@@ -78,5 +88,18 @@ public class QuestionResourceController {
         }
         return new ResponseEntity<>("User was voting", HttpStatus.BAD_REQUEST);
     }
+    @GetMapping("api/user/question/{id}")
+    @Operation(summary = "Получение информации по вопросу пользователя")
+    @ApiResponse(responseCode = "200", description = "Информация по вопросу", content = {
+            @Content(mediaType = "application/json")
+    })
+    public ResponseEntity<Object> getQuestion(@PathVariable Long id){
+        try{
+            return new ResponseEntity<>(questionDtoService.getQuestionDtoServiceById(id), HttpStatus.OK);
+        } catch (NoSuchElementException e){
+            return new ResponseEntity<>("Wrong question number!",HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
 
