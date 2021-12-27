@@ -1,7 +1,7 @@
 package com.javamentor.qa.platform.dao.impl.dto;
 
-import com.javamentor.qa.platform.dao.abstracts.dto.TagDTODao;
-import com.javamentor.qa.platform.models.dto.question.TagDTO;
+import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
+import com.javamentor.qa.platform.models.dto.question.TagDto;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
@@ -10,13 +10,13 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
-public class TagDTODaoImpl implements TagDTODao {
+public class TagDtoDaoImpl implements TagDtoDao {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public List<TagDTO> getTagDTOListByUserIdFromTrackedTag(Long currentUserId) {
+    public List<TagDto> getTrackedTagsByUserId(Long currentUserId) {
         return entityManager.createQuery(
                 "SELECT t.id as id, t.name as name, t.persistDateTime as persistDateTime " +
                         "FROM Tag t JOIN TrackedTag tr " +
@@ -25,7 +25,7 @@ public class TagDTODaoImpl implements TagDTODao {
         )
                 .setParameter("currentUserId", currentUserId)
                 .unwrap(org.hibernate.query.Query.class)
-                .setResultTransformer(Transformers.aliasToBean(TagDTO.class))
+                .setResultTransformer(Transformers.aliasToBean(TagDto.class))
                 .getResultList();
     }
 }

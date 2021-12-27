@@ -6,11 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
-@Schema(description = "TagDTO - сокращенный тег")
+@Schema(description = "TagDto - сокращенный тег")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TagDTO {
+public class TagDto {
 
     @Schema(description = "Идентификатор")
     private Long id;
