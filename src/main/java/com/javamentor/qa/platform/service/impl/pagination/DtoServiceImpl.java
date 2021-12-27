@@ -15,18 +15,17 @@ public abstract class DtoServiceImpl<T> {
         this.daoMap = daoMap;
     }
 
-    public PageDTO<T> getPageDto(PaginationData properties) throws NoSuchDaoException {
-        if (daoMap.containsKey(properties.getDaoName())) {
-            PageDtoDao<T> currentDao = daoMap.get(properties.getDaoName());
-            PageDTO<T> pageDTO = new PageDTO<>();
-            pageDTO.setCurrentPageNumber(properties.getCurrentPage());
-            pageDTO.setItems(currentDao.getPaginationItems(properties));
-            pageDTO.setItemsOnPage(pageDTO.getItems().size());
-            pageDTO.setTotalResultCount(currentDao.getTotalResultCount());
-            pageDTO.setTotalPageCount((int) Math.ceil((double) pageDTO.getTotalResultCount() / properties.getItemsOnPage()));
-            return pageDTO;
-        } else {
-            throw new NoSuchDaoException();
+    public PageDTO<T> getPageDto(PaginationData properties) {
+        if (!daoMap.containsKey(properties.getDaoName())) {
+            throw new NoSuchDaoException("There is no dao with name: " + properties.getDaoName());
         }
+        PageDtoDao<T> currentDao = daoMap.get(properties.getDaoName());
+        PageDTO<T> pageDTO = new PageDTO<>();
+        pageDTO.setCurrentPageNumber(properties.getCurrentPage());
+        pageDTO.setItems(currentDao.getPaginationItems(properties));
+        pageDTO.setItemsOnPage(pageDTO.getItems().size());
+        pageDTO.setTotalResultCount(currentDao.getTotalResultCount());
+        pageDTO.setTotalPageCount((int) Math.ceil((double) pageDTO.getTotalResultCount() / properties.getItemsOnPage()));
+        return pageDTO;
     }
 }
