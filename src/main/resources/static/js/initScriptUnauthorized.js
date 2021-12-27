@@ -105,10 +105,10 @@ function createFooter() {
             <div class="row">
                 <div class="col item_group">
                     <h6>BLOCK 1</h6>
-                    <div class="footer_item">Item 1</div>
-                    <div class="footer_item">Item 2</div>
-                    <div class="footer_item">Item 3</div>
-                    <div class="footer_item">Item 4</div>
+                    <div>Item 1</div>
+                    <div>Item 2</div>
+                    <div>Item 3</div>
+                    <div>Item 4</div>
                 </div>
                 <div class="col item_group">
                     <h6>BLOCK 2</h6>
