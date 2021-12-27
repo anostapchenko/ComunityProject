@@ -40,9 +40,13 @@ public class VoteQuestion implements Serializable {
     @Enumerated(EnumType.STRING)
     private VoteType vote;
 
-    public VoteQuestion(User user, Question question, VoteType vote) {
+    @Transient
+    private int countVQ;
+
+    public VoteQuestion(User user, Question question, VoteType vote, int countVQ) {
         this.user = user;
         this.question = question;
         this.vote = vote;
+        this.countVQ = countVQ;
     }
 }
