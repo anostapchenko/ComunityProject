@@ -43,7 +43,7 @@ public class TestDataInitService {
 
     public void createRoles() {
         List<Role> roles = new ArrayList<>();
-        //roles.add(new Role("ROLE_ADMIN"));
+        roles.add(new Role("ROLE_ADMIN"));
         roles.add(new Role("ROLE_USER"));
         roleService.persistAll(roles);
     }
