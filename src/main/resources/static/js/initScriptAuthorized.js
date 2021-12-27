@@ -34,7 +34,7 @@ function start() {
 
     let container = document.createElement("div")
     container.innerHTML = `
-        <div class="row">
+        <div class="row min-vh-100">
             <div class="col-2 col-sidebar"></div>
             <div class="col col-main"></div>
         </div>
