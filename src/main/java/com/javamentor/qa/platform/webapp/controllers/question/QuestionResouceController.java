@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @Tag(name = "QuestionCount", description = "Количество всего вопросов в бд")
 @RestController
 @RequestMapping("/api/user/")
@@ -32,8 +34,8 @@ public class QuestionResouceController {
             @Content(mediaType = "application/json")
     })
 
-    public ResponseEntity<Long> getCountQuestion() {
-        Long countQusetion = questionService.getCountByQuestion();
+    public ResponseEntity<Optional<Long>> getCountQuestion() {
+        Optional<Long> countQusetion = questionService.getCountByQuestion();
         return new ResponseEntity<>(countQusetion, HttpStatus.OK);
     }
 
