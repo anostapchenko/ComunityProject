@@ -1,0 +1,9 @@
+.col-main, .col-sidebar>.sidebar>.sticky-top {
+    padding-top: 70px;
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1264px;
+    }
+}
