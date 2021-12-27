@@ -18,8 +18,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/images/**")
-                .addResourceLocations("classpath:/static/images/");
         // Access Bootstrap static resource:
         registry.addResourceHandler("/js/jquery/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/jquery/3.6.0/");
