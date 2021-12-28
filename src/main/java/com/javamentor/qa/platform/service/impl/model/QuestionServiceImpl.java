@@ -5,6 +5,12 @@ import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import org.springframework.stereotype.Service;
 
+<<<<<<<<< Temporary merge branch 1
+import java.util.List;
+=========
+import java.util.Optional;
+>>>>>>>>> Temporary merge branch 2
+
 @Service
 public class QuestionServiceImpl extends ReadWriteServiceImpl<Question, Long> implements QuestionService {
 
@@ -15,4 +21,8 @@ public class QuestionServiceImpl extends ReadWriteServiceImpl<Question, Long> im
         this.questionDao = questionDao;
     }
 
+    @Override
+    public Optional<Question> getQuestionByIdWithAuthor(Long id){
+        return questionDao.getQuestionByIdWithAuthor(id);
+    }
 }

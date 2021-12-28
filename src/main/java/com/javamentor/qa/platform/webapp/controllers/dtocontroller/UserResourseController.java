@@ -1,7 +1,6 @@
 package com.javamentor.qa.platform.webapp.controllers.dtocontroller;
 
 import com.javamentor.qa.platform.models.dto.UserDto;
-import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @Tag(name = "UserDto", description = "Get UserDto id")
 @RestController
@@ -34,8 +35,8 @@ public class UserResourseController {
             @Content(mediaType = "application/json")
     })
 
-    public ResponseEntity<UserDto> getUserDtoId(@PathVariable("userId") long id) {
-        UserDto userDto = userDtoService.findUserDtoById(id);
+    public ResponseEntity<Optional<UserDto>> getUserDtoId(@PathVariable("userId") long id) {
+        Optional<UserDto> userDto = userDtoService.findUserDtoById(id);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 }
