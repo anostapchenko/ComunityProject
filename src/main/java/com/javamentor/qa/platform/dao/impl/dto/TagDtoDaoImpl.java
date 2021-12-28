@@ -19,13 +19,12 @@ public class TagDtoDaoImpl implements TagDtoDao {
     public List<TagDto> getTagDtoDaoById(Long id) {
 
         TypedQuery<TagDto> q = entityManager.createQuery(
-                "SELECT new com.javamentor.qa.platform.models.dto.question.TagDto(" +
-                        "t.id, t.name, t.description)" +
-                        " FROM Question q JOIN q.tags t WHERE q.id =: id ", TagDto.class)
+                        "SELECT new com.javamentor.qa.platform.models.dto.question.TagDto(" +
+                                "t.id, t.name, t.description)" +
+                                " FROM Question q JOIN q.tags t WHERE q.id =: id ", TagDto.class)
                 .setParameter("id", id);
         return q.getResultList();
-
-
+    }
     @Override
     public List<TagDto> getTrackedTagsByUserId(Long currentUserId) {
         return entityManager.createQuery(
@@ -38,6 +37,5 @@ public class TagDtoDaoImpl implements TagDtoDao {
                 .unwrap(org.hibernate.query.Query.class)
                 .setResultTransformer(Transformers.aliasToBean(TagDto.class))
                 .getResultList();
-
     }
 }

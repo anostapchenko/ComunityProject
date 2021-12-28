@@ -35,7 +35,7 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
             strategy = SeedStrategy.CLEAN_INSERT,
             cleanAfter = true)
     public void ifEmptyTrackedTag() throws Exception {
-        mockMvc.perform(get("http://localhost:8091/api/user/tag/tracked")
+        mockMvc.perform(get("/api/user/tag/tracked")
                 .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -52,7 +52,7 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
             strategy = SeedStrategy.CLEAN_INSERT,
             cleanAfter = true)
     public void ifHasTwoTags() throws Exception {
-        mockMvc.perform(get("http://localhost:8091/api/user/tag/tracked")
+        mockMvc.perform(get("/api/user/tag/tracked")
                 .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -74,7 +74,7 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
             strategy = SeedStrategy.CLEAN_INSERT,
             cleanAfter = true)
     public void ifHasTwoTagsAndOneOther() throws Exception {
-        mockMvc.perform(get("http://localhost:8091/api/user/tag/tracked")
+        mockMvc.perform(get("/api/user/tag/tracked")
                 .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
                 .andDo(print())
                 .andExpect(status().isOk())
