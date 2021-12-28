@@ -13,11 +13,11 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/users").setViewName("users");
         registry.addViewController("/tags").setViewName("tags");
+        registry.addViewController("/questions").setViewName("questions");
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
         // Access Bootstrap static resource:
         registry.addResourceHandler("/js/jquery/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/jquery/3.6.0/");
