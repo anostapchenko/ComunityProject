@@ -18,19 +18,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTests {
 
     @Test
-    //У пользовател с id = 15 нет игнорируемых тэгов
-    @DataSet(cleanBefore = true, value = "dataset/tagresourcecontroller/data.yml", strategy = SeedStrategy.REFRESH )
-    public void shouldReturnNotFoundMessage() throws Exception {
-        this.mockMvc.perform(get("/api/user/tag/ignored")
-                .header("Authorization", "Bearer " + getToken("test15@mail.ru","test15")))
-                .andDo(print())
-                .andExpect(status()
-                .isNotFound())
-                .andExpect(content()
-                .string(containsString("Can't find ignored tag for user with id 15")));
-    }
-
-    @Test
     //У пользовател с id = 15 есть игнорируемые тэги
     @DataSet(cleanBefore = true, value = "dataset/tagresourcecontroller/data2.yml", strategy = SeedStrategy.REFRESH )
     public void shouldReturnListIrnoredTag() throws Exception {

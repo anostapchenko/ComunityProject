@@ -37,11 +37,9 @@ public class TagResourceController {
     )
     public ResponseEntity<?> getIgnoredTag (){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user =(User)auth.getPrincipal();
+        User user =(User) auth.getPrincipal();
         Long userId = user.getId();
         List<TagDto> listTagDtoByIgnoredTag = tagDtoService.getIgnoredTagByUserId(userId);
-        return (listTagDtoByIgnoredTag.isEmpty())
-                ? new ResponseEntity<>("Can't find ignored tag for user with id "+ userId, HttpStatus.NOT_FOUND)
-                : new ResponseEntity<>(listTagDtoByIgnoredTag, HttpStatus.OK);
+        return new ResponseEntity<>(listTagDtoByIgnoredTag, HttpStatus.OK);
     }
 }
