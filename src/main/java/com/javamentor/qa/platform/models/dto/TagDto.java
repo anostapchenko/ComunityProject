@@ -1,18 +1,17 @@
 package com.javamentor.qa.platform.models.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TagDTO {
+public class TagDto {
 
    private Long id;
    private String name;
-   private LocalDateTime persistDateTime;
 }
 
