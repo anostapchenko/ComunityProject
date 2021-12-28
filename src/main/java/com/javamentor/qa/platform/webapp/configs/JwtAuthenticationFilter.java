@@ -35,8 +35,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = jwtUtil.resolveToken(request);
             if (token != null && jwtUtil.validateToken(token)) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUtil.extractUsername(token));
-                Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 
+                if (!userDetails.isEnabled()){
+                    response.sendError(HttpStatus.FORBIDDEN.value(), "User is disabled");
+                    return;
+                }
+
+                Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         } catch (ExpiredJwtException e) {
