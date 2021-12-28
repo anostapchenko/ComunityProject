@@ -18,12 +18,11 @@ public class QuestionServiceImpl extends ReadWriteServiceImpl<Question, Long> im
     }
 
     @Override
-<<<<<<<<< Temporary merge branch 1
-    public Long getCountByQuestion() {
+    public Optional<Long> getCountByQuestion() {
         return questionDao.getCountQuestion();
-=========
+    }
+
     public Optional<Question> getQuestionByIdWithAuthor(Long id){
         return questionDao.getQuestionByIdWithAuthor(id);
->>>>>>>>> Temporary merge branch 2
     }
 }

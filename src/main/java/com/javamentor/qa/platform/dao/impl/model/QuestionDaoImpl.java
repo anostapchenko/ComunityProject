@@ -21,20 +21,17 @@ public class QuestionDaoImpl extends ReadWriteDaoImpl<Question, Long> implements
     @PersistenceContext
     EntityManager entityManager;
 
-<<<<<<<<< Temporary merge branch 1
     @Override
-    public Long getCountQuestion() {
-        return (Long) entityManager.createQuery("SELECT COUNT(q.id) FROM Question q where q.isDeleted=false")
-                .getSingleResult();
-=========
-    @PersistenceContext
-    private EntityManager entityManager;
+    public Optional<Long> getCountQuestion() {
+        return SingleResultUtil.getSingleResultOrNull(entityManager.createQuery("" +
+                "SELECT COUNT(q.id) FROM Question q where q.isDeleted=false", Long.class));
+
+    }
 
     @Override
     public Optional<Question> getQuestionByIdWithAuthor(Long id){
         return SingleResultUtil.getSingleResultOrNull(entityManager.createQuery(
                 "select q from Question q inner join User u on q.user.id = u.id where q.id=:id",Question.class)
                 .setParameter("id", id));
->>>>>>>>> Temporary merge branch 2
     }
 }
