@@ -19,8 +19,6 @@ import java.util.List;
 
 @Repository
 public class QuestionDaoImpl extends ReadWriteDaoImpl<Question, Long> implements QuestionDao {
-<<<<<<<<< Temporary merge branch 1
-=========
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -31,5 +29,4 @@ public class QuestionDaoImpl extends ReadWriteDaoImpl<Question, Long> implements
                 "select q from Question q inner join User u on q.user.id = u.id where q.id=:id",Question.class)
                 .setParameter("id", id));
     }
->>>>>>>>> Temporary merge branch 2
 }
