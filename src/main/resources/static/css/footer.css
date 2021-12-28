@@ -1,0 +1,23 @@
+.footer {
+    background-color: #2e2e35;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: small;
+}
+
+.footer h6 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.footer div {
+    margin-bottom: 5px;
+}
+
+.item_group div:hover{
+    color: darkgray;
+    cursor: pointer;
+}
+

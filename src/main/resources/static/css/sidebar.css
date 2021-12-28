@@ -1,0 +1,26 @@
+.sidebar {
+    border-right: 1px solid #2e2e35;
+    height: 100%;
+}
+
+.sidebar .nav-link {
+    padding: 10px 10px 10px 15px;
+    color: #2e2e35;
+    font-family: Arial,sans-serif;
+    font-weight: 100;
+    font-size: small
+}
+
+.sidebar .nav-link:hover{
+    color: #2e2e35;
+    opacity: 70%;
+}
+
+.sidebar .nav-link.active{
+    color: white;
+    background-color: #545b62;
+    font-weight: bold;
+    border-right: 3px solid #17a2b8;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}

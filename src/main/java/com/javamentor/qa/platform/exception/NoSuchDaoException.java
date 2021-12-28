@@ -1,6 +1,6 @@
 package com.javamentor.qa.platform.exception;
 
-public class NoSuchDaoException extends Exception {
+public class NoSuchDaoException extends RuntimeException {
 
     public NoSuchDaoException() {
     }

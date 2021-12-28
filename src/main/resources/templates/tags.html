@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Метки</title>
+    <link href="/css/tags.css" rel="stylesheet" media="screen">
+</head>
+<body>
+
+<div id="main">
+    <h1>Теги</h1>
+    <p>
+        Тег - это ключевое слово или ярлык, с помощью которого ваш вопрос классифицируется с другими похожими вопросами.
+        Использование правильных тегов упрощает другим пользователям поиск вашего вопроса и ответ на него.
+    </p>
+    <p><a href="#">Показать все синонимы тегов</a></p>
+    <form class="form-inline justify-content-between">
+
+        <!-- User filter -->
+        <div class="form-group">
+            <input type="text" class="form-control" id="filterByUser" placeholder="Фильтр по тегу">
+        </div>
+
+        <!-- Category menu -->
+        <div class="form-group">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary active">
+                    <input type="radio" name="options" id="reputation" checked> Популярные
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="new_users"> Наименование
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="voters"> Новые
+                </label>
+            </div>
+        </div>
+    </form>
+    <br />
+
+    <!-- Tags grid -->
+    <div class="card-deck tags-card-deck">
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">javascript</span></a></div>
+                    <p class="card-text small">For questions regarding programming in ECMAScript (JavaScript/JS) and its various dialects/implementations (excluding ActionScript). Note.. </p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">2313009 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">638 asked today, 4173 this week</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">python</span></a></div>
+                    <p class="card-text small">Python is a multi-paradigm, dynamically typed, multi-purpose programming language. It is designed to be quick to learn, understand, and..</p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">1857955 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">910 asked today, 5930 this week</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">java</span></a></div>
+                    <p class="card-text small">Java is a high-level object oriented programming language. Use this tag when you're having problems using or understanding the language itself. This..</p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">1818091 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">362 asked today, 2199 this week </a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">c#</span></a></div>
+                    <p class="card-text small">C# (pronounced "see sharp") is a high level, statically typed, multi-paradigm programming language developed by Microsoft. C# code usually targets..</p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">1514095 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">287 asked today, 1673 this week</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-deck tags-card-deck">
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">javascript</span></a></div>
+                    <p class="card-text small">For questions regarding programming in ECMAScript (JavaScript/JS) and its various dialects/implementations (excluding ActionScript). Note.. </p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">2313009 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">638 asked today, 4173 this week</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">python</span></a></div>
+                    <p class="card-text small">Python is a multi-paradigm, dynamically typed, multi-purpose programming language. It is designed to be quick to learn, understand, and..</p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">1857955 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">910 asked today, 5930 this week</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">java</span></a></div>
+                    <p class="card-text small">Java is a high-level object oriented programming language. Use this tag when you're having problems using or understanding the language itself. This..</p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">1818091 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">362 asked today, 2199 this week </a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">c#</span></a></div>
+                    <p class="card-text small">C# (pronounced "see sharp") is a high level, statically typed, multi-paradigm programming language developed by Microsoft. C# code usually targets..</p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">1514095 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">287 asked today, 1673 this week</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-deck tags-card-deck">
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">javascript</span></a></div>
+                    <p class="card-text small">For questions regarding programming in ECMAScript (JavaScript/JS) and its various dialects/implementations (excluding ActionScript). Note.. </p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">2313009 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">638 asked today, 4173 this week</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">python</span></a></div>
+                    <p class="card-text small">Python is a multi-paradigm, dynamically typed, multi-purpose programming language. It is designed to be quick to learn, understand, and..</p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">1857955 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">910 asked today, 5930 this week</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">java</span></a></div>
+                    <p class="card-text small">Java is a high-level object oriented programming language. Use this tag when you're having problems using or understanding the language itself. This..</p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">1818091 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">362 asked today, 2199 this week </a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">c#</span></a></div>
+                    <p class="card-text small">C# (pronounced "see sharp") is a high level, statically typed, multi-paradigm programming language developed by Microsoft. C# code usually targets..</p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">1514095 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">287 asked today, 1673 this week</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-deck tags-card-deck">
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">javascript</span></a></div>
+                    <p class="card-text small">For questions regarding programming in ECMAScript (JavaScript/JS) and its various dialects/implementations (excluding ActionScript). Note.. </p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">2313009 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">638 asked today, 4173 this week</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">python</span></a></div>
+                    <p class="card-text small">Python is a multi-paradigm, dynamically typed, multi-purpose programming language. It is designed to be quick to learn, understand, and..</p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">1857955 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">910 asked today, 5930 this week</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">java</span></a></div>
+                    <p class="card-text small">Java is a high-level object oriented programming language. Use this tag when you're having problems using or understanding the language itself. This..</p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">1818091 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">362 asked today, 2199 this week </a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">c#</span></a></div>
+                    <p class="card-text small">C# (pronounced "see sharp") is a high level, statically typed, multi-paradigm programming language developed by Microsoft. C# code usually targets..</p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">1514095 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">287 asked today, 1673 this week</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-deck tags-card-deck">
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">javascript</span></a></div>
+                    <p class="card-text small">For questions regarding programming in ECMAScript (JavaScript/JS) and its various dialects/implementations (excluding ActionScript). Note.. </p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">2313009 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">638 asked today, 4173 this week</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">python</span></a></div>
+                    <p class="card-text small">Python is a multi-paradigm, dynamically typed, multi-purpose programming language. It is designed to be quick to learn, understand, and..</p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">1857955 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">910 asked today, 5930 this week</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">java</span></a></div>
+                    <p class="card-text small">Java is a high-level object oriented programming language. Use this tag when you're having problems using or understanding the language itself. This..</p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">1818091 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">362 asked today, 2199 this week </a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">c#</span></a></div>
+                    <p class="card-text small">C# (pronounced "see sharp") is a high level, statically typed, multi-paradigm programming language developed by Microsoft. C# code usually targets..</p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">1514095 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">287 asked today, 1673 this week</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-deck tags-card-deck">
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">javascript</span></a></div>
+                    <p class="card-text small">For questions regarding programming in ECMAScript (JavaScript/JS) and its various dialects/implementations (excluding ActionScript). Note.. </p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">2313009 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">638 asked today, 4173 this week</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">python</span></a></div>
+                    <p class="card-text small">Python is a multi-paradigm, dynamically typed, multi-purpose programming language. It is designed to be quick to learn, understand, and..</p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">1857955 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">910 asked today, 5930 this week</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">java</span></a></div>
+                    <p class="card-text small">Java is a high-level object oriented programming language. Use this tag when you're having problems using or understanding the language itself. This..</p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">1818091 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">362 asked today, 2199 this week </a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="tag-card">
+                <div class="card-body">
+                    <div class="card-title"><a href="#"><span class="badge bg-info text-light">c#</span></a></div>
+                    <p class="card-text small">C# (pronounced "see sharp") is a high level, statically typed, multi-paradigm programming language developed by Microsoft. C# code usually targets..</p>
+                    <div class="row">
+                        <div class="col"><span class="card-text small text-muted">1514095 questions</span></div>
+                        <div class="col"><a class="card-link small text-muted" href="#">287 asked today, 1673 this week</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination justify-content-end">
+            <li class="page-item"><a class="page-link" href="#">Предыдущая</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Следующая</a></li>
+        </ul>
+    </nav>
+
+</div>
+
+<script type="text/javascript" src="/js/initScriptAuthorized.js"></script>
+<script type="text/javascript" src="/js/tags.js"></script>
+</body>
+</html>
