@@ -1,0 +1,11 @@
+.navbar .svg-btn svg {
+    fill: white;
+}
+
+.navbar .svg-btn:hover svg {
+    fill: #17a2b8;
+}
+
+.navbar .logo {
+    fill: #fff
+}

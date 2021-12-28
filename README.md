@@ -567,7 +567,19 @@ public class UserController {
  } 
 }
 ````
-
+### Дополнение в OpenAPI 3.0/Swagger - авторизация JWT.
+ В OpenAPI добавлена JWT аутентификация. Для использования нужно получить токен и внести его в данные аутентификации, как на скриншотах:
+1. Используя API аутентификации проекта, нажать "Try it out".
+![](src/main/resources/static/images/openapi-jwt/OpenAPI-JWT-001.jpg)
+2. Исправить логин и пароль на необходимые и нажать "Execute".
+![](src/main/resources/static/images/openapi-jwt/OpenAPI-JWT-002.jpg)
+3. Ниже в поле "Server response" - "Response body" скопировать полученный токен.
+![](src/main/resources/static/images/openapi-jwt/OpenAPI-JWT-003.jpg)
+4. Затем нажать кнопку "Authorize"
+![](src/main/resources/static/images/openapi-jwt/OpenAPI-JWT-004.jpg)
+5. Внести скопированный токен в поле Value.
+![](src/main/resources/static/images/openapi-jwt/OpenAPI-JWT-005.jpg)
+Теперь можно использовать все API, которые отображаются в OpenAPI (Swagger).
 
 # Разделение на два профиля dev и local
 - Создать две копии файла application.properties со следующими именами application-**local**.properties и application-**dev**.properties.
@@ -680,18 +692,18 @@ public class UserController {
 - Clean. Удаление всех объектов в схеме. Не используйте clean в продакшен базах данных!
 
 ## Header, Side-Bar, Footer
-Для добавления header, side-bar и footer на веб-страницу необходимо в вашем html файле внутри тэга body создать элемент с тэгом div и присвоить ему класс "main" (Определён в файле utilCss.css).
-В данном элементе (div с классом main) необходимо распологать ваш html код, который должен быть отображён на вашей странице.
-Также перед закрывающимся тэгом body необходимо добавить:
+Для добавления header, side-bar и footer на веб-страницу необходимо в вашем html файле внутри тега body создать элемент с тэгом div и присвоить ему id="main".
+В данном элементе необходимо располагать ваш html код, который должен быть отображён на вашей странице.
+Также перед закрывающимся тегом body необходимо добавить:
 ````
 <script type="text/javascript" src="/js/scriptName.js"></script>
 ````
 В качестве "scriptName" необходимо использовать имя скрипта из перечисленных ниже:
-- initScriptAuthorized - добавляет на страницу side-bar, footer и heading (для авторизованного пользователя)
-- initScriptUnauthorized - добавляет на страницу side-bar, footer и heading (для НЕавторизованного пользователя, имеются кнопки Log in и Registration)
+- initScriptAuthorized - добавляет на страницу header, footer и side-bar (для авторизованного пользователя)
+- initScriptUnauthorized - добавляет на страницу header, footer и side-bar (для НЕавторизованного пользователя, имеются кнопки Log in и Registration)
 
 HTML код страницы с добавленными heading, side-bar, footer:
-````
+```
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -699,14 +711,10 @@ HTML код страницы с добавленными heading, side-bar, foot
     <title>Title</title>
 </head>
 <body>
-<div class="main">
+<div id="main">
   Your content
 </div>
 <script type="text/javascript" src="/js/initScriptAuthorized.js"></script>
 </body>
 </html>
-````
-
-Элементу с тэгом div и классом main при инициализации страницы динамически будет присвоен параметр "width", таким образом, чтобы он занимал всё оставшееся пространство на странице.
-
-Если возникнет необходимость изменить ширину side-bar, необходимо изменить переменную "side_bar_width" в initScriptAuthorized.js и initScriptUnauthorized.js и присвоить ей текущую ширину side-bar.
+```
