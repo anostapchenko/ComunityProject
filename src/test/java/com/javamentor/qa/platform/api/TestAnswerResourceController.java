@@ -25,15 +25,17 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
     @Autowired
     private MockMvc mvc;
 
-    public String getTokens(String email) throws Exception {
-        String tokenJS = mvc.perform(MockMvcRequestBuilders
-                .post("/api/auth/token")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"username\" : \"" + email + "\"," +
-                        " \"password\" : \"password\"}")
-        ).andReturn().getResponse().getContentAsString();
-        return new JSONObject(tokenJS).getString("token");
-    }
+    private static final String PASSWORD = "password";
+
+//    public String getTokens(String email) throws Exception {
+//        String tokenJS = mvc.perform(MockMvcRequestBuilders
+//                .post("/api/auth/token")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content("{\"username\" : \"" + email + "\"," +
+//                        " \"password\" : \"password\"}")
+//        ).andReturn().getResponse().getContentAsString();
+//        return new JSONObject(tokenJS).getString("token");
+//    }
 
     @Test
     @DataSet(value = {
@@ -65,7 +67,7 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization",
-                        "Bearer " + getTokens("user101@mail.ru"))
+                        "Bearer " + getToken("user101@mail.ru", PASSWORD))
         )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -97,7 +99,7 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization",
-                        "Bearer " + getTokens("user101@mail.ru"))
+                        "Bearer " + getToken("user101@mail.ru", PASSWORD))
         )
                 .andDo(print())
                 .andExpect(status().isNotFound());
@@ -133,7 +135,7 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization",
-                        "Bearer " + getTokens("user101@mail.ru"))
+                        "Bearer " + getToken("user101@mail.ru", PASSWORD))
         )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -143,7 +145,7 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization",
-                        "Bearer " + getTokens("user102@mail.ru"))
+                        "Bearer " + getToken("user102@mail.ru", PASSWORD))
         )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -180,7 +182,7 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization",
-                        "Bearer " + getTokens("user101@mail.ru"))
+                        "Bearer " + getToken("user101@mail.ru", PASSWORD))
         )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -190,7 +192,7 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization",
-                        "Bearer " + getTokens("user101@mail.ru"))
+                        "Bearer " + getToken("user101@mail.ru", PASSWORD))
         )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -228,7 +230,7 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization",
-                        "Bearer " + getTokens("user101@mail.ru"))
+                        "Bearer " + getToken("user101@mail.ru", PASSWORD))
         )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -238,7 +240,7 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization",
-                        "Bearer " + getTokens("user101@mail.ru"))
+                        "Bearer " + getToken("user101@mail.ru", PASSWORD))
         )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -275,7 +277,7 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization",
-                        "Bearer " + getTokens("user101@mail.ru"))
+                        "Bearer " + getToken("user101@mail.ru", PASSWORD))
         )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -285,7 +287,7 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization",
-                        "Bearer " + getTokens("user102@mail.ru"))
+                        "Bearer " + getToken("user102@mail.ru", PASSWORD))
         )
                 .andDo(print())
                 .andExpect(status().isOk())

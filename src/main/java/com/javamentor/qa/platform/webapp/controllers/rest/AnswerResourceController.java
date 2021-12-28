@@ -5,6 +5,8 @@ import com.javamentor.qa.platform.dao.impl.pagination.AnswerPageDtoDaoByIdImpl;
 import com.javamentor.qa.platform.models.dto.AnswerDTO;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
+import com.javamentor.qa.platform.models.entity.question.answer.Answer;
+import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
@@ -24,8 +26,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @Tag(name = "AnswerResourceController", description = "Позволяет работать с ответами на вопросы")
 @RestController
@@ -114,11 +117,12 @@ public class AnswerResourceController {
                     "если нет - добавляет и возвращает Ok + votes count," +
                     "если да - возвращает Ok + votes count")
     private ResponseEntity<Long> upDownVoteEvent(VoteType vote, long answerId, User currentUser) {
-        if (!answerService.existsById(answerId)) {
+        Optional<Answer> optional = answerService.getAnswerWithAuthor(answerId);
+        if (!optional.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         if (!voteAnswerService.existsVoteByAnswerAndUser(answerId, currentUser.getId())) {
-            voteAnswerService.addVoteAnswer(vote, answerId, currentUser);
+            voteAnswerService.persist(new VoteAnswer(currentUser, optional.get(), vote));
         }
         return new ResponseEntity<>(voteAnswerService.getVoteCount(answerId), HttpStatus.OK);
     }

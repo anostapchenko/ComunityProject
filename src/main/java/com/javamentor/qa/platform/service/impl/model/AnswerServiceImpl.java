@@ -6,6 +6,8 @@ import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class AnswerServiceImpl extends ReadWriteServiceImpl<Answer, Long> implements AnswerService {
 
@@ -16,4 +18,8 @@ public class AnswerServiceImpl extends ReadWriteServiceImpl<Answer, Long> implem
         this.answerDao = answerDao;
     }
 
+    @Override
+    public Optional<Answer> getAnswerWithAuthor(Long answerId) {
+        return answerDao.getAnswerWithAuthor(answerId);
+    }
 }
