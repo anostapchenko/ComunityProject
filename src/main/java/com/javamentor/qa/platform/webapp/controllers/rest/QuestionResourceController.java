@@ -1,6 +1,7 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.exception.ConstrainException;
+import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
@@ -46,6 +47,8 @@ public class QuestionResourceController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user =(User) auth.getPrincipal();
         Long userId = user.getId();
+        String userName = user.getUsername();
+        System.out.println("userName= " + userName);
         Question question = questionService
                 .getQuestionByIdWithAuthor(questionId)
                 .orElseThrow(() -> new ConstrainException("Can't find question with id:" + questionId));
@@ -78,5 +81,31 @@ public class QuestionResourceController {
         }
         return new ResponseEntity<>("User was voting", HttpStatus.BAD_REQUEST);
     }
+
+
+    @PostMapping("api/user/question")
+    @Operation(
+            summary = "Добавление вопроса",
+            description = "Добавление нового вопроса"
+    )
+    public ResponseEntity<?> addQuestion(QuestionCreateDto questionCreateDto) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user =(User) auth.getPrincipal();
+        Long userId = user.getId();
+
+        Question question = questionService
+                .getQuestionByIdWithAuthor(questionId)
+                .orElseThrow(() -> new ConstrainException("Can't find question with id:" + questionId));
+        int countUpVote = 10;
+        if (voteQuestionService.validateUserVoteByQuestionIdAndUserId(questionId, userId)) {
+            VoteQuestion voteQuestion = new VoteQuestion(user,question,VoteType.UP_VOTE,countUpVote);
+            voteQuestionService.persist(voteQuestion);
+            return new ResponseEntity<>(voteQuestionService.getVoteByQuestionId(questionId), HttpStatus.OK);
+        }
+        return new ResponseEntity<>("User was voting", HttpStatus.BAD_REQUEST);
+    }
+
+
+
 }
 

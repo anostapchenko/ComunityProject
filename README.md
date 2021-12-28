@@ -469,6 +469,7 @@ Swagger или OpenAPI framework состоит из 4 основных комп
 **@Hidden** - Скрывает ресурс, операцию или свойство
 
 ### Примеры использования:
+https://habr.com/ru/post/536388/
 
 ````
 @Tag(name = "User", description = "The User API")
@@ -672,6 +673,7 @@ public class UserController {
 Пример: ***V1_1_0__my_first_migration.sql*** или ***V001__InitDB.sql***
 
 ## Как работает Flyway.
+https://javarush.ru/groups/posts/3157-java-proekt-ot-a-do-ja-springboot--flyway
 
 Для отслеживания когда, кем и какие миграции были применены в схему базы данных добавляется специальная таблица с метаданными. В этой таблице также хранятся контрольные суммы миграций и информация о том, успешна была миграция или нет.
 
