@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.models.dto;
 
+import com.javamentor.qa.platform.models.dto.question.TagDto;
 import lombok.*;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;

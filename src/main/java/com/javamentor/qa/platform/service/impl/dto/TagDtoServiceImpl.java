@@ -19,6 +19,11 @@ public class TagDtoServiceImpl implements TagDtoService {
     }
 
     @Override
+    public List<TagDto> getTagDtoServiceById(Long id) {
+        return tagDtoDao.getTagDtoDaoById(id);
+    }
+
+    @Override
     public List<TagDto> getTrackedTagsByUserId(Long currentUserId) {
         return tagDtoDao.getTrackedTagsByUserId(currentUserId);
     }
