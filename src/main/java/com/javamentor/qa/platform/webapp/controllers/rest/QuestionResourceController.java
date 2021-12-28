@@ -48,7 +48,6 @@ public class QuestionResourceController {
         User user =(User) auth.getPrincipal();
         Long userId = user.getId();
         String userName = user.getUsername();
-        System.out.println("userName= " + userName);
         Question question = questionService
                 .getQuestionByIdWithAuthor(questionId)
                 .orElseThrow(() -> new ConstrainException("Can't find question with id:" + questionId));
