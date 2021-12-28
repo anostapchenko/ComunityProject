@@ -5,7 +5,6 @@ import com.javamentor.qa.platform.models.entity.question.Question;
 import java.util.Optional;
 
 public interface QuestionService extends ReadWriteService<Question, Long> {
-    Long getCountByQuestion();
+    Optional<Long> getCountByQuestion();
 
-    Optional<Question> getQuestionByIdWithAuthor (Long id);
 }
