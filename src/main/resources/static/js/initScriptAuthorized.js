@@ -34,7 +34,7 @@ function start() {
 
     let container = document.createElement("div")
     container.innerHTML = `
-        <div class="row">
+        <div class="row min-vh-100">
             <div class="col-2 col-sidebar"></div>
             <div class="col col-main"></div>
         </div>
@@ -114,28 +114,28 @@ function createFooter() {
     footer.innerHTML = `
         <div class="container">
             <div class="row">
-                <div class="col">
+                <div class="col item_group">
                     <h6>BLOCK 1</h6>
                     <div>Item 1</div>
                     <div>Item 2</div>
                     <div>Item 3</div>
                     <div>Item 4</div>
                 </div>
-                <div class="col">
+                <div class="col item_group">
                     <h6>BLOCK 2</h6>
                     <div>Item 1</div>
                     <div>Item 2</div>
                     <div>Item 3</div>
                     <div>Item 4</div>
                 </div>
-                <div class="col">
+                <div class="col item_group">
                     <h6>BLOCK 3</h6>
                     <div>Item 1</div>
                     <div>Item 2</div>
                     <div>Item 3</div>
                     <div>Item 4</div>
                 </div>
-                <div class="col">
+                <div class="col item_group">
                     <h6>CONTACT US</h6>
                     <div>Item 1</div>
                     <div>Item 2</div>
@@ -154,10 +154,10 @@ function createSideBar() {
     const sideBar = document.createElement("div")
     sideBar.innerHTML = `
         <div class="sticky-top">
-            <a class="nav-link active" href="#">Вопросы</a>
-            <a class="nav-link" href="/tags">Метки</a>
-            <a class="nav-link" href="/users">Участники</a>
-            <a class="nav-link" href="#">Неотвеченные</a>
+            <a class="nav-link" href="/questions" id="sidebar_questions">Вопросы</a>
+            <a class="nav-link" href="/tags" id="sidebar_tags">Метки</a>
+            <a class="nav-link" href="/users" id="sidebar_users">Участники</a>
+            <a class="nav-link" href="#" id="sidebar_unanswered">Неотвеченные</a>
         </div>
     `
     sideBar.classList.add("sidebar")

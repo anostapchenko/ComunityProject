@@ -1,0 +1,23 @@
+user_entity:
+  - id: 100
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 15"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user100@mail.ru"
+    nickname: "user1"
+    is_enabled: true
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 102
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 15"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user102@mail.ru"
+    nickname: "user1"
+    is_enabled: true
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
