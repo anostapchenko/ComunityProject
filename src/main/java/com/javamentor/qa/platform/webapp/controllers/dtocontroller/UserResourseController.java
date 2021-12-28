@@ -35,8 +35,14 @@ public class UserResourseController {
             @Content(mediaType = "application/json")
     })
 
-    public ResponseEntity<Optional<UserDto>> getUserDtoId(@PathVariable("userId") long id) {
+    public ResponseEntity<UserDto> getUserDtoId(@PathVariable("userId") long id) {
+
         Optional<UserDto> userDto = userDtoService.findUserDtoById(id);
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+
+        if(userDto.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }else{
+            return new ResponseEntity<>(userDto.get(), HttpStatus.OK);
+        }
     }
 }
