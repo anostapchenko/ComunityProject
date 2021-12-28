@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.models.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(description = "Вопрос")
 public class QuestionDto implements Serializable {
 
     private Long id;

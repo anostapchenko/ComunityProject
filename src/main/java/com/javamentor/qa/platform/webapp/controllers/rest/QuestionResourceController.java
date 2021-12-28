@@ -92,15 +92,15 @@ public class QuestionResourceController {
         User user =(User) auth.getPrincipal();
         Long userId = user.getId();
 
-        Question question = questionService
-                .getQuestionByIdWithAuthor(questionId)
-                .orElseThrow(() -> new ConstrainException("Can't find question with id:" + questionId));
-        int countUpVote = 10;
-        if (voteQuestionService.validateUserVoteByQuestionIdAndUserId(questionId, userId)) {
-            VoteQuestion voteQuestion = new VoteQuestion(user,question,VoteType.UP_VOTE,countUpVote);
-            voteQuestionService.persist(voteQuestion);
-            return new ResponseEntity<>(voteQuestionService.getVoteByQuestionId(questionId), HttpStatus.OK);
-        }
+//        Question question = questionService
+//                .getQuestionByIdWithAuthor(questionId)
+//                .orElseThrow(() -> new ConstrainException("Can't find question with id:" + questionId));
+//        int countUpVote = 10;
+//        if (voteQuestionService.validateUserVoteByQuestionIdAndUserId(questionId, userId)) {
+//            VoteQuestion voteQuestion = new VoteQuestion(user,question,VoteType.UP_VOTE,countUpVote);
+//            voteQuestionService.persist(voteQuestion);
+//            return new ResponseEntity<>(voteQuestionService.getVoteByQuestionId(questionId), HttpStatus.OK);
+//        }
         return new ResponseEntity<>("User was voting", HttpStatus.BAD_REQUEST);
     }
 
