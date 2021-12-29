@@ -59,7 +59,19 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(content().string(containsString("User was voting")));
     }
     @Test
-    @DataSet(value = "dataset/QuestionResourceController/questions.yml", strategy = SeedStrategy.INSERT)
+    @DataSet(value = {
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tags.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/questions_has_tag.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml"
+    },
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true
+    )
     // Получение json по существующему вопросу
     public void getCorrectQuestionDtoByIdTest() throws Exception {
         mockMvc.perform(get("/api/user/question/1")
@@ -86,7 +98,19 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(jsonPath("$.listTagDto[0].id").value(1));
     }
     @Test
-    @DataSet(cleanBefore = true, value = "dataset/QuestionResourceController/questions.yml", strategy = SeedStrategy.INSERT)
+    @DataSet(value = {
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tags.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/questions_has_tag.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml"
+    },
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true
+    )
     // получение ответа по не существующему в тестовой базе вопросу
     public void getWrongQuestionDtoByIdTest() throws Exception {
         mockMvc.perform(get("/api/user/question/2")
