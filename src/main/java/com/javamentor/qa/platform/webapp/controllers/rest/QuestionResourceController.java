@@ -1,6 +1,7 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.exception.ConstrainException;
+import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
@@ -94,12 +95,7 @@ public class QuestionResourceController {
             @Content(mediaType = "application/json")
     })
     public ResponseEntity<Object> getQuestion(@PathVariable Long id){
-        try{
-            return new ResponseEntity<>(questionDtoService.getQuestionDtoServiceById(id), HttpStatus.OK);
-        } catch (NoSuchElementException e){
-            return new ResponseEntity<>("Wrong question number!",HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(questionDtoService.getQuestionDtoServiceById(id).get(), HttpStatus.OK);
     }
-
 }
 

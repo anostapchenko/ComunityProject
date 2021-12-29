@@ -4,5 +4,5 @@ import com.javamentor.qa.platform.models.dto.QuestionDto;
 import java.util.Optional;
 
 public interface QuestionDtoDao {
-    QuestionDto getQuestionDtoDaoById(Long id);
+    Optional<QuestionDto> getQuestionDtoDaoById(Long id);
 }

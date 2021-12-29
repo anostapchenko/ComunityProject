@@ -92,6 +92,7 @@ public class TestDataInitService {
             Tag tag = Tag.builder()
                     .name("Tag " + i)
                     .description("Description of tag " + i)
+                    .persistDateTime(LocalDateTime.now())
                     .build();
             tags.add(tag);
         }

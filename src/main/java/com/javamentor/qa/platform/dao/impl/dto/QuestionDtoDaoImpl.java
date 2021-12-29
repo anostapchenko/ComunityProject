@@ -1,6 +1,7 @@
 package com.javamentor.qa.platform.dao.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.QuestionDtoDao;
+import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
 import com.javamentor.qa.platform.dao.util.SingleResultUtil;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import org.hibernate.transform.ResultTransformer;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Repository
@@ -17,7 +17,14 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public QuestionDto getQuestionDtoDaoById(Long id) {
+    public final TagDtoDao tagDtoDao;
+
+    public QuestionDtoDaoImpl(TagDtoDao tagDtoDao) {
+        this.tagDtoDao = tagDtoDao;
+    }
+
+    @Override
+    public Optional<QuestionDto> getQuestionDtoDaoById(Long id) {
 
         TypedQuery<QuestionDto> dto = entityManager.createQuery("select q.id, q.title, u.id," +
                         " u.fullName, u.imageLink, q.description, q.persistDateTime," +
@@ -42,6 +49,7 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                         questionDto.setAuthorReputation((Long) tuple[8]);
                         questionDto.setCountAnswer(((Number) tuple[9]).intValue());
                         questionDto.setCountValuable(((Number) tuple[10]).intValue());
+                        questionDto.setListTagDto(tagDtoDao.getTagDtoDaoById(id));
                         return questionDto;
                     }
                     @Override
@@ -49,8 +57,6 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                         return list;
                     }
                 });
-//        return SingleResultUtil.getSingleResultOrNull(dto).orElseThrow(() -> new NoSuchElementException("No such question!"));
-        return SingleResultUtil.getSingleResultOrNull(dto).orElseThrow(() -> new NoSuchElementException("No such question!"));
-
+        return SingleResultUtil.getSingleResultOrNull(dto);
     }
 }

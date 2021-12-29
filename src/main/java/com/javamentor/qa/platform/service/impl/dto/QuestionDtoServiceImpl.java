@@ -10,6 +10,8 @@ import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class QuestionDtoServiceImpl implements QuestionDtoService {
     public final QuestionDtoDao questionDtoDao;
@@ -20,9 +22,7 @@ public class QuestionDtoServiceImpl implements QuestionDtoService {
         this.tagDtoDao = tagDtoDao;
     }
 
-    public QuestionDto getQuestionDtoServiceById(Long id){
-        QuestionDto q = questionDtoDao.getQuestionDtoDaoById(id);
-        q.setListTagDto(tagDtoDao.getTagDtoDaoById(id));
-        return q;
+    public Optional<QuestionDto> getQuestionDtoServiceById(Long id){
+        return questionDtoDao.getQuestionDtoDaoById(id);
     }
 }
