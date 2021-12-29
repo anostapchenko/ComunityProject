@@ -49,6 +49,8 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                         return list;
                     }
                 });
+//        return SingleResultUtil.getSingleResultOrNull(dto).orElseThrow(() -> new NoSuchElementException("No such question!"));
         return SingleResultUtil.getSingleResultOrNull(dto).orElseThrow(() -> new NoSuchElementException("No such question!"));
+
     }
 }
