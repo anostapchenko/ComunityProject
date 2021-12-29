@@ -1,15 +1,14 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.models.dto.question.TagDto;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.TagDtoService;
 import io.swagger.v3.oas.annotations.Operation;
+import com.javamentor.qa.platform.models.dto.question.TagDto;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,15 +17,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "TagResourceController", description = "Позволяет работать с тегами")
 @RestController
+@Tag(name = "Tag Resource Controller", description = "Управление сущностями, которые связаны с тэгами")
 public class TagResourceController {
 
-    private TagDtoService tagDtoService;
+    private final
+    TagDtoService tagDtoService;
 
-    @Autowired
-    public void setTagServiceImpl(TagDtoService tagDtoService) {
+    public TagResourceController(TagDtoService tagDtoService) {
         this.tagDtoService = tagDtoService;
+    }
+
+
+    @GetMapping("/api/user/tag/ignored")
+    @Operation(
+            summary = "Тэг, который пользователь выбрал для игнорирования",
+            description = "Возвращает список тэгов, которые пользователь выбрал для игнорирования"
+    )
+    public ResponseEntity<?> getIgnoredTag (Authentication auth) {
+        User user = (User) auth.getPrincipal();
+        return new ResponseEntity<>(tagDtoService.getIgnoredTagByUserId(user.getId()), HttpStatus.OK);
     }
 
     @Operation(summary = "Получение списка пользовательских тегов",
