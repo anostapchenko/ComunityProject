@@ -1,0 +1,9 @@
+.btn_link_custom {
+    color: #007bff;
+}
+
+.btn_link_custom:hover {
+    color: #0056b3;
+    text-decoration: underline;
+    cursor: pointer;
+}

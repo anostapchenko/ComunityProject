@@ -1,0 +1,13 @@
+tag_tracked:
+  - id: 100
+    persist_date: 2021-12-13 15:09:52.715570
+    tracked_tag_id: 102
+    user_id: 100
+  - id: 101
+    persist_date: 2021-11-13 15:09:52.715570
+    tracked_tag_id: 103
+    user_id: 100
+  - id: 102
+    persist_date: 2021-11-13 15:09:52.715570
+    tracked_tag_id: 104
+    user_id: 102
