@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 @Tag(name = "UserDto", description = "Get UserDto id")
@@ -27,12 +29,18 @@ public class UserResourseController {
     }
 
     @GetMapping("{userId}")
-    @Operation(summary = "Получение UserDto по id")
-    @ApiResponse(responseCode = "200", description = "OK", content = {
-            @Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class))
-    })
-    @ApiResponse(responseCode = "400", description = "Неверные учетные данные", content = {
-            @Content(mediaType = "application/json")
+    @Operation(summary = "Получение dto пользователя по id",
+            description = "Получение null сли пользователь не найден")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает список UserDto (id, email, fullName, imageLink, city, reputacion)",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = UserDto.class))
+                    }),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещён")
     })
 
     public ResponseEntity<UserDto> getUserDtoId(@PathVariable("userId") long id) {
@@ -41,8 +49,7 @@ public class UserResourseController {
 
         if(userDto.isEmpty()) {
             return ResponseEntity.notFound().build();
-        }else{
-            return new ResponseEntity<>(userDto.get(), HttpStatus.OK);
         }
+        return new ResponseEntity<>(userDto.get(), HttpStatus.OK);
     }
 }
