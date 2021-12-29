@@ -34,8 +34,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (token != null && jwtUtil.validateToken(token)) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUtil.extractUsername(token));
 
-                if (!userDetails.isEnabled()) {
-                    response.sendError(HttpStatus.FORBIDDEN.value(), "User is disabled");
+                if (!userDetails.isAccountNonLocked()) {
+                    response.sendError(HttpStatus.FORBIDDEN.value(), "User is deleted");
                     return;
                 }
 

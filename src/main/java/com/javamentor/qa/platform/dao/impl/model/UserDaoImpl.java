@@ -27,12 +27,11 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
         return SingleResultUtil.getSingleResultOrNull(query);
     }
 
-    @Transactional
     @Override
-    public int disableUserWithId(long id) {
-        String hql = "update User u set u.isEnabled=false where u.id=:id";
-        TypedQuery<User> query = (TypedQuery<User>) entityManager.createQuery(hql).setParameter("id", id);
-        return query.executeUpdate();
+    public void deleteById(Long id) {
+        entityManager
+                .createQuery("update User u set u.isDeleted=true where u.id=:id")
+                .setParameter("id", id)
+                .executeUpdate();
     }
-
 }

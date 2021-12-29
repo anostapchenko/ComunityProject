@@ -21,9 +21,8 @@ public class AdminResourceController {
     }
 
     @PutMapping("/disable-user/{id}")
-    public ResponseEntity<Object> disableUserWithId(@PathVariable("id") long id) {
-        return userService.disableUserWithId(id) ?
-                new ResponseEntity<>("User with id = " + id + " was successfully disabled", HttpStatus.OK) :
-                new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Object> deleteUserWithId(@PathVariable("id") long id) {
+        userService.deleteById(id);
+        return new ResponseEntity<>("User with id = " + id + " was successfully disabled", HttpStatus.OK);
     }
 }

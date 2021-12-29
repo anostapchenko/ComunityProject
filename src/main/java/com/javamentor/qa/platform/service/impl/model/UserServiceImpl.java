@@ -74,9 +74,4 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User, Long> implements
         return userDao.getWithRoleByEmail(email);
     }
 
-    @Override
-    public boolean disableUserWithId(long id) {
-        int b = userDao.disableUserWithId(id);
-        return b != 0;
-    }
 }
