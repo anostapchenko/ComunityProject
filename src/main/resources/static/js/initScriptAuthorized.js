@@ -101,7 +101,7 @@ function createHeader() {
                 </a>
             </div>
             <div class="col-2">
-                <button class="btn btn-info btn-block">Log out</button>
+                <button class="btn btn-info btn-block" id="logout_btn">Log out</button>
             </div>
         </div>
     `
