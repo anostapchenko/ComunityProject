@@ -8,6 +8,6 @@ public interface UserService extends ReadWriteService<User, Long> {
 
     Optional<User> getByEmail(String email);
 
-    boolean disableUserWithEmail(long id);
+    boolean disableUserWithId(long id);
 
 }

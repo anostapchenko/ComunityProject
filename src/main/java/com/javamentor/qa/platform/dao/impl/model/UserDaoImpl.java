@@ -29,7 +29,7 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
 
     @Transactional
     @Override
-    public int disableUserWithEmail(long id) {
+    public int disableUserWithId(long id) {
         String hql = "update User u set u.isEnabled=false where u.id=:id";
         TypedQuery<User> query = (TypedQuery<User>) entityManager.createQuery(hql).setParameter("id", id);
         return query.executeUpdate();

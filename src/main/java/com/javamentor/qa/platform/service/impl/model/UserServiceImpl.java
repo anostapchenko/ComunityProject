@@ -75,8 +75,8 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User, Long> implements
     }
 
     @Override
-    public boolean disableUserWithEmail(long id) {
-        int b = userDao.disableUserWithEmail(id);
+    public boolean disableUserWithId(long id) {
+        int b = userDao.disableUserWithId(id);
         return b != 0;
     }
 }
