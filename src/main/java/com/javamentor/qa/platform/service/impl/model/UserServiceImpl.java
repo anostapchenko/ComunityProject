@@ -39,8 +39,9 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User, Long> implements
     public void updateAll(Iterable<? extends User> users) {
         users.forEach(user -> {
             String oldPassword = getById(user.getId()).get().getPassword();
-            if (user.getPassword().trim().isEmpty()) { user.setPassword(oldPassword); }
-            else if (!user.getPassword().equals(oldPassword)) {
+            if (user.getPassword().trim().isEmpty()) {
+                user.setPassword(oldPassword);
+            } else if (!user.getPassword().equals(oldPassword)) {
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
             }
         });
@@ -59,8 +60,9 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User, Long> implements
         // Check password for changes...
         // This method don't allow empty passwords!
         String oldPassword = getById(user.getId()).get().getPassword();
-        if (user.getPassword().trim().isEmpty()) { user.setPassword(oldPassword); }
-        else if (!user.getPassword().equals(oldPassword)) {
+        if (user.getPassword().trim().isEmpty()) {
+            user.setPassword(oldPassword);
+        } else if (!user.getPassword().equals(oldPassword)) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         super.update(user);
@@ -73,8 +75,8 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User, Long> implements
     }
 
     @Override
-    public boolean disableUserWithEmail(String email) {
-        userDao.disableUserWithEmail(email);
-        return false;
+    public boolean disableUserWithEmail(long id) {
+        int b = userDao.disableUserWithEmail(id);
+        return b != 0;
     }
 }

@@ -8,5 +8,5 @@ public interface UserDao extends ReadWriteDao<User, Long> {
 
     Optional<User> getWithRoleByEmail(String email);
 
-    boolean disableUserWithEmail(String email);
+    int disableUserWithEmail(long id);
 }
