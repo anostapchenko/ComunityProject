@@ -8,26 +8,19 @@ import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.isA;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTests {
 
     @Test
-    //У пользовател с id = 15 есть игнорируемые тэги
+    //У пользовател с id = 102 есть игнорируемые тэги
     @DataSet(cleanBefore = true,
             value = {
             "dataset/testTagResourceController/roles.yml",
