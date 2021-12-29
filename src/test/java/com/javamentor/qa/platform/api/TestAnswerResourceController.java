@@ -5,7 +5,6 @@ import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.javamentor.qa.platform.AbstractClassForDRRiderMockMVCTests;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,16 +25,6 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
     private MockMvc mvc;
 
     private static final String PASSWORD = "password";
-
-//    public String getTokens(String email) throws Exception {
-//        String tokenJS = mvc.perform(MockMvcRequestBuilders
-//                .post("/api/auth/token")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content("{\"username\" : \"" + email + "\"," +
-//                        " \"password\" : \"password\"}")
-//        ).andReturn().getResponse().getContentAsString();
-//        return new JSONObject(tokenJS).getString("token");
-//    }
 
     @Test
     @DataSet(value = {

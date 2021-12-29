@@ -39,7 +39,9 @@ public class VoteAnswerServiceImpl extends ReadWriteServiceImpl<VoteAnswer, Long
 
     public void persist(VoteAnswer voteAnswer) {
         int count = -5;
-        if (voteAnswer.getVote().equals(VoteType.UP_VOTE)) count = 10;
+        if (voteAnswer.getVote().equals(VoteType.UP_VOTE)) {
+            count = 10;
+        }
         voteAnswerDao.persist(voteAnswer);
         reputationDao.persist(Reputation.builder()
                 .count(count)

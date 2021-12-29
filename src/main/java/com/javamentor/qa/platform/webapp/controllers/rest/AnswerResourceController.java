@@ -79,7 +79,7 @@ public class AnswerResourceController {
             @ApiResponse(responseCode = "404", description = "Not Found, если нет id нужного ответа")
     })
     @PostMapping(path = "api/user/question/{questionId}/answer/{id}/upVote")
-    public ResponseEntity<Long> upVote(@PathVariable(name = "id") long answerId,
+    public ResponseEntity<?> upVote(@PathVariable(name = "id") long answerId,
                                        Authentication authentication) {
         User currentUser = (User) authentication.getPrincipal();
         return upDownVoteEvent(VoteType.UP_VOTE, answerId, currentUser);
@@ -103,7 +103,7 @@ public class AnswerResourceController {
             @ApiResponse(responseCode = "404", description = "Not Found, если нет id нужного ответа")
     })
     @PostMapping(path = "api/user/question/{questionId}/answer/{id}/downVote")
-    public ResponseEntity<Long> downVote(
+    public ResponseEntity<?> downVote(
             @PathVariable(name = "id") long answerId,
             Authentication authentication) {
         User currentUser = (User) authentication.getPrincipal();
@@ -112,14 +112,14 @@ public class AnswerResourceController {
 
     @Operation(summary = "Проверка и добавление голоса за ответ, возврат суммы голосов", description =
             "Проверяет, существует ли Answer по id, " +
-                    "если нет - NotFound, " +
+                    "если нет - BadRequest, " +
                     "если да - проверяет, есть ли голос текущего пользователя," +
                     "если нет - добавляет и возвращает Ok + votes count," +
                     "если да - возвращает Ok + votes count")
-    private ResponseEntity<Long> upDownVoteEvent(VoteType vote, long answerId, User currentUser) {
+    private ResponseEntity<?> upDownVoteEvent(VoteType vote, long answerId, User currentUser) {
         Optional<Answer> optional = answerService.getAnswerWithAuthor(answerId);
         if (!optional.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("The answer not found", HttpStatus.BAD_REQUEST);
         }
         if (!voteAnswerService.existsVoteByAnswerAndUser(answerId, currentUser.getId())) {
             voteAnswerService.persist(new VoteAnswer(currentUser, optional.get(), vote));
