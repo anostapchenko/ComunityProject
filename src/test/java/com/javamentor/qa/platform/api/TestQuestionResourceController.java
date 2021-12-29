@@ -116,6 +116,6 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         mockMvc.perform(get("/api/user/question/2")
                         .header("Authorization", "Bearer " + getToken("test15@mail.ru","test15")))
                 .andDo(print())
-                .andExpect(status().isBadRequest()); // Тест по отсутствующему вопросу не проходит
+                .andExpect(status().isBadRequest());
     }
 }

@@ -37,7 +37,7 @@ public class TagDtoDaoImpl extends ReadWriteDaoImpl<TagDto, Long> implements Tag
                 .setParameter("userId",userId)
                 .getResultList();
     }
-
+    @Override
     public List<TagDto> getTrackedTagsByUserId(Long currentUserId) {
         return entityManager.createQuery(
                 "SELECT t.id as id, t.name as name, t.persistDateTime as persistDateTime " +

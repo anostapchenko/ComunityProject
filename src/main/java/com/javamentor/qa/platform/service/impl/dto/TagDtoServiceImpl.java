@@ -17,7 +17,7 @@ public class TagDtoServiceImpl extends ReadWriteServiceImpl<TagDto, Long> implem
         super(tagDtoDao);
         this.tagDtoDao = tagDtoDao;
     }
-
+    @Override
     public List<TagDto> getIgnoredTagByUserId(Long userId){
         return tagDtoDao.getIgnoredTagByUserId(userId);
     }
