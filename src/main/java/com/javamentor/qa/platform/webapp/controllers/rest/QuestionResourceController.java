@@ -96,8 +96,11 @@ public class QuestionResourceController {
             @Content(mediaType = "application/json")
     })
     public ResponseEntity<?> getQuestion(@PathVariable Long id){
-        return new ResponseEntity<>(questionDtoService.getQuestionDtoServiceById(id)
+        if(questionDtoService.getQuestionDtoServiceById(id).isPresent()){
+            return new ResponseEntity<>(questionDtoService.getQuestionDtoServiceById(id)
                 .get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }
 
