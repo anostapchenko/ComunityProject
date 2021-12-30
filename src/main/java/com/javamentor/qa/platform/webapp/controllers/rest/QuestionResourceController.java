@@ -99,7 +99,7 @@ public class QuestionResourceController {
     })
     public ResponseEntity<?> getQuestion(@PathVariable Long id){
         return new ResponseEntity<>(questionDtoService.getQuestionDtoServiceById(id)
-                .orElseThrow(() -> new NoSuchDaoException("The question not found!")), HttpStatus.OK);
+                .get(), HttpStatus.OK);
     }
 }
 

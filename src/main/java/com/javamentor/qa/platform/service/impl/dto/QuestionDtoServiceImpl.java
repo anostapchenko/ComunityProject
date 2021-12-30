@@ -26,8 +26,7 @@ public class QuestionDtoServiceImpl implements QuestionDtoService {
             QuestionDto questionDto = questionDtoDao.getQuestionDtoDaoById(id).get();
             questionDto.setListTagDto(tagDtoDao.getTagDtoDaoById(id));
             return Optional.of(questionDto);
-        } else {
-            return Optional.empty();
         }
+            return Optional.empty();
     }
 }
