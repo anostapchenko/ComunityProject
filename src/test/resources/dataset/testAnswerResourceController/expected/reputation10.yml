@@ -1,0 +1,9 @@
+reputation:
+  - id: 1
+    count: 10
+    persist_date: 2021-12-13 15:09:52.715570
+    type: 2
+    answer_id: 100
+    author_id: 100
+    question_id: null
+    sender_id: 101
