@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController
 @Tag(name = "Question Resource Controller", description = "Управление сущностями, которые связаны с вопросами")
@@ -94,8 +95,9 @@ public class QuestionResourceController {
     @ApiResponse(responseCode = "200", description = "Информация по вопросу", content = {
             @Content(mediaType = "application/json")
     })
-    public ResponseEntity<Object> getQuestion(@PathVariable Long id){
-        return new ResponseEntity<>(questionDtoService.getQuestionDtoServiceById(id).get(), HttpStatus.OK);
+    public ResponseEntity<?> getQuestion(@PathVariable Long id){
+        return new ResponseEntity<>(questionDtoService.getQuestionDtoServiceById(id)
+                .get(), HttpStatus.OK);
     }
 }
 
