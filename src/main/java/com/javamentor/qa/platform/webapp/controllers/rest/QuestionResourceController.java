@@ -1,6 +1,7 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.exception.ConstrainException;
+import com.javamentor.qa.platform.exception.NoSuchDaoException;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
@@ -48,7 +49,7 @@ public class QuestionResourceController {
         Long userId = user.getId();
         Question question = questionService
                 .getQuestionByIdWithAuthor(questionId)
-                .orElseThrow(() -> new ConstrainException("Can't find question with id:" + questionId));
+                .orElseThrow(() -> new NoSuchDaoException("Can't find question with id:" + questionId));
         int countUpVote = 10;
         if (voteQuestionService.validateUserVoteByQuestionIdAndUserId(questionId, userId)) {
             VoteQuestion voteQuestion = new VoteQuestion(user,question,VoteType.UP_VOTE,countUpVote);
