@@ -11,10 +11,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import java.net.MalformedURLException;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -22,11 +19,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DataSet(value = "dataset/AuthenticationResourceController/users.yml")
+@DataSet(value = "dataset/AuthenticationResourceController/auth.yml")
 public class TestAuthenticationResourceController extends AbstractClassForDRRiderMockMVCTests {
-
-    @Autowired
-    private MockMvc mockMvc;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -34,12 +28,9 @@ public class TestAuthenticationResourceController extends AbstractClassForDRRide
     @Autowired
     private UserService userService;
 
-    protected TestAuthenticationResourceController() throws MalformedURLException {
-    }
-
     @Test
     public void forbiddenWhenNotAuthorized() throws Exception {
-        mockMvc.perform(get("/api/user"))
+        mockMvc.perform(get("/api/user/tag/tracked"))
                 .andDo(print())
                 .andExpect(status().isForbidden())
                 .andExpect(status().reason("Access Denied"));
@@ -49,8 +40,8 @@ public class TestAuthenticationResourceController extends AbstractClassForDRRide
     public void getTokenAndPassRequestForValidUser() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         AuthenticationRequest request = new AuthenticationRequest();
-        request.setUsername("test15@mail.ru");
-        request.setPassword("test15");
+        request.setUsername("test100@mail.ru");
+        request.setPassword("test100");
         MvcResult result = mockMvc.perform(post("/api/auth/token").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsBytes(request)))
                 .andDo(print())
@@ -59,7 +50,7 @@ public class TestAuthenticationResourceController extends AbstractClassForDRRide
                 .andReturn();
 
         AuthenticationResponse response = mapper.readValue(result.getResponse().getContentAsByteArray(), AuthenticationResponse.class);
-        mockMvc.perform(get("/api/user").header("Authorization", "Bearer " + response.getToken()))
+        mockMvc.perform(get("/api/user/tag/tracked").header("Authorization", "Bearer " + response.getToken()))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -79,10 +70,10 @@ public class TestAuthenticationResourceController extends AbstractClassForDRRide
 
     @Test
     public void forbiddenWhenTokenExpired() throws Exception {
-        User user = userService.getByEmail("test15@mail.ru").get();
+        User user = userService.getByEmail("test100@mail.ru").get();
         String token = jwtUtil.generateToken(user, -1L);
 
-        mockMvc.perform(get("/api/user").header("Authorization", "Bearer " + token))
+        mockMvc.perform(get("/api/user/tag/tracked").header("Authorization", "Bearer " + token))
                 .andDo(print())
                 .andExpect(status().isForbidden())
                 .andExpect(status().reason("Token expired"));

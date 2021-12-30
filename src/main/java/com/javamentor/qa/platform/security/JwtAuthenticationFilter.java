@@ -1,12 +1,10 @@
-package com.javamentor.qa.platform.webapp.configs;
+package com.javamentor.qa.platform.security;
 
-import com.javamentor.qa.platform.security.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,8 +33,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = jwtUtil.resolveToken(request);
             if (token != null && jwtUtil.validateToken(token)) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUtil.extractUsername(token));
-                Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 
+                if (!userDetails.isAccountNonLocked()) {
+                    response.sendError(HttpStatus.FORBIDDEN.value(), "User is deleted");
+                    return;
+                }
+
+                Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         } catch (ExpiredJwtException e) {
