@@ -47,8 +47,8 @@ public class UserResourseController {
 
         Optional<UserDto> userDto = userDtoService.findUserDtoById(id);
 
-        if(userDto.isEmpty()) {
-            return ResponseEntity.notFound().build();
+        if (userDto.isEmpty()) {
+            return new ResponseEntity("Пользователь не найден!", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(userDto.get(), HttpStatus.OK);
     }
