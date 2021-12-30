@@ -24,11 +24,11 @@ public class UserPageDtoDaoByVoteImpl implements PageDtoDao<UserDto> {
         int itemsOnPage = properties.getItemsOnPage();
         int offset = (properties.getCurrentPage() - 1) * itemsOnPage;
         return entityManager.createQuery(
-                "SELECT u.id, u.email, u.fullName, u.imageLink, u.city, SUM(CASE WHEN r.count = NULL THEN 0 ELSE r.count END) AS reputation " +
-                        "FROM User u LEFT JOIN Reputation r " +
-                        "ON r.author.id = u.id WHERE r.type = :voteAns OR r.type = :voteQuest " +
-                        //"GROUP BY u.id ORDER BY SUM(CASE WHEN r.count > 0 THEN 1 ELSE -1 END) DESC, u.email ASC "
-                        "GROUP BY u.id ORDER BY COUNT(r.count) DESC, u.email ASC "
+                "SELECT u.id, u.email, u.fullName, u.imageLink, u.city, " +
+                        "SUM(CASE WHEN r.count = NULL THEN 0 ELSE r.count END) AS reputation," +
+                        "SUM(CASE WHEN r.type = :voteAns OR r.type = :voteQuest THEN 1 ELSE 0 END) AS voteOrder " +
+                        "FROM User u LEFT JOIN Reputation r ON r.author.id = u.id " +
+                        "GROUP BY u.id ORDER BY voteOrder DESC, u.id ASC "
         )
                 .setParameter("voteAns", ReputationType.VoteAnswer)
                 .setParameter("voteQuest", ReputationType.VoteQuestion)
