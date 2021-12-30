@@ -22,10 +22,10 @@ public class QuestionDtoServiceImpl implements QuestionDtoService {
 
     @Override
     public Optional<QuestionDto> getQuestionDtoServiceById(Long id){
-        if(questionDtoDao.getQuestionDtoDaoById(id).isPresent()){
-            QuestionDto questionDto = questionDtoDao.getQuestionDtoDaoById(id).get();
-            questionDto.setListTagDto(tagDtoDao.getTagDtoDaoById(id));
-            return Optional.of(questionDto);
+        Optional<QuestionDto> q = questionDtoDao.getQuestionDtoDaoById(id);
+        if(q.isPresent()){
+            q.get().setListTagDto(tagDtoDao.getTagDtoDaoById(id));
+            return q;
         }
             return Optional.empty();
     }

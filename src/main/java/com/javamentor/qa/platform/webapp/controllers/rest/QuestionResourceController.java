@@ -97,9 +97,13 @@ public class QuestionResourceController {
     @ApiResponse(responseCode = "200", description = "Информация по вопросу", content = {
             @Content(mediaType = "application/json")
     })
+
     public ResponseEntity<?> getQuestion(@PathVariable Long id){
-        return new ResponseEntity<>(questionDtoService.getQuestionDtoServiceById(id)
-                .get(), HttpStatus.OK);
+        Optional<QuestionDto> q = questionDtoService.getQuestionDtoServiceById(id);
+        if(q.isPresent()){
+            return new ResponseEntity<>(q.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }
 
