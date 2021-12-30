@@ -49,7 +49,6 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                         questionDto.setAuthorReputation((Long) tuple[8]);
                         questionDto.setCountAnswer(((Number) tuple[9]).intValue());
                         questionDto.setCountValuable(((Number) tuple[10]).intValue());
-                        questionDto.setListTagDto(tagDtoDao.getTagDtoDaoById(id));
                         return questionDto;
                     }
                     @Override
