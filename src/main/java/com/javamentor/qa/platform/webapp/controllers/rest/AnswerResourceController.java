@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/user/answer")
 public class AnswerResourceController {
 
     private final AnswerPageDtoService answerDtoService;
@@ -23,7 +25,7 @@ public class AnswerResourceController {
         this.answerDtoService = answerDtoService;
     }
 
-    @GetMapping("/api/answer/id")
+    @GetMapping("/id")
     public ResponseEntity<PageDTO<AnswerDTO>> paginationById(@RequestParam int page, @RequestParam int items) {
         PaginationData data = new PaginationData(page, items,
                 AnswerPageDtoDaoByIdImpl.class.getSimpleName());
@@ -31,7 +33,7 @@ public class AnswerResourceController {
 
     }
 
-    @GetMapping("/api/answer/html_body")
+    @GetMapping("/html_body")
     public ResponseEntity<PageDTO<AnswerDTO>> paginationByHtmlBody(@RequestParam int page, @RequestParam int items) {
         PaginationData data = new PaginationData(page, items,
                 AnswerPageDtoDaoByBodyImpl.class.getSimpleName());

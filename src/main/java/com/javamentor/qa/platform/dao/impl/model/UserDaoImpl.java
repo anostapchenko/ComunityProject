@@ -27,4 +27,11 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
         return SingleResultUtil.getSingleResultOrNull(query);
     }
 
+    @Override
+    public void deleteById(Long id) {
+        entityManager
+                .createQuery("update User u set u.isDeleted=true where u.id=:id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
 }
