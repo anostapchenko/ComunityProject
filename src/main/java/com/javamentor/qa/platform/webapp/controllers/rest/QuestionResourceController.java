@@ -103,7 +103,7 @@ public class QuestionResourceController {
         if(q.isPresent()){
             return new ResponseEntity<>(q.get(), HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Question number not exist!", HttpStatus.BAD_REQUEST);
     }
 }
 
