@@ -23,7 +23,10 @@ public class UserResourceController {
     }
 
     @GetMapping(path = "/api/user/vote")
-    public ResponseEntity<PageDTO<UserDto>> getUsersByVoteAsc(@RequestParam int page, @RequestParam int items) {
+    public ResponseEntity<PageDTO<UserDto>> getUsersByVoteAsc(@RequestParam Integer page, @RequestParam(required = false) Integer items) {
+        if(items == null) {
+            items = 10;
+        }
         PaginationData data = new PaginationData(page, items,
                 UserPageDtoDaoByVoteImpl.class.getSimpleName());
         return new ResponseEntity<>(userDtoService.getPageDto(data), HttpStatus.OK);

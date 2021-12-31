@@ -7,6 +7,7 @@ user_entity:
     email: "user100@mail.ru"
     nickname: "user1"
     is_enabled: true
+    is_deleted: false
     last_redaction_date: 2021-12-09 19:41:18.252588
     persist_date: 2021-12-09 19:41:18.252588
     role_id: 100
@@ -18,6 +19,7 @@ user_entity:
     email: "user101@mail.ru"
     nickname: "user2"
     is_enabled: true
+    is_deleted: false
     last_redaction_date: 2021-12-09 19:41:18.252588
     persist_date: 2021-12-09 19:41:18.252588
     role_id: 100
@@ -29,6 +31,7 @@ user_entity:
     email: "user102@mail.ru"
     nickname: "user3"
     is_enabled: true
+    is_deleted: false
     last_redaction_date: 2021-12-09 19:41:18.252588
     persist_date: 2021-12-09 19:41:18.252588
     role_id: 100

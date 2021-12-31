@@ -26,7 +26,8 @@ public class UserPageDtoDaoByVoteImpl implements PageDtoDao<UserDto> {
         return entityManager.createQuery(
                 "SELECT u.id, u.email, u.fullName, u.imageLink, u.city, " +
                         "SUM(CASE WHEN r.count = NULL THEN 0 ELSE r.count END) AS reputation," +
-                        "SUM(CASE WHEN r.type = :voteAns OR r.type = :voteQuest THEN 1 ELSE 0 END) AS voteOrder " +
+                        "SUM(CASE WHEN (r.type = :voteAns OR r.type = :voteQuest) AND r.count > 0 THEN 1" +
+                        "WHEN (r.type = :voteAns OR r.type = :voteQuest) AND r.count < 0 THEN -1 ELSE 0 END) AS voteOrder " +
                         "FROM User u LEFT JOIN Reputation r ON r.author.id = u.id " +
                         "GROUP BY u.id ORDER BY voteOrder DESC, u.id ASC "
         )
