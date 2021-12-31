@@ -11,3 +11,4 @@ user_entity:
     last_redaction_date: 2021-12-09 19:41:18.252588
     persist_date: 2021-12-09 19:41:18.252588
     role_id : 1
+    is_deleted: false
