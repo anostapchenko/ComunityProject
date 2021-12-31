@@ -13,6 +13,8 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+
 @Repository
 public class QuestionDaoImpl extends ReadWriteDaoImpl<Question, Long> implements QuestionDao {
 
