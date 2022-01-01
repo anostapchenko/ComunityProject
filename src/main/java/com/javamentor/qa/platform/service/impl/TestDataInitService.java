@@ -3,14 +3,20 @@ package com.javamentor.qa.platform.service.impl;
 import com.javamentor.qa.platform.models.entity.question.IgnoredTag;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.Tag;
+import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.TrackedTag;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
+import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
+import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.Role;
 import com.javamentor.qa.platform.models.entity.user.User;
+import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
+import com.javamentor.qa.platform.models.entity.user.reputation.ReputationType;
 import com.javamentor.qa.platform.service.abstracts.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -24,6 +30,9 @@ public class TestDataInitService {
     private final IgnoredTagService ignoredTagService;
     private final QuestionService questionService;
     private final AnswerService answerService;
+    private final ReputationService reputationService;
+    private final VoteQuestionService voteQuestionService;
+    private final VoteAnswerService voteAnswerService;
 
     private final long NUM_OF_USERS = 10L;
     private final long NUM_OF_TAGS = 5L;
@@ -31,6 +40,9 @@ public class TestDataInitService {
     private final long NUM_OF_ANSWERS = 50L;
     private final int MAX_TRACKED_TAGS = 3;
     private final int MAX_IGNORED_TAGS = 3;
+    private final long NUM_OF_REPUTATIONS = 10L;
+    private final long NUM_OF_VOTEQUESTIONS = 10L;
+    private final long NUM_OF_VOTEANSWERS = 10L;
 
     public void init() {
         createRoles();
@@ -39,6 +51,9 @@ public class TestDataInitService {
         createTrackedAndIgnoredTags();
         createQuestions();
         createAnswers();
+        createReputations();
+        createVoteQuestion();
+        createVoteAnswer();
     }
 
     public void createRoles() {
@@ -77,6 +92,7 @@ public class TestDataInitService {
             Tag tag = Tag.builder()
                     .name("Tag " + i)
                     .description("Description of tag " + i)
+                    .persistDateTime(LocalDateTime.now())
                     .build();
             tags.add(tag);
         }
@@ -148,6 +164,49 @@ public class TestDataInitService {
 
         answerService.persistAll(answers);
     }
+    public void createReputations() {
+        List<Reputation> reputations = new ArrayList<>();
+        for (long i = 1; i <= NUM_OF_REPUTATIONS; i++) {
+            Reputation reputation = Reputation.builder()
+                    .persistDate(LocalDateTime.now())
+                    .author(userService.getById(i).get()) // При getRandomUser  могут не быть все авторы
+                    .sender(null)
+                    .count(((Number) (getRandomUser().getId() * 100)).intValue())
+                    .type(ReputationType.Question)
+                    .question(getRandomQuestion())
+                    .answer(null)
+                    .build();
+            reputations.add(reputation);
+        }
+        reputationService.persistAll(reputations);
+    }
+    public void createVoteQuestion() {
+        List<VoteQuestion> voteQuestions = new ArrayList<>();
+        for (long i = 1; i <= NUM_OF_VOTEQUESTIONS; i++) {
+            VoteQuestion voteQuestion = VoteQuestion.builder()
+                    .question(questionService.getById(i).get()) // При getRandomQuestion могут не быть все вопросы
+                    .vote(new Random().nextInt(100) % 2 == 0 ? VoteType.UP_VOTE : VoteType.DOWN_VOTE)
+                    .localDateTime(LocalDateTime.now())
+                    .user(getRandomUser())
+                    .build();
+            voteQuestions.add(voteQuestion);
+        }
+        voteQuestionService.persistAll(voteQuestions);
+    }
+
+    public void createVoteAnswer() {
+        List<VoteAnswer> voteAnswers = new ArrayList<>();
+        for (long i = 1; i <= NUM_OF_VOTEANSWERS; i++) {
+            VoteAnswer voteAnswer = VoteAnswer.builder()
+                    .answer(answerService.getById(i).get())
+                    .vote(new Random().nextInt(100) % 2 == 0 ? VoteType.UP_VOTE : VoteType.DOWN_VOTE)
+                    .persistDateTime(LocalDateTime.now())
+                    .user(getRandomUser())
+                    .build();
+            voteAnswers.add(voteAnswer);
+        }
+        voteAnswerService.persistAll(voteAnswers);
+    }
 
     private List<Tag> getRandomTagList() {
         List<Tag> tags = tagService.getAll();
@@ -167,5 +226,6 @@ public class TestDataInitService {
         List<Question> questions = questionService.getAll();
         return questions.get(new Random().nextInt(questions.size()));
     }
+
 
 }
