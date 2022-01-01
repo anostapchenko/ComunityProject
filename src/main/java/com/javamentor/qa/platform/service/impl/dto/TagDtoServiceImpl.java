@@ -34,4 +34,9 @@ public class TagDtoServiceImpl implements TagDtoService {
     public List<PopularTagDto> getPopularTags(Integer limit) {
         return tagDtoDao.getPopularTags(limit);
     }
+
+    @Override
+    public List<TagDto> getTagDtoServiceById(Long id) {
+        return tagDtoDao.getTagDtoDaoById(id);
+    }
 }

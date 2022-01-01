@@ -1,10 +1,14 @@
 package com.javamentor.qa.platform.models.entity.question;
 
 import com.javamentor.qa.platform.models.entity.user.User;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
