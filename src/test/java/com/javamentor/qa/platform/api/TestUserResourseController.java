@@ -34,6 +34,7 @@ public class TestUserResourseController extends AbstractClassForDRRiderMockMVCTe
                         .contentType("application/json")
                         .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")))
                 .andExpect(status().isOk())
+                .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.*", isA(ArrayList.class))).
                 andExpect(jsonPath("$.*", hasSize(6)))
