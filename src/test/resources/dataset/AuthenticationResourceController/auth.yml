@@ -7,6 +7,7 @@ user_entity:
     password: "$2a$12$Vvk6ZrleqxzJXyqOihZ4Du0LL5VviCgY19NDgtTR7KztOPuPdIsr."
     email: "test100@mail.ru"
     is_enabled: true
+    is_deleted: false
     last_redaction_date: 2021-12-09 19:41:18.252588
     persist_date: 2021-12-09 19:41:18.252588
     role_id: 100
