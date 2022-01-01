@@ -118,4 +118,44 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/questions.yml"
+    },
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true
+    )
+    // получение количество вопросов
+    public void getQuestionCount() throws Exception {
+        mockMvc.perform(get("/api/user/question/count")
+                        .header("Authorization", "Bearer " + getToken("test15@mail.ru","test15")))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/questions.yml"
+    },
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true
+    )
+    // Получение json по существующему вопросу
+    public void getNotOneQuestionCount() throws Exception {
+        mockMvc.perform(get("/api/user/question/count")
+                        .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.id").value("5"))
+                .andExpect(jsonPath("$.is_deleted").value(false))
+                .andExpect(jsonPath("$.persistDateTime").value("2021-12-13T18:09:52.716"))
+                .andExpect(jsonPath("$.lastUpdateDateTime").value("2021-12-13T18:09:52.716"))
+                .andExpect(jsonPath("$.title").value("test"));
+    }
 }
