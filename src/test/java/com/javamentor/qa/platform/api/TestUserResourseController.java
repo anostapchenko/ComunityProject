@@ -3,11 +3,8 @@ package com.javamentor.qa.platform.api;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.javamentor.qa.platform.AbstractClassForDRRiderMockMVCTests;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import java.util.ArrayList;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -63,6 +60,4 @@ public class TestUserResourseController extends AbstractClassForDRRiderMockMVCTe
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
-
-
 }
