@@ -1,51 +1,32 @@
 package com.javamentor.qa.platform.models.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.javamentor.qa.platform.models.dto.question.TagDto;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
-@Schema(description = "Вопрос")
-public class QuestionDto implements Serializable {
-
+@AllArgsConstructor
+public class QuestionDto {
     private Long id;
     private String title;
     private Long authorId;
+    private Long authorReputation; //(можно подсчитать с помощью sql);
     private String authorName;
     private String authorImage;
     private String description;
-    private int viewCount;
-    private int countAnswer;
-    private int countValuable;
+    private int viewCount; //(пока не считай это поле, как оно будет считаться решим позже, пусть пока будет 0)
+    private int countAnswer;// (можно подсчитать с помощью sql);
+    private int countValuable; // (Это голоса за ответ QuestionVote);
     private LocalDateTime persistDateTime;
     private LocalDateTime lastUpdateDateTime;
     private List<TagDto> listTagDto;
 
-    @Override
-    public String toString() {
-        return "{" +
-                "id=" + id +
-                ", title=" + title +
-                ", authorId=" + authorId +
-                ", authorName=" + authorName +
-                ", authorImage=" + authorImage +
-                ", description=" + description +
-                ", viewCount=" + viewCount +
-                ", countAnswer=" + countAnswer +
-                ", countValuable=" + countValuable +
-                ", persistDateTime=" + persistDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) +
-                ", lastUpdateDateTime=" + lastUpdateDateTime +
-                ", listTagDto=" + listTagDto +
-                '}';
-    }
 }
