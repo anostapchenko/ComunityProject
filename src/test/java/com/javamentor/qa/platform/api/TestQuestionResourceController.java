@@ -3,8 +3,12 @@ package com.javamentor.qa.platform.api;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.javamentor.qa.platform.AbstractClassForDRRiderMockMVCTests;
+import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
 import org.junit.jupiter.api.Test;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 
@@ -145,17 +149,14 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             strategy = SeedStrategy.CLEAN_INSERT,
             cleanAfter = true
     )
-    // Получение json по существующему вопросу
+    //Обновляем один вопрос на удаленный и выводим только существующие
+    @Transactional(readOnly = false, isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
     public void getNotOneQuestionCount() throws Exception {
+        entityManager.createQuery("UPDATE Question q set q.isDeleted=true where q.id=1L").executeUpdate();
         mockMvc.perform(get("/api/user/question/count")
                         .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id").value("5"))
-                .andExpect(jsonPath("$.is_deleted").value(false))
-                .andExpect(jsonPath("$.persistDateTime").value("2021-12-13T18:09:52.716"))
-                .andExpect(jsonPath("$.lastUpdateDateTime").value("2021-12-13T18:09:52.716"))
-                .andExpect(jsonPath("$.title").value("test"));
+                .andExpect(status().isOk());
+
     }
 }
