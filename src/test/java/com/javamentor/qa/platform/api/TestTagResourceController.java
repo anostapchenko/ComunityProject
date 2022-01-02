@@ -31,7 +31,7 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
             },
             strategy = SeedStrategy.REFRESH )
     public void shouldReturnListIrnoredTag() throws Exception {
-        this.mockMvc.perform(get("/api/user/tag/ignored")
+        this.mockMvc.perform(get("http://localhost:8091/api/user/tag/ignored")
                 .contentType("application/json")
                 .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")))
                 .andDo(print())
@@ -135,7 +135,7 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
     }
 
     @Test
-    @DataSet(value = "dataset/testTagResourceController/popularTagsNoTags.yml", strategy = SeedStrategy.CLEAN_INSERT)
+    @DataSet(cleanBefore = true, value = "dataset/testTagResourceController/popularTagsNoTags.yml", strategy = SeedStrategy.CLEAN_INSERT)
     public void shouldReturnEmptyArray() throws Exception {
         mockMvc.perform(get("http://localhost:8091/api/user/tag/popular")
                         .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))

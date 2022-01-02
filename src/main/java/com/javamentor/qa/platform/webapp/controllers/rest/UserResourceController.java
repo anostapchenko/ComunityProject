@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class UserRecourceController {
+public class UserResourceController {
 
 
     private final UserPageDtoService userDtoService;
 
     @Autowired
-    public UserRecourceController(UserPageDtoService userDtoService) {
+    public UserResourceController(UserPageDtoService userDtoService) {
         this.userDtoService = userDtoService;
     }
 

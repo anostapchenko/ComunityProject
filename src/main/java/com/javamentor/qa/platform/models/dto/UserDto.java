@@ -4,10 +4,8 @@ import lombok.*;
 
 @Getter
 @Setter
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class UserDto {
 
     private Long id;
@@ -15,5 +13,7 @@ public class UserDto {
     private String fullName;
     private String imageLink;
     private String city;
-    private int reputation;
+    private Long reputation;
+
+
 }

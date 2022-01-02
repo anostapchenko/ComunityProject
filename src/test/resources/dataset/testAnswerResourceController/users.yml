@@ -5,6 +5,7 @@ user_entity:
     full_name: "test 15"
     password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
     email: "user100@mail.ru"
+    is_deleted: false
     nickname: "user1"
     is_enabled: true
     last_redaction_date: 2021-12-09 19:41:18.252588
@@ -16,6 +17,7 @@ user_entity:
     full_name: "test 3"
     password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
     email: "user101@mail.ru"
+    is_deleted: false
     nickname: "user2"
     is_enabled: true
     last_redaction_date: 2021-12-09 19:41:18.252588
@@ -27,6 +29,7 @@ user_entity:
     full_name: "test 2"
     password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
     email: "user102@mail.ru"
+    is_deleted: false
     nickname: "user3"
     is_enabled: true
     last_redaction_date: 2021-12-09 19:41:18.252588
