@@ -129,8 +129,8 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/questions.yml"
     },
-            strategy = SeedStrategy.CLEAN_INSERT,
-            cleanAfter = true
+            strategy = SeedStrategy.REFRESH,
+            cleanBefore = true
     )
     // получение количество вопросов
     public void getQuestionCount() throws Exception {
@@ -146,8 +146,8 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/questions.yml"
     },
-            strategy = SeedStrategy.CLEAN_INSERT,
-            cleanAfter = true
+            strategy = SeedStrategy.REFRESH,
+            cleanBefore = true
     )
     //Обновляем один вопрос на удаленный и выводим только существующие
     @Transactional(readOnly = false, isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
