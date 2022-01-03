@@ -21,10 +21,12 @@ public class UserResourceController {
     public UserResourceController(UserPageDtoService userDtoService) {
         this.userDtoService = userDtoService;
     }
-
     @GetMapping(path = "/api/user/vote")
     public ResponseEntity<PageDTO<UserDto>> getUsersByVoteAsc(@RequestParam Integer page, @RequestParam(required = false) Integer items) {
-        if(items == null) {
+        if(page == null || page <= 0) {
+            return new ResponseEntity("Incorrect page number", HttpStatus.BAD_REQUEST);
+        }
+        if(items == null || items <= 0) {
             items = 10;
         }
         PaginationData data = new PaginationData(page, items,
