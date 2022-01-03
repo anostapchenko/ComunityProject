@@ -52,7 +52,7 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
     ignoreCols = {"id","persist_date"})
     public void shouldBeVoteUp() throws Exception {
         mvc.perform(MockMvcRequestBuilders
-                .post("http://localhost:8091/api/user/question/100/answer/100/upVote")
+                .post("/api/user/question/100/answer/100/upVote")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization",
@@ -84,7 +84,7 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
             strategy = SeedStrategy.INSERT)
     public void shouldBeNotFound() throws Exception {
         mvc.perform(MockMvcRequestBuilders
-                .post("http://localhost:8091/api/user/question/100/answer/999/upVote")
+                .post("/api/user/question/100/answer/999/upVote")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization",
@@ -120,7 +120,7 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
             ignoreCols = {"id","persist_date"})
     public void shouldBeVoteUp2DifferentUsers() throws Exception {
         mvc.perform(MockMvcRequestBuilders
-                .post("http://localhost:8091/api/user/question/100/answer/100/upVote")
+                .post("/api/user/question/100/answer/100/upVote")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization",
@@ -130,7 +130,7 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
                 .andExpect(status().isOk())
                 .andExpect(content().string("1"));
         mvc.perform(MockMvcRequestBuilders
-                .post("http://localhost:8091/api/user/question/100/answer/100/upVote")
+                .post("/api/user/question/100/answer/100/upVote")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization",
