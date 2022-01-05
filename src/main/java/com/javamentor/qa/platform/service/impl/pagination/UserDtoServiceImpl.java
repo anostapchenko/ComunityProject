@@ -15,4 +15,5 @@ public class UserDtoServiceImpl extends DtoServiceImpl<UserDto> implements UserP
     public UserDtoServiceImpl(Map<String, PageDtoDao<UserDto>> daoMap) {
         super(daoMap);
     }
+
 }

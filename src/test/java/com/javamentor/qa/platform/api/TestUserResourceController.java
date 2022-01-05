@@ -5,8 +5,12 @@ import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.javamentor.qa.platform.AbstractClassForDRRiderMockMVCTests;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
+
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -14,7 +18,127 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
 
     private static final String USERNAME = "user100@mail.ru";
     private static final String PASSWORD = "password";
-    private static final String URL = "/api/user/vote?";
+    private static final String URL_VOTE = "/api/user/vote?";
+
+    @Test
+//  Получаем всех пользователей из БД
+    @DataSet(cleanBefore = true,
+            value = {
+                    "dataset/userresourcecontroller/roles.yml",
+                    "dataset/userresourcecontroller/users.yml",
+                    "dataset/userresourcecontroller/questions.yml",
+                    "dataset/userresourcecontroller/reputations.yml"
+            },
+            strategy = SeedStrategy.REFRESH)
+    public void shouldReturnAllUsers() throws Exception {
+        this.mockMvc.perform(get("/api/user/new?page=1")
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.currentPageNumber").value("1"))
+                .andExpect(jsonPath("$.totalPageCount").value("1"))
+                .andExpect(jsonPath("$.totalResultCount").value("3"))
+                .andExpect(jsonPath("$.items[0].id").value("101"))
+                .andExpect(jsonPath("$.items[0].email").value("test15@mail.ru"))
+                .andExpect(jsonPath("$.items[0].fullName").value("test 101"))
+                .andExpect(jsonPath("$.items[0].imageLink").value("photo"))
+                .andExpect(jsonPath("$.items[0].city").value("Moscow"))
+                .andExpect(jsonPath("$.items[0].reputation").value("100"))
+                .andExpect(jsonPath("$.items[1].id").value("102"))
+                .andExpect(jsonPath("$.items[1].email").value("test102@mail.ru"))
+                .andExpect(jsonPath("$.items[1].fullName").value("test 102"))
+                .andExpect(jsonPath("$.items[1].imageLink").value("photo"))
+                .andExpect(jsonPath("$.items[1].city").value("Moscow"))
+                .andExpect(jsonPath("$.items[1].reputation").value("500"))
+                .andExpect(jsonPath("$.items[2].id").value("103"))
+                .andExpect(jsonPath("$.items[2].email").value("test103@mail.ru"))
+                .andExpect(jsonPath("$.items[2].fullName").value("test 103"))
+                .andExpect(jsonPath("$.items[2].imageLink").value("photo"))
+                .andExpect(jsonPath("$.items[2].city").value("Moscow"))
+                .andExpect(jsonPath("$.items[2].reputation").value("80"))
+                .andExpect(jsonPath("$.itemsOnPage").value("3"))
+        ;
+
+    }
+
+    @Test
+//  Получаем всех пользователей из БД (у пользователей еще нет репутации)
+    @DataSet(cleanBefore = true,
+            value = {
+                    "dataset/userresourcecontroller/roles.yml",
+                    "dataset/userresourcecontroller/users.yml",
+                    "dataset/userresourcecontroller/questions.yml"
+            },
+            strategy = SeedStrategy.REFRESH)
+    public void shouldReturnAllUsersWithNullReputaion() throws Exception {
+        this.mockMvc.perform(get("/api/user/new?page=1")
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.currentPageNumber").value("1"))
+                .andExpect(jsonPath("$.totalPageCount").value("1"))
+                .andExpect(jsonPath("$.totalResultCount").value("3"))
+                .andExpect(jsonPath("$.items[0].id").value("101"))
+                .andExpect(jsonPath("$.items[0].email").value("test15@mail.ru"))
+                .andExpect(jsonPath("$.items[0].fullName").value("test 101"))
+                .andExpect(jsonPath("$.items[0].imageLink").value("photo"))
+                .andExpect(jsonPath("$.items[0].city").value("Moscow"))
+                .andExpect(jsonPath("$.items[0].reputation").value(nullValue()))
+                .andExpect(jsonPath("$.items[1].id").value("102"))
+                .andExpect(jsonPath("$.items[1].email").value("test102@mail.ru"))
+                .andExpect(jsonPath("$.items[1].fullName").value("test 102"))
+                .andExpect(jsonPath("$.items[1].imageLink").value("photo"))
+                .andExpect(jsonPath("$.items[1].city").value("Moscow"))
+                .andExpect(jsonPath("$.items[1].reputation").value(nullValue()))
+                .andExpect(jsonPath("$.items[2].id").value("103"))
+                .andExpect(jsonPath("$.items[2].email").value("test103@mail.ru"))
+                .andExpect(jsonPath("$.items[2].fullName").value("test 103"))
+                .andExpect(jsonPath("$.items[2].imageLink").value("photo"))
+                .andExpect(jsonPath("$.items[2].city").value("Moscow"))
+                .andExpect(jsonPath("$.items[2].reputation").value(nullValue()))
+                .andExpect(jsonPath("$.itemsOnPage").value("3"))
+        ;
+
+    }
+
+    @Test
+//  Получаем всех пользователей из БД, кроме пользователя с флагом is_deleted: true
+    @DataSet(cleanBefore = true,
+            value = {
+                    "dataset/userresourcecontroller/roles.yml",
+                    "dataset/userresourcecontroller/users_with_deleted_user.yml",
+                    "dataset/userresourcecontroller/questions.yml",
+                    "dataset/userresourcecontroller/reputations.yml"
+            },
+            strategy = SeedStrategy.REFRESH)
+    public void shouldReturnAllUsersWithoutDeletedUser() throws Exception {
+        this.mockMvc.perform(get("/api/user/new?page=1")
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.currentPageNumber").value("1"))
+                .andExpect(jsonPath("$.totalPageCount").value("1"))
+                .andExpect(jsonPath("$.totalResultCount").value("3"))
+                .andExpect(jsonPath("$.items[0].id").value("101"))
+                .andExpect(jsonPath("$.items[0].email").value("test15@mail.ru"))
+                .andExpect(jsonPath("$.items[0].fullName").value("test 101"))
+                .andExpect(jsonPath("$.items[0].imageLink").value("photo"))
+                .andExpect(jsonPath("$.items[0].city").value("Moscow"))
+                .andExpect(jsonPath("$.items[0].reputation").value("100"))
+                .andExpect(jsonPath("$.items[1].id").value("103"))
+                .andExpect(jsonPath("$.items[1].email").value("test103@mail.ru"))
+                .andExpect(jsonPath("$.items[1].fullName").value("test 103"))
+                .andExpect(jsonPath("$.items[1].imageLink").value("photo"))
+                .andExpect(jsonPath("$.items[1].city").value("Moscow"))
+                .andExpect(jsonPath("$.items[1].reputation").value("80"))
+                .andExpect(jsonPath("$.itemsOnPage").value("2"));
+    }
 
     @Test
     @DataSet(value = {
@@ -30,8 +154,8 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.INSERT)
     public void ifReputationEmptyItems2() throws Exception {
         mockMvc.perform(
-                get(URL + "page=1&items=2")
-                .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
+                get(URL_VOTE + "page=1&items=2")
+                        .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
         )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -39,7 +163,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                 .andExpect(jsonPath("$.items[0].id").value(100))
                 .andExpect(jsonPath("$.items[1].id").value(101));
         mockMvc.perform(
-                get(URL + "page=2&items=2")
+                get(URL_VOTE + "page=2&items=2")
                         .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
         )
                 .andDo(print())
@@ -63,7 +187,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.INSERT)
     public void ifNotNecessaryVotesItems2() throws Exception {
         mockMvc.perform(
-                get(URL + "page=1&items=2")
+                get(URL_VOTE + "page=1&items=2")
                         .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
         )
                 .andDo(print())
@@ -72,7 +196,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                 .andExpect(jsonPath("$.items[0].id").value(100))
                 .andExpect(jsonPath("$.items[1].id").value(101));
         mockMvc.perform(
-                get(URL + "page=2&items=2")
+                get(URL_VOTE + "page=2&items=2")
                         .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
         )
                 .andDo(print())
@@ -96,7 +220,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.INSERT)
     public void ifItemsNullThenArraySize10() throws Exception {
         mockMvc.perform(
-                get(URL + "page=1")
+                get(URL_VOTE + "page=1")
                         .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
         )
                 .andDo(print())
@@ -119,7 +243,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.INSERT)
     public void ifFirst3DownVoteAndLast3UpVote() throws Exception {
         mockMvc.perform(
-                get(URL + "page=1&items=10")
+                get(URL_VOTE + "page=1&items=10")
                         .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
         )
                 .andDo(print())
@@ -129,7 +253,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                 .andExpect(jsonPath("$.items[1].id").value(118))
                 .andExpect(jsonPath("$.items[2].id").value(119));
         mockMvc.perform(
-                get(URL + "page=2&items=10")
+                get(URL_VOTE + "page=2&items=10")
                         .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
         )
                 .andDo(print())
@@ -155,7 +279,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.INSERT)
     public void ifReputationCount15() throws Exception {
         mockMvc.perform(
-                get(URL + "page=1")
+                get(URL_VOTE + "page=1")
                         .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
         )
                 .andDo(print())
@@ -177,22 +301,23 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.INSERT)
     public void ifCurrentPageIncorrectThen400() throws Exception {
         mockMvc.perform(
-                get(URL + "page=")
+                get(URL_VOTE + "page=")
                         .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
         )
                 .andDo(print())
                 .andExpect(status().isBadRequest());
         mockMvc.perform(
-                get(URL + "page=-1")
+                get(URL_VOTE + "page=-1")
                         .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
         )
                 .andDo(print())
                 .andExpect(status().isBadRequest());
         mockMvc.perform(
-                get(URL + "page=0")
+                get(URL_VOTE + "page=0")
                         .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
         )
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 }
+
