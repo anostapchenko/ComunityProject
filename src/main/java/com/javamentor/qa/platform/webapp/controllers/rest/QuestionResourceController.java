@@ -29,8 +29,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -123,10 +125,11 @@ public class QuestionResourceController {
             @Content(mediaType = "application/json")
     })
 
-    public ResponseEntity<?> addNewQuestion(QuestionCreateDto questionCreateDto) {
+    public ResponseEntity<?> addNewQuestion(@Valid @RequestBody QuestionCreateDto questionCreateDto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user =(User) auth.getPrincipal();
-        Long userId = user.getId();
+//        Long userId = user.getId();
+        Question question = questionConverter.questionCreateDtoToQuestion(questionCreateDto);
 
 //        Question question = new Question(1L, questionCreateDto.getTitle(), questionCreateDto.getDescription(), DateTimeFormat, );
 //        Question question = questionService.
