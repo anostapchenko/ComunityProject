@@ -5,18 +5,49 @@
     <title>Pagination</title>
 </head>
 <body>
-<form name="user_data">
+<form id="user_data">
     <input id="username" value="user1@mail.ru" placeholder="user1@mail.ru">
     <input id="password" value="user1" placeholder="user1">
-    <input type="submit">
+    <button name="send_user_data" type="submit" onclick="send(event)">get token</button>
 </form>
-<form>
-
-</form>
-<script src="/js/login.js"></script>
+<br/>
+<span>Token is: </span>
+<br />
+<span name="token">token</span>
+<div name="users"></div>
 <script src="/js/getPagination.js"></script>
 <script>
+    let button = document.querySelector("button[name=send_user_data]");
+    console.log(button);
+    async function send(event){
+        event.preventDefault();
+        let token = await getToken(
+            {
+                "username": document.querySelector("#username").value,
+                "password": document.querySelector("#password").value
+            }
+        )
+        await console.log(token);
+        document.querySelector("span[name=token]").innerHTML = token;
+        //let users = await getPagination(token, null, null, null);
+    }
 
+    async function getToken(user) {
+        console.log(user);
+        let token = "";
+        await fetch("http://localhost:8091/api/auth/token", {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json; charset=utf-8"
+            },
+            body: JSON.stringify(user)
+        })
+            .then(data => data.json())
+            .then(resp => {
+                token += "Bearer " + resp.token;
+            })
+        return token;
+    }
 </script>
 </body>
 </html>
