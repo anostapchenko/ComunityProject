@@ -4,7 +4,6 @@ package com.javamentor.qa.platform.dao.impl.pagination;
 import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
-import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -15,7 +14,7 @@ import java.util.List;
 public class UserPageDtoDaoAllUsersImpl implements PageDtoDao<UserDto> {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @Override
     public List<UserDto> getPaginationItems(PaginationData properties) {
@@ -32,8 +31,4 @@ public class UserPageDtoDaoAllUsersImpl implements PageDtoDao<UserDto> {
         return (Long) entityManager.createQuery("select count(u.id) from User u" ).getSingleResult();
     }
 
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
 }

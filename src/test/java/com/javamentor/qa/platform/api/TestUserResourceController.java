@@ -25,7 +25,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
     },
     strategy = SeedStrategy.REFRESH)
     public void shouldReturnAllUsers() throws Exception{
-        this.mockMvc.perform(get("http://localhost:8091/api/user/new?page=1")
+        this.mockMvc.perform(get("/api/user/new?page=1")
                         .contentType("application/json")
                         .header("Authorization","Bearer " + getToken("test15@mail.ru","test15")))
                 .andDo(print())
@@ -67,7 +67,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             },
             strategy = SeedStrategy.REFRESH)
     public void shouldReturnAllUsersWithNullReputaion() throws Exception{
-        this.mockMvc.perform(get("http://localhost:8091/api/user/new?page=1")
+        this.mockMvc.perform(get("/api/user/new?page=1")
                         .contentType("application/json")
                         .header("Authorization","Bearer " + getToken("test15@mail.ru","test15")))
                 .andDo(print())
@@ -109,7 +109,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             },
             strategy = SeedStrategy.REFRESH)
     public void shouldReturnAllUsersWithoutDeletedUser() throws Exception{
-        this.mockMvc.perform(get("http://localhost:8091/api/user/new?page=1")
+        this.mockMvc.perform(get("/api/user/new?page=1")
                         .contentType("application/json")
                         .header("Authorization","Bearer " + getToken("test15@mail.ru","test15")))
                 .andDo(print())
