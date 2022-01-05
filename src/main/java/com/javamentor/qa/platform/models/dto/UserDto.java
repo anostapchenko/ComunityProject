@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.models.dto;
 
+<<<<<<< HEAD
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -26,5 +27,22 @@ public class UserDto {
         this.city = city;
         this.reputation = reputation;
     }
+=======
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserDto {
+
+    private Long id;
+    private String email;
+    private String fullName;
+    private String imageLink;
+    private String city;
+    private Long reputation;
+
+>>>>>>> dev
 
 }

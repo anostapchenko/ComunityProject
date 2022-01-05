@@ -1,7 +1,6 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.exception.ConstrainException;
-import com.javamentor.qa.platform.exception.NoSuchDaoException;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
@@ -13,11 +12,11 @@ import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
 import com.javamentor.qa.platform.service.abstracts.model.VoteQuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -41,7 +39,7 @@ public class QuestionResourceController {
     private final
     ReputationService reputationService;
 
-    public final
+    private final
     QuestionDtoService questionDtoService;
 
     public QuestionResourceController(QuestionService questionService, VoteQuestionService voteQuestionService, ReputationService reputationService, QuestionDtoService questionDtoService) {
@@ -49,6 +47,19 @@ public class QuestionResourceController {
         this.voteQuestionService = voteQuestionService;
         this.reputationService = reputationService;
         this.questionDtoService = questionDtoService;
+    }
+
+    @GetMapping("api/user/question/count")
+    @Operation(summary = "Количество всего вопросов в бд")
+    @ApiResponse(responseCode = "200", description = "OK", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = Question.class))
+    })
+    @ApiResponse(responseCode = "400", description = "Неверные учетные данные", content = {
+            @Content(mediaType = "application/json")
+    })
+    public ResponseEntity<Optional<Long>> getCountQuestion() {
+        Optional<Long> countQusetion = questionService.getCountByQuestion();
+        return new ResponseEntity<>(countQusetion, HttpStatus.OK);
     }
 
     @PostMapping("api/user/question/{questionId}/upVote")
@@ -92,6 +103,7 @@ public class QuestionResourceController {
         }
         return new ResponseEntity<>("User was voting", HttpStatus.BAD_REQUEST);
     }
+
     @GetMapping("api/user/question/{id}")
     @Operation(summary = "Получение информации по вопросу пользователя")
     @ApiResponse(responseCode = "200", description = "Информация по вопросу", content = {

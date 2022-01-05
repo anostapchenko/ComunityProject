@@ -5,6 +5,7 @@ user_entity:
   - id: 1
     password: "$2a$10$Dbl/hKOLzLUVMn/ahtgPcOA6IrZzLE2bVBW/sDumCSUi8KZTecLnC"
     email: "user1@mail.ru"
+    is_deleted: false
     is_enabled: true
     last_redaction_date: 2021-12-28 11:00:00.00000
     persist_date: 2021-12-28 10:00:00.00000
