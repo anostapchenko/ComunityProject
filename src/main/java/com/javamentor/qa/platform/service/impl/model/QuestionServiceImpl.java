@@ -5,6 +5,7 @@ import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +19,10 @@ public class QuestionServiceImpl extends ReadWriteServiceImpl<Question, Long> im
     }
 
     @Override
+    public Optional<Long> getCountByQuestion() {
+        return questionDao.getCountQuestion();
+    }
+
     public Optional<Question> getQuestionByIdWithAuthor(Long id){
         return questionDao.getQuestionByIdWithAuthor(id);
     }

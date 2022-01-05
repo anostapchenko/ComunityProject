@@ -17,13 +17,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,8 +39,8 @@ public class QuestionResourceController {
 
     private final QuestionService questionService;
     private final VoteQuestionService voteQuestionService;
-    private final  ReputationService reputationService;
-    private final    QuestionDtoService questionDtoService;
+    private final ReputationService reputationService;
+    private final QuestionDtoService questionDtoService;
 
     public QuestionResourceController(QuestionService questionService,
                                       VoteQuestionService voteQuestionService,
@@ -53,6 +50,19 @@ public class QuestionResourceController {
         this.voteQuestionService = voteQuestionService;
         this.reputationService = reputationService;
         this.questionDtoService = questionDtoService;
+    }
+
+    @GetMapping("api/user/question/count")
+    @Operation(summary = "Количество всего вопросов в бд")
+    @ApiResponse(responseCode = "200", description = "OK", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = Question.class))
+    })
+    @ApiResponse(responseCode = "400", description = "Неверные учетные данные", content = {
+            @Content(mediaType = "application/json")
+    })
+    public ResponseEntity<Optional<Long>> getCountQuestion() {
+        Optional<Long> countQusetion = questionService.getCountByQuestion();
+        return new ResponseEntity<>(countQusetion, HttpStatus.OK);
     }
 
     @PostMapping("api/user/question/{questionId}/upVote")
@@ -96,6 +106,7 @@ public class QuestionResourceController {
         }
         return new ResponseEntity<>("User was voting", HttpStatus.BAD_REQUEST);
     }
+
     @GetMapping("api/user/question/{id}")
     @Operation(summary = "Получение информации по вопросу пользователя")
     @ApiResponse(responseCode = "200", description = "Информация по вопросу", content = {
