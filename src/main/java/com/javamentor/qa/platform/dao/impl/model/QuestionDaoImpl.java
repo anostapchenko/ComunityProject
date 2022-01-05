@@ -15,13 +15,17 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.List;
 
 @Repository
 public class QuestionDaoImpl extends ReadWriteDaoImpl<Question, Long> implements QuestionDao {
-
     @PersistenceContext
-    private EntityManager entityManager;
+    EntityManager entityManager;
+
+    @Override
+    public Optional<Long> getCountQuestion() {
+        return SingleResultUtil.getSingleResultOrNull(entityManager.createQuery("" +
+                "SELECT COUNT(q.id) FROM Question q where q.isDeleted=false", Long.class));
+    }
 
     @Override
     public Optional<Question> getQuestionByIdWithAuthor(Long id){

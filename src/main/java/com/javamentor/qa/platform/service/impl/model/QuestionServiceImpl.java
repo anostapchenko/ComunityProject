@@ -19,6 +19,10 @@ public class QuestionServiceImpl extends ReadWriteServiceImpl<Question, Long> im
     }
 
     @Override
+    public Optional<Long> getCountByQuestion() {
+        return questionDao.getCountQuestion();
+    }
+
     public Optional<Question> getQuestionByIdWithAuthor(Long id){
         return questionDao.getQuestionByIdWithAuthor(id);
     }
