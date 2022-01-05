@@ -1,7 +1,7 @@
 package com.javamentor.qa.platform.dao.impl.pagination;
 
 import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
-import com.javamentor.qa.platform.models.dto.user.UserDto;
+import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import com.javamentor.qa.platform.models.entity.user.reputation.ReputationType;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
@@ -46,7 +46,7 @@ public class UserPageDtoDaoByVoteImpl implements PageDtoDao<UserDto> {
                                 (String)objects[2],
                                 (String)objects[3],
                                 (String)objects[4],
-                                reputation.intValue());
+                                reputation);
                     }
 
                     @Override

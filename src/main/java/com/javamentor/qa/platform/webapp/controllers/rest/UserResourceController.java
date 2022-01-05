@@ -4,8 +4,6 @@ import com.javamentor.qa.platform.dao.impl.pagination.UserPageDtoDaoAllUsersImpl
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.dao.impl.pagination.UserPageDtoDaoByVoteImpl;
-import com.javamentor.qa.platform.models.dto.PageDTO;
-import com.javamentor.qa.platform.models.dto.user.UserDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import com.javamentor.qa.platform.service.abstracts.pagination.UserPageDtoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +28,7 @@ public class UserResourceController {
     private final UserPageDtoService userDtoService;
 
     @Autowired
-    public UserResourceController(UserPageDtoService userDtoService) {
+    public UserResourceController(@Qualifier("userDtoPaginationService") UserPageDtoService userDtoService) {
         this.userDtoService = userDtoService;
     }
 
