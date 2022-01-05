@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,11 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserResourceController {
 
 
-    private final UserPageDtoService userDtoService;
+    private final UserPageDtoService userPageDtoService;
 
     @Autowired
-    public UserResourceController(@Qualifier("userDtoPaginationService") UserPageDtoService userDtoService) {
-        this.userDtoService = userDtoService;
+    public UserResourceController(UserPageDtoService userPageDtoService) {
+        this.userPageDtoService = userPageDtoService;
     }
 
     @Operation(summary = "Получение пагинированного списка всех пользователей. " +
@@ -49,7 +48,7 @@ public class UserResourceController {
     public ResponseEntity<PageDTO<UserDto>> paginationById(@RequestParam int page, @RequestParam(defaultValue = "10") int items) {
         PaginationData data = new PaginationData(page, items,
                 UserPageDtoDaoAllUsersImpl.class.getSimpleName());
-        return new ResponseEntity<>(userDtoService.getPageDto(data), HttpStatus.OK);
+        return new ResponseEntity<>(userPageDtoService.getPageDto(data), HttpStatus.OK);
     }
 
     @Operation(summary = "Постраничное получение списка пользователей",
@@ -78,6 +77,6 @@ public class UserResourceController {
         }
         PaginationData data = new PaginationData(page, items,
                 UserPageDtoDaoByVoteImpl.class.getSimpleName());
-        return new ResponseEntity<>(userDtoService.getPageDto(data), HttpStatus.OK);
+        return new ResponseEntity<>(userPageDtoService.getPageDto(data), HttpStatus.OK);
     }
 }
