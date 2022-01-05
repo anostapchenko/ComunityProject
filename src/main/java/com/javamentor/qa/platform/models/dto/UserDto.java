@@ -15,5 +15,4 @@ public class UserDto {
     private String city;
     private Long reputation;
 
-
 }
