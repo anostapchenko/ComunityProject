@@ -1,6 +1,8 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.exception.ConstrainException;
+import com.javamentor.qa.platform.models.dto.AuthenticationResponse;
+import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.exception.NoSuchDaoException;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
@@ -13,8 +15,12 @@ import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
 import com.javamentor.qa.platform.service.abstracts.model.VoteQuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -32,19 +38,15 @@ import java.util.Optional;
 @Tag(name = "Question Resource Controller", description = "Управление сущностями, которые связаны с вопросами")
 public class QuestionResourceController {
 
-    private final
-    QuestionService questionService;
+    private final QuestionService questionService;
+    private final VoteQuestionService voteQuestionService;
+    private final  ReputationService reputationService;
+    private final    QuestionDtoService questionDtoService;
 
-    private final
-    VoteQuestionService voteQuestionService;
-
-    private final
-    ReputationService reputationService;
-
-    public final
-    QuestionDtoService questionDtoService;
-
-    public QuestionResourceController(QuestionService questionService, VoteQuestionService voteQuestionService, ReputationService reputationService, QuestionDtoService questionDtoService) {
+    public QuestionResourceController(QuestionService questionService,
+                                      VoteQuestionService voteQuestionService,
+                                      ReputationService reputationService,
+                                      QuestionDtoService questionDtoService) {
         this.questionService = questionService;
         this.voteQuestionService = voteQuestionService;
         this.reputationService = reputationService;
@@ -98,12 +100,48 @@ public class QuestionResourceController {
             @Content(mediaType = "application/json")
     })
 
-    public ResponseEntity<?> getQuestion(@PathVariable Long id){
+    public ResponseEntity<?> getQuestion(@PathVariable Long id) {
         Optional<QuestionDto> q = questionDtoService.getQuestionDtoServiceById(id);
-        if(q.isPresent()){
+        if (q.isPresent()) {
             return new ResponseEntity<>(q.get(), HttpStatus.OK);
         }
         return new ResponseEntity<>("Question number not exist!", HttpStatus.BAD_REQUEST);
     }
+
+
+
+
+    @PostMapping("api/user/question")
+    @Operation(
+            summary = "Добавление вопроса",
+            description = "Добавление нового вопроса"
+    )
+    @ApiResponse(responseCode = "200", description = "Вопрос добавлен", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionCreateDto.class))
+    })
+    @ApiResponse(responseCode = "400", description = "Вопрос не добавлен", content = {
+            @Content(mediaType = "application/json")
+    })
+
+    public ResponseEntity<?> addNewQuestion(QuestionCreateDto questionCreateDto) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user =(User) auth.getPrincipal();
+        Long userId = user.getId();
+
+//        Question question = new Question(1L, questionCreateDto.getTitle(), questionCreateDto.getDescription(), DateTimeFormat, );
+//        Question question = questionService.
+//                .getQuestionByIdWithAuthor(questionId)
+//                .orElseThrow(() -> new ConstrainException("Can't find question with id:" + questionId));
+//        int countUpVote = 10;
+//        if (voteQuestionService.validateUserVoteByQuestionIdAndUserId(questionId, userId)) {
+//            VoteQuestion voteQuestion = new VoteQuestion(user,question,VoteType.UP_VOTE,countUpVote);
+//            voteQuestionService.persist(voteQuestion);
+//            return new ResponseEntity<>(voteQuestionService.getVoteByQuestionId(questionId), HttpStatus.OK);
+//        }
+        return new ResponseEntity<>("Question not create", HttpStatus.BAD_REQUEST);
+    }
+
+
+
 }
 
