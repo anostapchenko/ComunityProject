@@ -140,7 +140,7 @@ public class QuestionResourceController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user =(User) auth.getPrincipal();
 //        Long userId = user.getId();
-        Question question = questionConverter.questionCreateDtoToQuestion(questionCreateDto);
+//        Question question = questionConverter.questionCreateDtoToQuestion(questionCreateDto);
 
 //        Question question = new Question(1L, questionCreateDto.getTitle(), questionCreateDto.getDescription(), DateTimeFormat, );
 //        Question question = questionService.
