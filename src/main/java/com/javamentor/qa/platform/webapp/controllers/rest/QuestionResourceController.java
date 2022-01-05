@@ -1,10 +1,12 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.exception.ConstrainException;
+import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.User;
+import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
 import com.javamentor.qa.platform.service.abstracts.model.VoteQuestionService;
@@ -37,10 +39,14 @@ public class QuestionResourceController {
     private final
     ReputationService reputationService;
 
-    public QuestionResourceController(QuestionService questionService, VoteQuestionService voteQuestionService, ReputationService reputationService) {
+    private final
+    QuestionDtoService questionDtoService;
+
+    public QuestionResourceController(QuestionService questionService, VoteQuestionService voteQuestionService, ReputationService reputationService, QuestionDtoService questionDtoService) {
         this.questionService = questionService;
         this.voteQuestionService = voteQuestionService;
         this.reputationService = reputationService;
+        this.questionDtoService = questionDtoService;
     }
 
     @GetMapping("api/user/question/count")
@@ -96,6 +102,20 @@ public class QuestionResourceController {
             return new ResponseEntity<>(voteQuestionService.getVoteByQuestionId(questionId), HttpStatus.OK);
         }
         return new ResponseEntity<>("User was voting", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("api/user/question/{id}")
+    @Operation(summary = "Получение информации по вопросу пользователя")
+    @ApiResponse(responseCode = "200", description = "Информация по вопросу", content = {
+            @Content(mediaType = "application/json")
+    })
+
+    public ResponseEntity<?> getQuestion(@PathVariable Long id){
+        Optional<QuestionDto> q = questionDtoService.getQuestionDtoServiceById(id);
+        if(q.isPresent()){
+            return new ResponseEntity<>(q.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Question number not exist!", HttpStatus.BAD_REQUEST);
     }
 }
 
