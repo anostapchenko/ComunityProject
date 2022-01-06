@@ -6,30 +6,43 @@
 </head>
 <body>
 <form id="user_data">
+    <label for="username">Email: </label>
     <input id="username" value="user1@mail.ru" placeholder="user1@mail.ru">
+    <label for="password">Password: </label>
     <input id="password" value="user1" placeholder="user1">
-    <button name="send_user_data" type="submit" onclick="send(event)">get token</button>
+    <button name="send_user_data" type="submit" onclick="send(event)">Authorization</button>
 </form>
-<br/>
-<span>Token is: </span>
-<br />
-<span name="token">token</span>
-<div name="users"></div>
+<br>
+<labe>Token is: <br></labe>
+<span name="token">token <br></span>
+<form id="user_data">
+    <label for="url_pagination">Pagination URL: </label>
+    <input id="url_pagination" value="localhost:8091/api/user/vote" placeholder="localhost:8091/api/user/vote">
+</form>
+<div id="pagination_objects"></div>
+<div id="navigation"></div>
 <script src="/js/getPagination.js"></script>
 <script>
     let button = document.querySelector("button[name=send_user_data]");
-    console.log(button);
-    async function send(event){
-        event.preventDefault();
-        let token = await getToken(
+
+    n = document.querySelector("div[name=navigation]");
+    
+    getPagination.token = await getTokenByUser();
+    
+
+    async function getTokenByUser(event){
+        if(event != null) {
+            event.preventDefault();
+        }
+        token = await getToken(
             {
                 "username": document.querySelector("#username").value,
                 "password": document.querySelector("#password").value
             }
         )
-        await console.log(token);
         document.querySelector("span[name=token]").innerHTML = token;
-        //let users = await getPagination(token, null, null, null);
+        getPagination.token = token;
+        return token;
     }
 
     async function getToken(user) {
