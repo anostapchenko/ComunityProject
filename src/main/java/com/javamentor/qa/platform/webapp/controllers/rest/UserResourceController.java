@@ -1,6 +1,7 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.dao.impl.pagination.UserPageDtoDaoAllUsersImpl;
+import com.javamentor.qa.platform.dao.impl.pagination.UserPageDtoDaoByVoteImpl;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
@@ -104,6 +105,6 @@ public class UserResourceController {
         }
         PaginationData data = new PaginationData(page, items,
                 UserPageDtoDaoByVoteImpl.class.getSimpleName());
-        return new ResponseEntity<>(userPageDtoService.getPageDto(data), HttpStatus.OK);
+        return new ResponseEntity<>(userDtoService.getPageDto(data), HttpStatus.OK);
     }
 }
