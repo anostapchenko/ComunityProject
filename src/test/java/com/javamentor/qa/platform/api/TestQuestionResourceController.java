@@ -22,6 +22,46 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TestQuestionResourceController extends AbstractClassForDRRiderMockMVCTests {
 
     @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tags.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/questions_has_tag.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml"
+    },
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true
+    )
+    // Получение списка дто комментариев
+    public void shouldGetQuestionIdComment() throws Exception {
+        mockMvc.perform(get("/api/user/question/1/comment")
+                        .header("Authorization", "Bearer " + getToken("test15@mail.ru","test15")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.title").value("test"))
+                .andExpect(jsonPath("$.authorId").value(15))
+                .andExpect(jsonPath("$.authorReputation").value(100))
+                .andExpect(jsonPath("$.authorName").value("test 15"))
+                .andExpect(jsonPath("$.authorImage").value("photo"))
+                .andExpect(jsonPath("$.description").value("test"))
+                .andExpect(jsonPath("$.viewCount").value(0L))
+                .andExpect(jsonPath("$.countAnswer").value(1))
+                .andExpect(jsonPath("$.countValuable").value(-1))
+                .andExpect(jsonPath("$.countAnswer").value(1))
+                .andExpect(jsonPath("$.persistDateTime").value("2021-12-13T18:09:52.716"))
+                .andExpect(jsonPath("$.lastUpdateDateTime").value("2021-12-13T18:09:52.716"))
+                .andExpect(jsonPath("$.listTagDto[0].description").value("testDescriptionTag"))
+                .andExpect(jsonPath("$.listTagDto[0].name").value("testNameTag"))
+                .andExpect(jsonPath("$.listTagDto[0].id").value(1));
+    }
+
+    @Test
     //Голосуем ПРОТИВ вопроса (DOWN_VOTE) и получаем ответ с количеством голосов: 1 и репутацией -5
     @DataSet(cleanBefore = true, value = "dataset/questionresourcecontroller/data.yml", strategy = SeedStrategy.REFRESH )
     public void shouldReturnSetupDownVoteDownReputation() throws Exception {

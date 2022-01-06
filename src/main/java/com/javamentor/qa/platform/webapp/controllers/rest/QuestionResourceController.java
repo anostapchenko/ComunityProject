@@ -2,10 +2,12 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.models.dto.question.QuestionCommentDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.User;
+import com.javamentor.qa.platform.service.abstracts.dto.QuestionCommentDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -42,11 +45,15 @@ public class QuestionResourceController {
     private final
     QuestionDtoService questionDtoService;
 
-    public QuestionResourceController(QuestionService questionService, VoteQuestionService voteQuestionService, ReputationService reputationService, QuestionDtoService questionDtoService) {
+    private final
+    QuestionCommentDtoService questionCommentDtoService;
+
+    public QuestionResourceController(QuestionService questionService, VoteQuestionService voteQuestionService, ReputationService reputationService, QuestionDtoService questionDtoService, QuestionCommentDtoService questionCommentDtoService) {
         this.questionService = questionService;
         this.voteQuestionService = voteQuestionService;
         this.reputationService = reputationService;
         this.questionDtoService = questionDtoService;
+        this.questionCommentDtoService = questionCommentDtoService;
     }
 
     @GetMapping("api/user/question/count")
@@ -60,6 +67,19 @@ public class QuestionResourceController {
     public ResponseEntity<Optional<Long>> getCountQuestion() {
         Optional<Long> countQusetion = questionService.getCountByQuestion();
         return new ResponseEntity<>(countQusetion, HttpStatus.OK);
+    }
+
+    @GetMapping("api/user/question/{id}/comment")
+    @Operation(summary = "Количество всего вопросов в бд")
+    @ApiResponse(responseCode = "200", description = "OK", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = Question.class))
+    })
+    @ApiResponse(responseCode = "400", description = "Неверные учетные данные", content = {
+            @Content(mediaType = "application/json")
+    })
+    public ResponseEntity<List<QuestionCommentDto>> getQuestionIdComment(@PathVariable("questionId") Long questionId) {
+        List<QuestionCommentDto> qustionIdComment = questionCommentDtoService.getQuestionByIdComment(questionId);
+        return new ResponseEntity<>(qustionIdComment, HttpStatus.OK);
     }
 
     @PostMapping("api/user/question/{questionId}/upVote")
