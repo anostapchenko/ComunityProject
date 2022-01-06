@@ -38,7 +38,7 @@ public class TestUserResourseController extends AbstractClassForDRRiderMockMVCTe
                 .andExpect(jsonPath("$.id").value("102"))
                 .andExpect(jsonPath("$.email").value("user102@mail.ru"))
                 .andExpect(jsonPath("$.fullName").value("test 15"))
-                .andExpect(jsonPath("$.linkImage").value("image/photo.jpg"))
+                .andExpect(jsonPath("$.imageLink").value("image/photo.jpg"))
                 .andExpect(jsonPath("$.city").value("Moscow"))
                 .andExpect(jsonPath("$.reputation").value(100));
     }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-@Service
+@Service("userDtoPaginationService")
 public class UserDtoServiceImpl extends DtoServiceImpl<UserDto> implements UserPageDtoService {
 
     @Autowired
