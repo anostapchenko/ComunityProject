@@ -11,7 +11,7 @@ import org.mapstruct.factory.Mappers;
 //@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 @Mapper(componentModel = "spring")
 public abstract class QuestionConverter {
-    public QuestionConverter INSTANCE = Mappers.getMapper(QuestionConverter.class );
+//    public QuestionConverter INSTANCE = Mappers.getMapper(QuestionConverter.class );
 
 
     @Mapping(source = "tags", target = "listTagDto")
