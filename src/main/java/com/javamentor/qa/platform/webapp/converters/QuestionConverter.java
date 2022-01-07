@@ -27,7 +27,8 @@ public abstract class QuestionConverter {
 
     @Mapping(source = "title", target = "title")
     @Mapping(source = "description", target = "description")
-    @Mapping(source = "listTagDto", target = "tags")
+//    @Mapping(source = "listTagDto", target = "tags")
+    @Mapping(source = "tags", target = "tags")
     public abstract Question questionDtoToQuestion(QuestionCreateDto questionCreateDto);
 
 

@@ -140,16 +140,15 @@ public class QuestionResourceController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        User user =(User) authentication.getPrincipal();
 
-        Question question2 = questionConverter.questionDtoToQuestion(questionCreateDto);
+        Question question = questionConverter.questionDtoToQuestion(questionCreateDto);
 
-        Question question = new Question();
-        question.setTitle(questionCreateDto.getTitle());
-        question.setUser((User) authentication.getPrincipal());
-        question.setDescription(questionCreateDto.getDescription());
-//        question.setTags(tagConverter.listTagDtoToListTag(questionCreateDto.getTags()));
+//        Question question = new Question();
+//        question.setTitle(questionCreateDto.getTitle());
+//        question.setUser((User) authentication.getPrincipal());
+//        question.setDescription(questionCreateDto.getDescription());
+////        question.setTags(tagConverter.listTagDtoToListTag(questionCreateDto.getTags()));
 
         questionService.persist(question);
-
         return new ResponseEntity<>(questionConverter.questionToQuestionDto(question), HttpStatus.OK);
 
 
