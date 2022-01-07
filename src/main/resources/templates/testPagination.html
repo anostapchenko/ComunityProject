@@ -24,24 +24,32 @@
             <label for="url_pagination">Pagination URL: </label>
             <input id="url_pagination" value="http://localhost:8091/api/user/vote"
                 placeholder="http://localhost:8091/api/user/vote" size="50">
+            <button onclick="showPage(event, 1)">Show Paging</button>
         </form>
-        <div id="pagination_objects" class="col"></div>
-        <div id="navigation" class="col"></div>
+        <br>
+        <br>
+        <br>
+        <div class="container col=12">
+            <div id="pagination_objects" class="col"></div>
+            <br>
+            <br>
+            <br>
+            <div id="navigation" class="col"></div>
+        </div>
     </div>
     <script src="/js/getPagination.js"></script>
     <script>
-        let liAttributes = [{
+        let aAttributes = [{
                 'name': 'class',
                 'value': 'nav-item'
             },
             {
                 'name': 'href',
                 'value': '#'
-            }
-        ]
+            }]
         let ulAttributes = [{
             'name': 'class',
-            'value': 'nav'
+            'value': 'nav-tabs'
         }]
 
         let pagination = new Pagination(
@@ -60,7 +68,7 @@
                 }
                 return ul;
             }, {
-                liAttributes,
+                aAttributes,
                 ulAttributes
             });
 

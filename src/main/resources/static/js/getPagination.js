@@ -39,18 +39,18 @@ class Pagination {
 
         }
         for (let num = 1; num <= pageCount; num++) {
-            let li = document.createElement('a');
-            li.textContent = num;
-            li.setAttribute('onclick', `showPage(event, ${num})`);
-            if (pageNumAttr != null && pageNumAttr.liAttributes != null && pageNumAttr.liAttributes.length > 0) {
-                for (let attribute of pageNumAttr.liAttributes) {
-                    li.setAttribute(attribute.name, attribute.value);
+            let a = document.createElement('a');
+            a.textContent = num;
+            a.setAttribute('onclick', `showPage(event, ${num})`);
+            if (pageNumAttr != null && pageNumAttr.aAttributes != null && pageNumAttr.aAttributes.length > 0) {
+                for (let attribute of pageNumAttr.aAttributes) {
+                    a.setAttribute(attribute.name, attribute.value);
                 }
             }
             if (num == numActive) {
-                li.classList.add('active')
+                a.classList.add('active')
             }
-            ul.appendChild(li);
+            ul.appendChild(a);
         }
         navigation.innerHTML = "";
         navigation.appendChild(ul);
@@ -71,7 +71,6 @@ class Pagination {
             })
             .then(data => data.json())
             .then(ob => {
-                console.log(pagination);
                 pagination.totalPageCount = ob.totalPageCount;
                 pagination.items = ob.items;
             })
