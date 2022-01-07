@@ -30,13 +30,4 @@ public abstract class QuestionConverter {
     @Mapping(source = "tags", target = "tags")
     public abstract Question questionDtoToQuestion(QuestionCreateDto questionCreateDto);
 
-
-//    @Named("userIdToSet")
-//    public Set<User> userIdToSet(Long userId) {
-//        User user = userService.getById(userId);
-//        Set<User> userSet = new HashSet<>();
-//        userSet.add(user);
-//        return userSet;
-//    }
-
 }
