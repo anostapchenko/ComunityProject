@@ -143,9 +143,9 @@ public class QuestionResourceController {
         Question question = questionConverter.questionDtoToQuestion(questionCreateDto);
 
 //        Question question = new Question();
-//        question.setTitle(questionCreateDto.getTitle());
-//        question.setUser((User) authentication.getPrincipal());
-//        question.setDescription(questionCreateDto.getDescription());
+        question.setTitle(questionCreateDto.getTitle());
+        question.setUser((User) authentication.getPrincipal());
+        question.setDescription(questionCreateDto.getDescription());
 ////        question.setTags(tagConverter.listTagDtoToListTag(questionCreateDto.getTags()));
 
         questionService.persist(question);
