@@ -1,9 +1,7 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.exception.ConstrainException;
-import com.javamentor.qa.platform.models.dto.AuthenticationResponse;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
-import com.javamentor.qa.platform.exception.NoSuchDaoException;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
@@ -13,12 +11,12 @@ import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
 import com.javamentor.qa.platform.service.abstracts.model.VoteQuestionService;
+import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -30,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -41,15 +38,19 @@ public class QuestionResourceController {
     private final VoteQuestionService voteQuestionService;
     private final ReputationService reputationService;
     private final QuestionDtoService questionDtoService;
+    private final QuestionConverter questionConverter;
 
     public QuestionResourceController(QuestionService questionService,
                                       VoteQuestionService voteQuestionService,
                                       ReputationService reputationService,
-                                      QuestionDtoService questionDtoService) {
+                                      QuestionDtoService questionDtoService,
+                                      QuestionConverter questionConverter
+                                      ) {
         this.questionService = questionService;
         this.voteQuestionService = voteQuestionService;
         this.reputationService = reputationService;
         this.questionDtoService = questionDtoService;
+        this.questionConverter = questionConverter;
     }
 
     @GetMapping("api/user/question/count")
@@ -124,7 +125,6 @@ public class QuestionResourceController {
 
 
 
-    @PostMapping("api/user/question")
     @Operation(
             summary = "Добавление вопроса",
             description = "Добавление нового вопроса"
@@ -135,13 +135,27 @@ public class QuestionResourceController {
     @ApiResponse(responseCode = "400", description = "Вопрос не добавлен", content = {
             @Content(mediaType = "application/json")
     })
+    @PostMapping("api/user/question")
+    public ResponseEntity<?> createNewQuestion(@Valid @RequestBody QuestionCreateDto questionCreateDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        User user =(User) authentication.getPrincipal();
 
-    public ResponseEntity<?> addNewQuestion(@Valid @RequestBody QuestionCreateDto questionCreateDto) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user =(User) auth.getPrincipal();
+
+        Question question = new Question();
+        question.setTitle(questionCreateDto.getTitle());
+        question.setUser((User) authentication.getPrincipal());
+        question.setDescription(questionCreateDto.getDescription());
+//        question.setTags(tagConverter.listTagDtoToListTag(questionCreateDto.getTags()));
+
+        questionService.persist(question);
+
+        return new ResponseEntity<>(questionConverter.questionToQuestionDto(question), HttpStatus.OK);
+
+
 //        Long userId = user.getId();
-//        Question question = questionConverter.questionCreateDtoToQuestion(questionCreateDto);
+//        Question question = QuestionConverter.questionCreateDtoToQuestion(questionCreateDto);
 
+//        Question question = questionConverter.questionCreateDtoToQuestion(questionCreateDto);
 //        Question question = new Question(1L, questionCreateDto.getTitle(), questionCreateDto.getDescription(), DateTimeFormat, );
 //        Question question = questionService.
 //                .getQuestionByIdWithAuthor(questionId)
@@ -152,7 +166,7 @@ public class QuestionResourceController {
 //            voteQuestionService.persist(voteQuestion);
 //            return new ResponseEntity<>(voteQuestionService.getVoteByQuestionId(questionId), HttpStatus.OK);
 //        }
-        return new ResponseEntity<>("Question not create", HttpStatus.BAD_REQUEST);
+//        return new ResponseEntity<>("Question not create", HttpStatus.BAD_REQUEST);
     }
 
 
