@@ -32,7 +32,8 @@ public class QuestionCreateDto implements Serializable {
     @NotBlank(groups = OnCreate.class, message = "Значение description не должно быть пустым")
     @NotNull private String description;
 
-    @Schema(description = "Список тэгов к вопросу", example = "Spring Security")
+//    @Schema(description = "Список тэгов к вопросу", example = "Spring Security")
+    @Schema(description = "Список тэгов к вопросу")
     @NotNull(groups = OnCreate.class, message = "Значение tags должно быть заполнено")
     @NotBlank(groups = OnCreate.class, message = "Значение tags не должно быть пустым")
     private List<TagDto> tags;
