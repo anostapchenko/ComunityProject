@@ -1,66 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Pagination</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
+
 <body>
-<form id="user_data">
-    <label for="username">Email: </label>
-    <input id="username" value="user1@mail.ru" placeholder="user1@mail.ru">
-    <label for="password">Password: </label>
-    <input id="password" value="user1" placeholder="user1">
-    <button name="send_user_data" type="submit" onclick="send(event)">Authorization</button>
-</form>
-<br>
-<labe>Token is: <br></labe>
-<span name="token">token <br></span>
-<form id="user_data">
-    <label for="url_pagination">Pagination URL: </label>
-    <input id="url_pagination" value="localhost:8091/api/user/vote" placeholder="localhost:8091/api/user/vote">
-</form>
-<div id="pagination_objects"></div>
-<div id="navigation"></div>
-<script src="/js/getPagination.js"></script>
-<script>
-    let button = document.querySelector("button[name=send_user_data]");
-
-    n = document.querySelector("div[name=navigation]");
-    
-    getPagination.token = await getTokenByUser();
-    
-
-    async function getTokenByUser(event){
-        if(event != null) {
-            event.preventDefault();
-        }
-        token = await getToken(
+    <div class="container">
+        <form id="user_data">
+            <label for="username">Email: </label>
+            <input id="username" value="user1@mail.ru" placeholder="user1@mail.ru">
+            <label for="password">Password: </label>
+            <input id="password" value="user1" placeholder="user1">
+            <button name="send_user_data" type="submit" onclick="getTokenByUser(event)">Authorization</button>
+        </form>
+        <br>
+        <labe>Token is: <br></labe>
+        <span name="token">token <br></span>
+        <form id="objects_pagination">
+            <label for="url_pagination">Pagination URL: </label>
+            <input id="url_pagination" value="http://localhost:8091/api/user/vote"
+                placeholder="http://localhost:8091/api/user/vote" size="50">
+        </form>
+        <div id="pagination_objects" class="col"></div>
+        <div id="navigation" class="col"></div>
+    </div>
+    <script src="/js/getPagination.js"></script>
+    <script>
+        let liAttributes = [{
+                'name': 'class',
+                'value': 'nav-item'
+            },
             {
+                'name': 'href',
+                'value': '#'
+            }
+        ]
+        let ulAttributes = [{
+            'name': 'class',
+            'value': 'nav'
+        }]
+
+        let pagination = new Pagination(
+            document.querySelector('#url_pagination').value,
+            3,
+            'pagination_objects',
+            'navigation',
+            function (arrayObjects) {
+                let ul = document.createElement('ul');
+                if (arrayObjects != null && arrayObjects.length > 0) {
+                    for (let num = 0; num < arrayObjects.length; num++) {
+                        let li = document.createElement('li');
+                        li.innerHTML = Object.values(arrayObjects[num]);
+                        ul.appendChild(li);
+                    }
+                }
+                return ul;
+            }, {
+                liAttributes,
+                ulAttributes
+            });
+
+        init();
+
+        function showPage(event, num) {
+            pagination.pagination_url = document.querySelector('#url_pagination').value;
+            pagination.showPage(event, num, document.querySelector('span[name=token]').textContent);
+        }
+
+        async function init() {
+            await getTokenByUser(null);
+            await pagination.showPage(null, 1, document.querySelector('span[name=token]').textContent);
+        }
+
+        async function getTokenByUser(event) {
+            let userToken = "";
+            if (event != null) {
+                event.preventDefault();
+            }
+            userToken = await getToken({
                 "username": document.querySelector("#username").value,
                 "password": document.querySelector("#password").value
-            }
-        )
-        document.querySelector("span[name=token]").innerHTML = token;
-        getPagination.token = token;
-        return token;
-    }
-
-    async function getToken(user) {
-        console.log(user);
-        let token = "";
-        await fetch("http://localhost:8091/api/auth/token", {
-            method: "POST",
-            headers: {
-                "Content-type": "application/json; charset=utf-8"
-            },
-            body: JSON.stringify(user)
-        })
-            .then(data => data.json())
-            .then(resp => {
-                token += "Bearer " + resp.token;
             })
-        return token;
-    }
-</script>
+            document.querySelector("span[name=token]").innerHTML = userToken;
+            return userToken;
+        }
+
+        async function getToken(user) {
+            let token = "";
+            await fetch("http://localhost:8091/api/auth/token", {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify(user)
+                })
+                .then(data => data.json())
+                .then(resp => {
+                    token += "Bearer " + resp.token;
+                })
+            return token;
+        }
+    </script>
 </body>
+
 </html>

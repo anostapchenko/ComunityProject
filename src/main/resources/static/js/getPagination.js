@@ -1,87 +1,83 @@
-// async function getPagination(token, URL, page, items) {
-//     let pagination;
-//     URL +="?page=" + page;
-//     if(items != null) URL += "&items=" + items;
-//     await fetch(URL, {
-//         method: 'GET',
-//         headers: {
-//             "Content-Type" : "application/json",
-//             "Authorization" : `${token}`,
-//         }
-//     })
-//         .then(data => data.json())
-//         .then(ob => {
-//             pagination = ob;
-//         });
-//     return pagination;
-// }
+class Pagination {
 
-//pagination API url
-let pagination_url = "";
-//Authorization token                
-let token = "";
-//Count of object on one page
-let items = null;
-//node - where and how will add objects 
-let objectNodeId = "";
-//node - where will add page`s numbers
-let navNodeId = "";
-//must return node for objects
-let display = null;
-//attributes for navigation numbers
-let liAttributes = new Array();
-
-async function showPage(event, num) {
-    if (event != null) {
-        event.preventDefault();
+    constructor(pagination_url, items, objectNodeId, navNodeId, display, pageNumAttr) {
+        this.pagination_url = pagination_url;
+        this.items = items;
+        this.objectNodeId = objectNodeId;
+        this.navNodeId = navNodeId;
+        this.display = display;
+        this.pageNumAttr = pageNumAttr;
     }
-    let pageDto = await getPageDto(token, pagination_url, num, items);
-    showNavigation(navNodeId, liAttributes, pageDto.totalPageCount);
-    showObjects(objectNodeId, display, pageDto.items);
-}
 
-function showObjects(objectNodeId, display, arrayObjects) {
-    let table = document.querySelector(`#${objectNodeId}`);
-    let node = display(arrayObjects);
-    table.appendChild(node);
-}
-
-function showNavigation(navNodeId, liAttributes, pageCount) {
-    let navigation = document.querySelector(`#${navNodeId}`);
-    let ul = document.createElement('ul');
-    ul.setAttribute('name', 'pages');
-    for (let num = 1; num <= pageCount; num++) {
-        let li = document.createElement('li');
-        li.textContent = num;
-        li.setAttribute('onclick', `showPage(event, ${num})`);
-        if (liAttributes.length > 0) {
-            for (let attribute of liAttributes) {
-                li.setAttribute(attribute.name, attribute.value);
-            }
+    async showPage(event, num, token) {
+        if (event != null) {
+            event.preventDefault();
         }
-        ul.appendChild(li);
+        await this.getPageDto(token, this.pagination_url, num, this.items)
+            .then(pageDto => {
+                this.showNavigation(this.navNodeId, this.pageNumAttr, pageDto.totalPageCount, num);
+                this.showObjects(this.objectNodeId, pageDto.items);
+            })
     }
-    navigation.innerHTML = "";
-    navigation.appendChild(ul);
-}
 
-async function getPageDto(token, URL, page, items) {
-    let pagination;
-    URL += "?page=" + page;
-    if (items != null) URL += "&items=" + items;
-    await fetch(URL, {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `${token}`,
+    showObjects(objectNodeId, arrayObjects) {
+        let table = document.querySelector(`#${objectNodeId}`);
+        table.innerHTML = "";
+        let node = this.display(arrayObjects);
+        table.appendChild(node);
+    }
+
+    showNavigation(navNodeId, pageNumAttr, pageCount, numActive) {
+        let navigation = document.querySelector(`#${navNodeId}`);
+        navigation.innerHTML = "";
+        let ul = document.createElement('ul');
+        ul.setAttribute('name', 'pages');
+        if (pageNumAttr != null && pageNumAttr.ulAttributes != null && pageNumAttr.ulAttributes.length > 0) {
+            for (let attribute of pageNumAttr.ulAttributes) {
+                ul.setAttribute(attribute.name, attribute.value);
             }
-        })
-        .then(data => data.json())
-        .then(ob => {
-            pagination = ob;
-        })
-        .catch(mess => {
-            console.log(mess);
-        })
-    return pagination;
+
+        }
+        for (let num = 1; num <= pageCount; num++) {
+            let li = document.createElement('a');
+            li.textContent = num;
+            li.setAttribute('onclick', `showPage(event, ${num})`);
+            if (pageNumAttr != null && pageNumAttr.liAttributes != null && pageNumAttr.liAttributes.length > 0) {
+                for (let attribute of pageNumAttr.liAttributes) {
+                    li.setAttribute(attribute.name, attribute.value);
+                }
+            }
+            if (num == numActive) {
+                li.classList.add('active')
+            }
+            ul.appendChild(li);
+        }
+        navigation.innerHTML = "";
+        navigation.appendChild(ul);
+    }
+
+    async getPageDto(token, URL, page, items) {
+        let pagination = {};
+        URL += "?page=" + page;
+        if (items != null) {
+            URL += "&items=" + items;
+        }
+        await fetch(URL, {
+                method: 'GET',
+                headers: {
+                    "Content-type": "application/json",
+                    "Authorization": `${token}`,
+                }
+            })
+            .then(data => data.json())
+            .then(ob => {
+                console.log(pagination);
+                pagination.totalPageCount = ob.totalPageCount;
+                pagination.items = ob.items;
+            })
+            .catch(mess => {
+                console.log(mess);
+            })
+        return pagination;
+    }
 }
