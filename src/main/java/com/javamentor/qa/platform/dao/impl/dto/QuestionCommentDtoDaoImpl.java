@@ -18,14 +18,14 @@ public class QuestionCommentDtoDaoImpl implements QuestionCommentDtoDao {
     public List<QuestionCommentDto> getQuestionIdComment(Long id) {
         return entityManager.createQuery(
                 "SELECT NEW com.javamentor.qa.platform.models.dto.question.QuestionCommentDto(" +
-                        "c.id," +
-                        "c.id," +
-                        "c.lastUpdateDateTime," +
-                        "c.persistDateTime," +
-                        "c.text," +
-                        "c.id," +
-                        "c.id," +
-                        "(select sum(r.count) from Reputation r where r.author.id=c.id)) FROM Comment c where c.id=:id")
+                        "c.comment.id," +
+                        "c.question.id," +
+                        "c.comment.lastUpdateDateTime," +
+                        "c.comment.persistDateTime," +
+                        "c.comment.text," +
+                        "c.comment.user.id," +
+                        "c.comment.user.imageLink," +
+                        "(select sum(r.count) from Reputation r where r.author.id=c.id)) FROM CommentQuestion c where c.question.id=:id")
                 .setParameter("id", id)
                 .getResultList();
     }

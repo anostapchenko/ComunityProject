@@ -18,6 +18,6 @@ public class QuestionCommentDto {
     private LocalDateTime persistDate;
     private String text;
     private Long userId;
-    private Long imageLink;
+    private String imageLink;
     private Long reputation;
 }
