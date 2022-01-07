@@ -27,13 +27,11 @@ import java.util.Optional;
 @RestController
 public class AnswerResourceController {
 
-    private final AnswerDtoService answerDtoService;
     private VoteAnswerService voteAnswerService;
     private AnswerService answerService;
 
     @Autowired
-    public AnswerResourceController(AnswerDtoService answerDtoService,
-                                    VoteAnswerService voteAnswerService,
+    public AnswerResourceController(VoteAnswerService voteAnswerService,
                                     AnswerService answerService) {
         this.voteAnswerService = voteAnswerService;
         this.answerService = answerService;
