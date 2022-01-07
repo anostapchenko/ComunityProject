@@ -96,13 +96,7 @@ public class UserResourceController {
             @ApiResponse(responseCode = "400", description = "Неверная нумерация страниц")
     })
     @GetMapping(path = "/api/user/vote")
-    public ResponseEntity<PageDTO<UserDto>> getUsersByVoteAsc(@RequestParam Integer page, @RequestParam(required = false) Integer items) {
-        if (page == null || page <= 0) {
-            return new ResponseEntity("Incorrect page number", HttpStatus.BAD_REQUEST);
-        }
-        if (items == null || items <= 0) {
-            items = 10;
-        }
+    public ResponseEntity<PageDTO<UserDto>> getUsersByVoteAsc(@RequestParam(defaultValue = "1") Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
         PaginationData data = new PaginationData(page, items,
                 UserPageDtoDaoByVoteImpl.class.getSimpleName());
         return new ResponseEntity<>(userDtoService.getPageDto(data), HttpStatus.OK);

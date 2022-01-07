@@ -6,7 +6,7 @@ import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
 import com.javamentor.qa.platform.service.abstracts.model.VoteAnswerService;
-import com.javamentor.qa.platform.service.abstracts.pagination.AnswerPageDtoService;
+import com.javamentor.qa.platform.service.abstracts.dto.AnswerDtoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,15 +27,12 @@ import java.util.Optional;
 @RestController
 public class AnswerResourceController {
 
-    private final AnswerPageDtoService answerDtoService;
     private VoteAnswerService voteAnswerService;
     private AnswerService answerService;
 
     @Autowired
-    public AnswerResourceController(AnswerPageDtoService answerDtoService,
-                                    VoteAnswerService voteAnswerService,
+    public AnswerResourceController(VoteAnswerService voteAnswerService,
                                     AnswerService answerService) {
-        this.answerDtoService = answerDtoService;
         this.voteAnswerService = voteAnswerService;
         this.answerService = answerService;
     }

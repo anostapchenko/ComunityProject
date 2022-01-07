@@ -64,9 +64,4 @@ public class UserPageDtoDaoByVoteImpl implements PageDtoDao<UserDto> {
                 Long.class
         ).getSingleResult();
     }
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
 }

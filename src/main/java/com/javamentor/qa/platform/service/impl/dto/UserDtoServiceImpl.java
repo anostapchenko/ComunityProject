@@ -4,20 +4,16 @@ import com.javamentor.qa.platform.dao.abstracts.dto.UserDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
-import com.javamentor.qa.platform.service.abstracts.pagination.PageDtoService;
-import com.javamentor.qa.platform.service.impl.pagination.DtoServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class UserDtoServiceImpl extends DtoServiceImpl<UserDto> implements UserDtoService, PageDtoService<UserDto> {
+public class UserDtoServiceImpl extends DtoServiceImpl<UserDto> implements UserDtoService {
     private final UserDtoDao userDtoDao;
 
-    @Autowired
-    public UserDtoServiceImpl(Map<String, PageDtoDao<UserDto>> daoMap, UserDtoDao userDtoDao) {
+    public UserDtoServiceImpl(UserDtoDao userDtoDao, Map<String, PageDtoDao<UserDto>> daoMap) {
         super(daoMap);
         this.userDtoDao = userDtoDao;
     }
@@ -26,5 +22,4 @@ public class UserDtoServiceImpl extends DtoServiceImpl<UserDto> implements UserD
     public Optional<UserDto> findUserDtoById(Long id) {
         return userDtoDao.findUserDto(id);
     }
-
 }
