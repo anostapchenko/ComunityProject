@@ -10,6 +10,7 @@ import org.mapstruct.factory.Mappers;
 //@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 @Mapper(componentModel = "spring")
 public abstract class QuestionConverter {
+    public QuestionConverter INSTANCE = Mappers.getMapper(QuestionConverter.class );
 
 
     @Mapping(source = "tags", target = "listTagDto")
@@ -22,13 +23,12 @@ public abstract class QuestionConverter {
     public abstract QuestionDto questionToQuestionDto(Question question);
 
 
-//    public QuestionConverter INSTANCE = Mappers.getMapper(QuestionConverter.class );
 
-    @Mapping(source = "title", target = "title")
-    @Mapping(source = "description", target = "description")
-//    @Mapping(source = "tags", target = "tags")
-    @Mapping(source = "listTagDto", target = "tags")
-    public abstract Question questionDtoToQuestion(QuestionDto questionDto);
+//    @Mapping(source = "title", target = "title")
+//    @Mapping(source = "description", target = "description")
+////    @Mapping(source = "tags", target = "tags")
+//    @Mapping(source = "listTagDto", target = "tags")
+//    public abstract Question questionDtoToQuestion(QuestionDto questionDto);
 
 
 //    @Named("userIdToSet")
