@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.webapp.converters;
 
+import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import org.mapstruct.InjectionStrategy;
@@ -27,7 +28,7 @@ public abstract class QuestionConverter {
     @Mapping(source = "title", target = "title")
     @Mapping(source = "description", target = "description")
     @Mapping(source = "listTagDto", target = "tags")
-    public abstract Question questionDtoToQuestion(QuestionDto questionDto);
+    public abstract Question questionDtoToQuestion(QuestionCreateDto questionCreateDto);
 
 
 //    @Named("userIdToSet")

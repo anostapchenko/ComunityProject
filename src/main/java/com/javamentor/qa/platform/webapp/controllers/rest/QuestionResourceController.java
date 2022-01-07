@@ -140,6 +140,7 @@ public class QuestionResourceController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        User user =(User) authentication.getPrincipal();
 
+        Question question2 = questionConverter.questionDtoToQuestion(questionCreateDto);
 
         Question question = new Question();
         question.setTitle(questionCreateDto.getTitle());
