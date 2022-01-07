@@ -1,4 +1,4 @@
-package com.javamentor.qa.platform.service.impl.pagination;
+package com.javamentor.qa.platform.service.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
 import com.javamentor.qa.platform.exception.NoSuchDaoException;
