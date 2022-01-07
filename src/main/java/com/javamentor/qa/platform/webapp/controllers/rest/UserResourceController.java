@@ -4,7 +4,7 @@ import com.javamentor.qa.platform.dao.impl.pagination.UserPageDtoDaoAllUsersImpl
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
-import com.javamentor.qa.platform.service.abstracts.pagination.UserPageDtoService;
+import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserResourceController {
 
 
-    private final UserPageDtoService userDtoService;
+    private final UserDtoService userDtoService;
 
     @Autowired
-    public UserResourceController(UserPageDtoService userDtoService) {
+    public UserResourceController(UserDtoService userDtoService) {
         this.userDtoService = userDtoService;
     }
 
