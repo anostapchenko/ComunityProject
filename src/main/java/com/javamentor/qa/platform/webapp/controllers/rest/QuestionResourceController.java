@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.question.QuestionCommentDto;
+import com.javamentor.qa.platform.models.entity.question.CommentQuestion;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
@@ -69,10 +70,10 @@ public class QuestionResourceController {
         return new ResponseEntity<>(countQusetion, HttpStatus.OK);
     }
 
-    @GetMapping("api/user/question/{id}/comment")
+    @GetMapping("api/user/question/{questionId}/comment")
     @Operation(summary = "Количество всего вопросов в бд")
     @ApiResponse(responseCode = "200", description = "OK", content = {
-            @Content(mediaType = "application/json", schema = @Schema(implementation = Question.class))
+            @Content(mediaType = "application/json", schema = @Schema(implementation = CommentQuestion.class))
     })
     @ApiResponse(responseCode = "400", description = "Неверные учетные данные", content = {
             @Content(mediaType = "application/json")
