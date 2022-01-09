@@ -9,11 +9,11 @@ class Pagination {
         this.pageNumAttr = pageNumAttr;
     }
 
-    async showPage(event, num, token) {
+    async showPage(event, num) {
         if (event != null) {
             event.preventDefault();
         }
-        await this.getPageDto(token, this.pagination_url, num, this.items)
+        await this.getPageDto(this.getCookie(token), this.pagination_url, num, this.items)
             .then(pageDto => {
                 this.showNavigation(this.navNodeId, this.pageNumAttr, pageDto.totalPageCount, num);
                 this.showObjects(this.objectNodeId, pageDto.items);
@@ -78,5 +78,12 @@ class Pagination {
                 console.log(mess);
             })
         return pagination;
+    }
+
+    async getCookie(name) {
+        let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
     }
 }
