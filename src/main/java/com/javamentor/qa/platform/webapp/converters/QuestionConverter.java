@@ -6,7 +6,6 @@ import com.javamentor.qa.platform.models.entity.question.Question;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 //@Mapper(componentModel = "spring")
