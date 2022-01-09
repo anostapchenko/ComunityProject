@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
@@ -12,6 +13,7 @@ import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
 import com.javamentor.qa.platform.service.abstracts.model.VoteQuestionService;
 import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
+import com.javamentor.qa.platform.webapp.converters.TagConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,6 +30,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -39,18 +44,21 @@ public class QuestionResourceController {
     private final ReputationService reputationService;
     private final QuestionDtoService questionDtoService;
     private final QuestionConverter questionConverter;
+    private final TagConverter tagConverter;
 
     public QuestionResourceController(QuestionService questionService,
                                       VoteQuestionService voteQuestionService,
                                       ReputationService reputationService,
                                       QuestionDtoService questionDtoService,
-                                      QuestionConverter questionConverter
+                                      QuestionConverter questionConverter,
+                                      TagConverter tagConverter
                                       ) {
         this.questionService = questionService;
         this.voteQuestionService = voteQuestionService;
         this.reputationService = reputationService;
         this.questionDtoService = questionDtoService;
         this.questionConverter = questionConverter;
+        this.tagConverter = tagConverter;
     }
 
     @GetMapping("api/user/question/count")
@@ -146,7 +154,8 @@ public class QuestionResourceController {
 //        question.setTitle(questionCreateDto.getTitle());
         question.setUser((User) authentication.getPrincipal());
 //        question.setDescription(questionCreateDto.getDescription());
-////        question.setTags(tagConverter.listTagDtoToListTag(questionCreateDto.getTags()));
+         List<TagDto> stTags = questionCreateDto.getTags();
+        question.setTags(tagConverter.listTagDtoToListTag(questionCreateDto.getTags()));
 
         questionService.persist(question);
         return new ResponseEntity<>(questionConverter.questionToQuestionDto(question), HttpStatus.OK);
