@@ -146,15 +146,10 @@ public class QuestionResourceController {
     @PostMapping("api/user/question")
     public ResponseEntity<?> createNewQuestion(@Valid @RequestBody QuestionCreateDto questionCreateDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        User user =(User) authentication.getPrincipal();
 
         Question question = questionConverter.questionDtoToQuestion(questionCreateDto);
 
-//        Question question = new Question();
-//        question.setTitle(questionCreateDto.getTitle());
         question.setUser((User) authentication.getPrincipal());
-//        question.setDescription(questionCreateDto.getDescription());
-         List<TagDto> stTags = questionCreateDto.getTags();
         question.setTags(tagConverter.listTagDtoToListTag(questionCreateDto.getTags()));
 
         questionService.persist(question);
@@ -162,10 +157,6 @@ public class QuestionResourceController {
 
 
 //        Long userId = user.getId();
-//        Question question = QuestionConverter.questionCreateDtoToQuestion(questionCreateDto);
-
-//        Question question = questionConverter.questionCreateDtoToQuestion(questionCreateDto);
-//        Question question = new Question(1L, questionCreateDto.getTitle(), questionCreateDto.getDescription(), DateTimeFormat, );
 //        Question question = questionService.
 //                .getQuestionByIdWithAuthor(questionId)
 //                .orElseThrow(() -> new ConstrainException("Can't find question with id:" + questionId));
