@@ -71,7 +71,7 @@ public class QuestionResourceController {
     }
 
     @GetMapping("api/user/question/{questionId}/comment")
-    @Operation(summary = "Количество всего вопросов в бд")
+    @Operation(summary = "Получить список комементариев к вопросу")
     @ApiResponse(responseCode = "200", description = "OK", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = CommentQuestion.class))
     })
