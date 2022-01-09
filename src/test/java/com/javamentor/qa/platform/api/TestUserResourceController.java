@@ -353,19 +353,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                         .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
         )
                 .andDo(print())
-                .andExpect(status().isBadRequest());
-        mockMvc.perform(
-                get(URL_VOTE + "page=-1")
-                        .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
-        )
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-        mockMvc.perform(
-                get(URL_VOTE + "page=0")
-                        .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
-        )
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk());
     }
 }
 
