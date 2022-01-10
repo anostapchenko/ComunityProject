@@ -41,10 +41,10 @@ public class QuestionServiceImpl extends ReadWriteServiceImpl<Question, Long> im
 
         List<Tag> listTagForQuestion = new ArrayList<>();
 
-        List<String> listTagName = question.getTags().stream().map(tag -> tag.getName()).collect(Collectors.toList());
+        List<String> listTagName = question.getTags().stream().map(Tag::getName).collect(Collectors.toList());
         List<Tag> tagsThatExistsInDatabase = tagDao.getListTagsByListOfTagName(listTagName);
         Map<String, Tag> mapTagsThatExistsInDatabase = tagsThatExistsInDatabase.stream()
-                .collect(Collectors.toMap(tag -> tag.getName(), tag -> tag));
+                .collect(Collectors.toMap(Tag::getName, tag -> tag));
 
         for (String tagName : listTagName) {
             if (mapTagsThatExistsInDatabase.containsKey(tagName)) {

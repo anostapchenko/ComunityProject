@@ -1,6 +1,5 @@
 package com.javamentor.qa.platform.models.dto;
 
-import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.util.OnCreate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
