@@ -130,12 +130,11 @@ public class QuestionResourceController {
         return new ResponseEntity<>("Question number not exist!", HttpStatus.BAD_REQUEST);
     }
 
-
-
-
     @Operation(
             summary = "Добавление вопроса",
-            description = "Добавление нового вопроса"
+            description = "Данное API в качестве параметров принимает QuestionCreateDto, так же должны быть валидация" +
+                    " параметров titile не должен быть пустым или null и description тоже самое, tags не пустым" +
+                    " и не null. В качестве ответа должно вернуть QuestionDto"
     )
     @ApiResponse(responseCode = "200", description = "Вопрос добавлен", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionCreateDto.class))
