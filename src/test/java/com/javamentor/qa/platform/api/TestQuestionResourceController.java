@@ -32,7 +32,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             "dataset/testQuestionIdCommentResource/roles.yml"
     },
             strategy = SeedStrategy.CLEAN_INSERT,
-            cleanAfter = true
+            cleanBefore = true
     )
     // Получение списка дто комментариев к вопросам
     public void shouldGetQuestionIdComment() throws Exception {
