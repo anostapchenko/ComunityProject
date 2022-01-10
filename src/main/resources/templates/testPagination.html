@@ -9,66 +9,64 @@
 </head>
 
 <body>
-    <div class="container">
-        <form id="user_data">
-            <label for="username">Email: </label>
-            <input id="username" value="user1@mail.ru" placeholder="user1@mail.ru"><br>
-            <label for="password">Password: </label>
-            <input id="password" value="user1" placeholder="user1"><br>
-            <button name="send_user_data" type="submit" onclick="authorizationByUser(event)">Authorization</button>
-        </form>
-        <br>
-        <labe>Authorization is: </labe>
-        <span name="token"><br></span>
-        <!-- <form id="objects_pagination">
-            <label for="url_pagination">Pagination URL: </label>
-            <input id="url_pagination" value="http://localhost:8091/api/user/vote"
-                placeholder="http://localhost:8091/api/user/vote" size="50">
-            <button onclick="showPage(event, 1)">Show Paging</button>
-        </form>
-        <br>
-        <br> -->
-        <br>
-        <div class="container col=12">
-            <div id="pagination_objects" class="col"></div>
-            <br>
-            <br>
-            <br>
-            <div id="navigation" class="col"></div>
+    <div class="container h-100">
+        <div class="container h-100  mt-5">
+            <div class="row align-items-start h-100">
+                <div class="col-12 mx-auto">
+                    <div id="pagination_objects" class="col mt-2"></div>
+                </div>
+            </div>
+            <div class="row align-items-start h-100">
+                <div class="col-12 mx-auto mt-4">
+                    <div id="navigation" class="col mt-2"></div>
+                </div>
+            </div>
         </div>
+    </div>
     </div>
     <script src="/js/getPagination.js"></script>
     <script>
+        //настраиваем атрибуты списка
         let aAttributes = [{
                 'name': 'class',
-                'value': 'nav-item ml-2'
+                'value': 'nav-link ml-3'
+            },
+            {
+                'name': 'data-toggle',
+                'value': 'pill'
             },
             {
                 'name': 'href',
                 'value': '#'
-            }]
+            },
+            {
+                'name': 'aria-controls',
+                'value': 'pills-profile'
+            }
+        ]
+        //настраваем атрибуты заголовка списка
         let ulAttributes = [{
             'name': 'class',
-            'value': 'nav-tabs'
+            'value': 'nav nav-pills mb-3'
         }]
 
+        //создаем новый объект пагинации и передаем аргументы в конструктор
         let pagination = new Pagination(
-            'http://localhost:8091/api/user/vote',
-            3,
-            'pagination_objects',
-            'navigation',
-            function (arrayObjects) {
-                let ul = document.createElement('ul');
-                if (arrayObjects != null && arrayObjects.length > 0) {
+            'http://localhost:8091/api/user/vote', //url
+            3, //количество объектов
+            'pagination_objects', //id div куда будут вставляться объекты
+            'navigation', //id div куду будет вставляться нумерация
+            function (arrayObjects) { //функция, которая задаёт - как будут вставляться объекты
+                let ul = document.createElement('ul'); //здесь был создан корневой узел(список)
+                if (arrayObjects != null && arrayObjects.length > 0) { //проверка массива с объектами
                     for (let num = 0; num < arrayObjects.length; num++) {
-                        let li = document.createElement('li');
-                        li.innerHTML = Object.values(arrayObjects[num]);
-                        ul.appendChild(li);
+                        let li = document.createElement('li'); //для каждого объекта создаем узел
+                        li.innerHTML = Object.values(arrayObjects[num]); //помещаем текстовое представление в узел
+                        ul.appendChild(li); //добавляем узел в корневой
                     }
                 }
                 return ul;
-            },
-            {
+            }, { //список атрибутов нумерации
                 aAttributes,
                 ulAttributes
             });
@@ -80,37 +78,7 @@
         }
 
         async function init() {
-            if(document.cookie.includes('token='))
-            await pagination.showPage(null, 1, document.querySelector('span[name=token]').textContent);
-        }
-
-        async function authorizationByUser(event) {
-            let userToken = "";
-            if (event != null) {
-                event.preventDefault();
-            }
-            userToken = await getToken({
-                "username": document.querySelector("#username").value,
-                "password": document.querySelector("#password").value
-            })
-            document.cookie = "token=" + userToken;
-            return userToken;
-        }
-
-        async function getToken(user) {
-            let token = "";
-            await fetch("http://localhost:8091/api/auth/token", {
-                    method: "POST",
-                    headers: {
-                        "Content-type": "application/json; charset=utf-8"
-                    },
-                    body: JSON.stringify(user)
-                })
-                .then(data => data.json())
-                .then(resp => {
-                    token += "Bearer " + resp.token;
-                })
-            return token;
+            await pagination.showPage(null, 1);
         }
     </script>
 </body>

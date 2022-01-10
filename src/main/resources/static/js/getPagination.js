@@ -1,19 +1,20 @@
 class Pagination {
 
     constructor(pagination_url, items, objectNodeId, navNodeId, display, pageNumAttr) {
-        this.pagination_url = pagination_url;
-        this.items = items;
-        this.objectNodeId = objectNodeId;
-        this.navNodeId = navNodeId;
-        this.display = display;
-        this.pageNumAttr = pageNumAttr;
+        this.pagination_url = pagination_url;       //url
+        this.items = items;                         //количество объектов
+        this.objectNodeId = objectNodeId;           //id div куда будут вставляться объекты
+        this.navNodeId = navNodeId;                 //id div куда будет вставляться нумерация
+        this.display = display;                     //функция, которая задаёт - как будут вставляться объекты
+        this.pageNumAttr = pageNumAttr;             //атрибуты для заголовка и нумерации страниц
     }
 
+    //получение токена происходит из cookie.
     async showPage(event, num) {
         if (event != null) {
             event.preventDefault();
         }
-        await this.getPageDto(this.getCookie(token), this.pagination_url, num, this.items)
+        await this.getPageDto(this.getCookie('token'), this.pagination_url, num, this.items)
             .then(pageDto => {
                 this.showNavigation(this.navNodeId, this.pageNumAttr, pageDto.totalPageCount, num);
                 this.showObjects(this.objectNodeId, pageDto.items);
@@ -80,10 +81,10 @@ class Pagination {
         return pagination;
     }
 
-    async getCookie(name) {
+    getCookie(name) {
         let matches = document.cookie.match(new RegExp(
             "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
         ));
-        return matches ? decodeURIComponent(matches[1]) : undefined;
+        return matches ? ('Bearer ' + decodeURIComponent(matches[1])) : undefined;
     }
 }
