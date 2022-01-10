@@ -1,7 +1,8 @@
 reputation:
-  - id : 1
-    author_id : 15
-    count : 100
-    persist_date : 2021-12-13 15:09:52.715570
-    question_id : 1
-    type : 0
+  - id: 1
+    persist_date: 2021-12-09 19:41:18.252588
+    author_id: 15
+    count: 100
+    type: 1
+    question_id: 1
+

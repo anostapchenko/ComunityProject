@@ -8,7 +8,6 @@ import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.User;
-import com.javamentor.qa.platform.service.abstracts.dto.QuestionCommentDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
@@ -46,15 +45,12 @@ public class QuestionResourceController {
     private final
     QuestionDtoService questionDtoService;
 
-    private final
-    QuestionCommentDtoService questionCommentDtoService;
 
-    public QuestionResourceController(QuestionService questionService, VoteQuestionService voteQuestionService, ReputationService reputationService, QuestionDtoService questionDtoService, QuestionCommentDtoService questionCommentDtoService) {
+    public QuestionResourceController(QuestionService questionService, VoteQuestionService voteQuestionService, ReputationService reputationService, QuestionDtoService questionDtoService) {
         this.questionService = questionService;
         this.voteQuestionService = voteQuestionService;
         this.reputationService = reputationService;
         this.questionDtoService = questionDtoService;
-        this.questionCommentDtoService = questionCommentDtoService;
     }
 
     @GetMapping("api/user/question/count")
@@ -79,7 +75,7 @@ public class QuestionResourceController {
             @Content(mediaType = "application/json")
     })
     public ResponseEntity<List<QuestionCommentDto>> getQuestionIdComment(@PathVariable("questionId") Long questionId) {
-        List<QuestionCommentDto> qustionIdComment = questionCommentDtoService.getQuestionByIdComment(questionId);
+        List<QuestionCommentDto> qustionIdComment = questionDtoService.getQuestionByIdComment(questionId);
         return new ResponseEntity<>(qustionIdComment, HttpStatus.OK);
     }
 
