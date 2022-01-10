@@ -132,9 +132,7 @@ public class QuestionResourceController {
 
     @Operation(
             summary = "Добавление вопроса",
-            description = "Данное API в качестве параметров принимает QuestionCreateDto, так же должны быть валидация" +
-                    " параметров titile не должен быть пустым или null и description тоже самое, tags не пустым" +
-                    " и не null. В качестве ответа должно вернуть QuestionDto"
+            description = "Добавление вопроса"
     )
     @ApiResponse(responseCode = "200", description = "Вопрос добавлен", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionCreateDto.class))
@@ -145,27 +143,11 @@ public class QuestionResourceController {
     @PostMapping("api/user/question")
     public ResponseEntity<?> createNewQuestion(@Valid @RequestBody QuestionCreateDto questionCreateDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         Question question = questionConverter.questionDtoToQuestion(questionCreateDto);
-
         question.setUser((User) authentication.getPrincipal());
         question.setTags(tagConverter.listTagDtoToListTag(questionCreateDto.getTags()));
-
         questionService.persist(question);
         return new ResponseEntity<>(questionConverter.questionToQuestionDto(question), HttpStatus.OK);
-
-
-//        Long userId = user.getId();
-//        Question question = questionService.
-//                .getQuestionByIdWithAuthor(questionId)
-//                .orElseThrow(() -> new ConstrainException("Can't find question with id:" + questionId));
-//        int countUpVote = 10;
-//        if (voteQuestionService.validateUserVoteByQuestionIdAndUserId(questionId, userId)) {
-//            VoteQuestion voteQuestion = new VoteQuestion(user,question,VoteType.UP_VOTE,countUpVote);
-//            voteQuestionService.persist(voteQuestion);
-//            return new ResponseEntity<>(voteQuestionService.getVoteByQuestionId(questionId), HttpStatus.OK);
-//        }
-//        return new ResponseEntity<>("Question not create", HttpStatus.BAD_REQUEST);
     }
 
 
