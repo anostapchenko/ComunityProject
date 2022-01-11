@@ -49,7 +49,15 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(jsonPath("$[0].text").value("Hello Test"))
                 .andExpect(jsonPath("$[0].userId").value(1))
                 .andExpect(jsonPath("$[0].imageLink").value("photo"))
-                .andExpect(jsonPath("$[0].reputation").value(600));
+                .andExpect(jsonPath("$[0].reputation").value(100))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].questionId").value(1))
+                .andExpect(jsonPath("$[1].lastRedactionDate").value("2021-12-13T23:09:52.716"))
+                .andExpect(jsonPath("$[1].persistDate").value("2021-12-13T23:09:52.716"))
+                .andExpect(jsonPath("$[1].text").value("Hello Test2"))
+                .andExpect(jsonPath("$[1].userId").value(2))
+                .andExpect(jsonPath("$[1].imageLink").value("photo"))
+                .andExpect(jsonPath("$[1].reputation").value(500));
     }
 
     @Test
