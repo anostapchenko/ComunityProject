@@ -23,7 +23,6 @@
             </div>
         </div>
     </div>
-    </div>
     <script src="/js/getPagination.js"></script>
     <script>
         //настраиваем атрибуты списка
@@ -52,21 +51,24 @@
 
         //создаем новый объект пагинации и передаем аргументы в конструктор
         let pagination = new Pagination(
-            'http://localhost:8091/api/user/vote', //url
-            3, //количество объектов
-            'pagination_objects', //id div куда будут вставляться объекты
-            'navigation', //id div куду будет вставляться нумерация
-            function (arrayObjects) { //функция, которая задаёт - как будут вставляться объекты
-                let ul = document.createElement('ul'); //здесь был создан корневой узел(список)
+            'http://localhost:8091/api/user/vote',            //url
+            3,                                                //количество объектов
+            'pagination_objects',                             //id div куда будут вставляться объекты
+            'navigation',                                     //id div куду будет вставляться нумерация
+
+            function (arrayObjects) {                         //функция, которая задаёт - как будут вставляться объекты
+                let ul = document.createElement('ul');        //здесь был создан корневой узел(список)
                 if (arrayObjects != null && arrayObjects.length > 0) { //проверка массива с объектами
                     for (let num = 0; num < arrayObjects.length; num++) {
                         let li = document.createElement('li'); //для каждого объекта создаем узел
                         li.innerHTML = Object.values(arrayObjects[num]); //помещаем текстовое представление в узел
-                        ul.appendChild(li); //добавляем узел в корневой
+                        ul.appendChild(li);             //добавляем узел в корневой
                     }
                 }
                 return ul;
-            }, { //список атрибутов нумерации
+            },
+
+            { //список атрибутов нумерации
                 aAttributes,
                 ulAttributes
             });

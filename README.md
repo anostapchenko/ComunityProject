@@ -718,3 +718,80 @@ HTML код страницы с добавленными heading, side-bar, foot
 </body>
 </html>
 ```
+# Пагинация на стороне frontend
+Для получения пагинации, по-заданному url, был создан javascript объект Pagination,
+который находится в файле getPagination.js. Для его использования необходимо
+указать js файл в используемом html файле, настроить его поля через конструктор,
+и используя метод showPage отобразить необходимый массив объектов с нумерацией.
+
+##Описание объекта Pagination
+- pagination_url - url для получения пагинации
+- items - количество запрашиваемых объектов, может быть null
+- objectNodeId - id узла, куда будет вставляться массив объектов
+- navNodeId - id узла, куда будет вставляться нумерация
+- display - функция, которая задаёт как будут отображаться объекты 
+- pageNumAttr - атрибуты для заголовка и нумерации страниц
+  pageNumAttr должен состоять из массивов aAttributes и 
+  ulAttributes. Каждый должен содержать объекты следующего вида:
+  
+    { 'name' : 'имя_аттрибута',
+    'value' : 'значение_аттрибута' }
+
+Для получения пагинации используется token, который получаем из cookie.
+
+##Пример использования
+```
+ <script>
+        //настраиваем атрибуты предметов списка
+        let aAttributes = [{
+                'name': 'class',
+                'value': 'nav-link ml-3'
+            },
+            {
+                'name': 'data-toggle',
+                'value': 'pill'
+            },
+            {
+                'name': 'href',
+                'value': '#'
+            },
+            {
+                'name': 'aria-controls',
+                'value': 'pills-profile'
+            }
+        ]
+        //настраваем атрибуты корня списка
+        let ulAttributes = [{
+            'name': 'class',
+            'value': 'nav nav-pills mb-3'
+        }]
+
+        //создаем новый объект пагинации и передаем аргументы в конструктор
+        let pagination = new Pagination(
+            'http://localhost:8091/api/user/vote',            //url
+            3,                                                //количество объектов
+            'pagination_objects',                             //id div куда будут вставляться объекты
+            'navigation',                                     //id div куду будет вставляться нумерация
+            
+            function (arrayObjects) {                         //функция, которая задаёт - как будут вставляться объекты
+                let ul = document.createElement('ul');        //здесь был создан корневой узел(список)
+                if (arrayObjects != null && arrayObjects.length > 0) { //проверка массива с объектами
+                    for (let num = 0; num < arrayObjects.length; num++) {
+                        let li = document.createElement('li'); //для каждого объекта создаем узел
+                        li.innerHTML = Object.values(arrayObjects[num]); //помещаем текстовое представление в узел
+                        ul.appendChild(li);             //добавляем узел в корневой
+                    }
+                }
+                return ul;
+            }, 
+            { //список атрибутов нумерации
+                aAttributes,
+                ulAttributes
+            });
+        
+        //вызываем функцию отображения страницы
+        function showPage(event, num) {
+            pagination.showPage(event, num);
+        }
+```
+Для просмотра примера необходимо залогироваться на сервере и перейти на /pagination

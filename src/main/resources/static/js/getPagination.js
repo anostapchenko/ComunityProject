@@ -3,13 +3,12 @@ class Pagination {
     constructor(pagination_url, items, objectNodeId, navNodeId, display, pageNumAttr) {
         this.pagination_url = pagination_url;       //url
         this.items = items;                         //количество объектов
-        this.objectNodeId = objectNodeId;           //id div куда будут вставляться объекты
+        this.objectNodeId = objectNodeId;           //id div куда будут вставляться массив объектов
         this.navNodeId = navNodeId;                 //id div куда будет вставляться нумерация
         this.display = display;                     //функция, которая задаёт - как будут вставляться объекты
         this.pageNumAttr = pageNumAttr;             //атрибуты для заголовка и нумерации страниц
     }
 
-    //получение токена происходит из cookie.
     async showPage(event, num) {
         if (event != null) {
             event.preventDefault();
