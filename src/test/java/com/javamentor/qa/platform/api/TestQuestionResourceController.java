@@ -38,18 +38,18 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     public void shouldGetQuestionIdComment() throws Exception {
         mockMvc.perform(get("/api/user/question/1/comment")
                         .contentType("application/json")
-                        .header("Authorization", "Bearer " + getToken("test15@mail.ru","test15")))
+                        .header("Authorization", "Bearer " + getToken("test1@mail.ru","test15")))
                 .andExpect(status().isOk())
-                .andDo(print());
-/*                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.questionId").value(1))
-                .andExpect(jsonPath("$.lastRedactionDate").value("2021-12-13T18:09:52.716"))
-                .andExpect(jsonPath("$.persistDate").value("2021-12-13T18:09:52.716"))
-                .andExpect(jsonPath("$.text").value("Hello Test"))
-                .andExpect(jsonPath("$.userId").value(15))
-                .andExpect(jsonPath("$.imageLink").value("photo"))
-                .andExpect(jsonPath("$.reputation").value(100));*/
+                .andDo(print())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].questionId").value(1))
+                .andExpect(jsonPath("$[0].lastRedactionDate").value("2021-12-13T23:09:52.716"))
+                .andExpect(jsonPath("$[0].persistDate").value("2021-12-13T23:09:52.716"))
+                .andExpect(jsonPath("$[0].text").value("Hello Test"))
+                .andExpect(jsonPath("$[0].userId").value(1))
+                .andExpect(jsonPath("$[0].imageLink").value("photo"))
+                .andExpect(jsonPath("$[0].reputation").value(600));
     }
 
     @Test

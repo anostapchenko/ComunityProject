@@ -1,26 +1,26 @@
 user_entity:
-  - id: 15
-    about: "I'm Test user #15"
+  - id: 1
+    about: "I'm Test user #1"
     city: "Moscow"
-    full_name: "test 15"
+    full_name: "test 1"
     password: "$2a$10$p94zVhwJKsg6CzDQAg1tPOwgUUa66.ITiPyhvJbYKIIZQ1i86UEpm"
-    email: "test15@mail.ru"
+    email: "test1@mail.ru"
     is_deleted: false
-    nickname: "test15"
+    nickname: "test1"
     image_link: "photo"
     is_enabled: true
     last_redaction_date: 2021-12-09 19:41:18.252588
     persist_date: 2021-12-09 19:41:18.252588
     role_id : 1
 
-  - id: 16
-    about: "I'm Test user #16"
+  - id: 2
+    about: "I'm Test user #2"
     city: "Moscow"
-    full_name: "test 16"
+    full_name: "test 2"
     password: "$2a$10$p94zVhwJKsg6CzDQAg1tPOwgUUa66.ITiPyhvJbYKIIZQ1i86UEpm"
-    email: "test16@mail.ru"
+    email: "test2@mail.ru"
     is_deleted: false
-    nickname: "test16"
+    nickname: "test2"
     image_link: "photo"
     is_enabled: true
     last_redaction_date: 2021-12-09 19:41:18.252588
