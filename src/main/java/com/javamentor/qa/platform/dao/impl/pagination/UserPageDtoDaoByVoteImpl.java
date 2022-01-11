@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Map;
 
 @Repository("UserPageDtoDaoByVoteImpl")
 public class UserPageDtoDaoByVoteImpl implements PageDtoDao<UserDto> {
@@ -58,7 +59,7 @@ public class UserPageDtoDaoByVoteImpl implements PageDtoDao<UserDto> {
     }
 
     @Override
-    public Long getTotalResultCount() {
+    public Long getTotalResultCount(Map<String,Object> properties) {
         return entityManager.createQuery(
                 "SELECT COUNT(u.id) FROM User u",
                 Long.class
