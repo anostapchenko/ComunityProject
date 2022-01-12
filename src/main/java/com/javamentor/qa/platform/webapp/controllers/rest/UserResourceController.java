@@ -1,6 +1,7 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.dao.impl.pagination.UserPageDtoDaoAllUsersImpl;
+import com.javamentor.qa.platform.dao.impl.pagination.UserPageDtoDaoByVoteImpl;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
@@ -76,6 +77,28 @@ public class UserResourceController {
         PaginationData data = new PaginationData(page, items,
                 UserPageDtoDaoAllUsersImpl.class.getSimpleName());
         return new ResponseEntity<>(userDtoService.getPageDto(data), HttpStatus.OK);
+    }
 
+    @Operation(summary = "Постраничное получение списка пользователей",
+            description = "Постраничное получение списка пользователей отсортированных по сумме голосов" +
+                    "за ответы и вопросы, где DownVote = -1 и UpVote = 1")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает PageDto с вложенным массивом UserDto согласно текущей страницы" +
+                            "и количеству запрашиваемых пользователей",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = PageDTO.class))
+                    }),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещён"),
+            @ApiResponse(responseCode = "400", description = "Неверная нумерация страниц")
+    })
+    @GetMapping(path = "/api/user/vote")
+    public ResponseEntity<PageDTO<UserDto>> getUsersByVoteAsc(@RequestParam(defaultValue = "1") Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
+        PaginationData data = new PaginationData(page, items,
+                UserPageDtoDaoByVoteImpl.class.getSimpleName());
+        return new ResponseEntity<>(userDtoService.getPageDto(data), HttpStatus.OK);
     }
 }

@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Repository("AnswerPageDtoDaoByIdImpl")
 public class AnswerPageDtoDaoByIdImpl implements PageDtoDao<AnswerDTO> {
@@ -47,7 +48,7 @@ public class AnswerPageDtoDaoByIdImpl implements PageDtoDao<AnswerDTO> {
     }
 
     @Override
-    public Long getTotalResultCount() {
+    public Long getTotalResultCount(Map<String, Object> properties) {
         return (Long) entityManager.createQuery("select count(a.id) from Answer a")
                 .getSingleResult();
     }

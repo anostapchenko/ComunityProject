@@ -1,0 +1,241 @@
+user_entity:
+  - id: 100
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 1"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user100@mail.ru"
+    nickname: "user1"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 101
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 3"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user101@mail.ru"
+    nickname: "user21"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 102
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 2"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user102@mail.ru"
+    nickname: "user31"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 103
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 1"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user103@mail.ru"
+    nickname: "user1"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 104
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 3"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user104@mail.ru"
+    nickname: "user21"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 105
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 2"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user105@mail.ru"
+    nickname: "user31"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 106
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 1"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user106@mail.ru"
+    nickname: "user1"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 107
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 3"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user107@mail.ru"
+    nickname: "user21"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 108
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 2"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user108@mail.ru"
+    nickname: "user31"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 109
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 2"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user109@mail.ru"
+    nickname: "user31"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 110
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 1"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user110@mail.ru"
+    nickname: "user1"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 111
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 3"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user111@mail.ru"
+    nickname: "user21"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 112
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 2"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user112@mail.ru"
+    nickname: "user31"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 113
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 1"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user113@mail.ru"
+    nickname: "user1"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 114
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 3"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user114@mail.ru"
+    nickname: "user21"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 115
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 2"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user115@mail.ru"
+    nickname: "user31"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 116
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 1"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user116@mail.ru"
+    nickname: "user1"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 117
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 3"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user117@mail.ru"
+    nickname: "user21"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 118
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 2"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user118@mail.ru"
+    nickname: "user31"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 119
+    about: "I'm Test user #15"
+    city: "Moscow"
+    full_name: "test 2"
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user119@mail.ru"
+    nickname: "user31"
+    is_enabled: true
+    is_deleted: false
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
