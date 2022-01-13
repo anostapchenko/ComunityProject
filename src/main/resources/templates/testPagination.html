@@ -4,85 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Pagination</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
 <body>
-    <div class="container h-100">
-        <div class="container h-100  mt-5">
-            <div class="row align-items-start h-100">
-                <div class="col-12 mx-auto">
-                    <div id="pagination_objects" class="col mt-2"></div>
-                </div>
-            </div>
-            <div class="row align-items-start h-100">
-                <div class="col-12 mx-auto mt-4">
-                    <div id="navigation" class="col mt-2"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="/js/getPagination.js"></script>
-    <script>
-        //настраиваем атрибуты списка
-        let aAttributes = [{
-                'name': 'class',
-                'value': 'nav-link ml-3'
-            },
-            {
-                'name': 'data-toggle',
-                'value': 'pill'
-            },
-            {
-                'name': 'href',
-                'value': '#'
-            },
-            {
-                'name': 'aria-controls',
-                'value': 'pills-profile'
-            }
-        ]
-        //настраваем атрибуты заголовка списка
-        let ulAttributes = [{
-            'name': 'class',
-            'value': 'nav nav-pills mb-3'
-        }]
+<div id="pagination_objects" class="col mt-2"></div>
+<div id="navigation" class="col mt-2"></div>
+<script src="/js/getPagination.js"></script>
+<script>
+    //создаем новый объект пагинации и передаем аргументы в конструктор
+    let pagination = new Pagination(
+        'http://localhost:8091/api/user/vote',            //url
+        1,                                                //количество объектов
+        'pagination_objects',                             //id div куда будут вставляться объекты
+        'navigation',                                     //id div куду будет вставляться нумерация
 
-        //создаем новый объект пагинации и передаем аргументы в конструктор
-        let pagination = new Pagination(
-            'http://localhost:8091/api/user/vote',            //url
-            3,                                                //количество объектов
-            'pagination_objects',                             //id div куда будут вставляться объекты
-            'navigation',                                     //id div куду будет вставляться нумерация
-
-            function (arrayObjects) {                         //функция, которая задаёт - как будут вставляться объекты
-                let ul = document.createElement('ul');        //здесь был создан корневой узел(список)
-                if (arrayObjects != null && arrayObjects.length > 0) { //проверка массива с объектами
-                    for (let num = 0; num < arrayObjects.length; num++) {
-                        let li = document.createElement('li'); //для каждого объекта создаем узел
-                        li.innerHTML = Object.values(arrayObjects[num]); //помещаем текстовое представление в узел
-                        ul.appendChild(li);             //добавляем узел в корневой
-                    }
+        function (arrayObjects) {                         //функция, которая задаёт - как будут вставляться объекты
+            let ul = document.createElement('ul');        //здесь был создан корневой узел(список)
+            if (arrayObjects != null && arrayObjects.length > 0) { //проверка массива с объектами
+                for (let num = 0; num < arrayObjects.length; num++) {
+                    let li = document.createElement('li'); //для каждого объекта создаем узел
+                    li.innerHTML = Object.values(arrayObjects[num]); //помещаем текстовое представление в узел
+                    ul.appendChild(li);             //добавляем узел в корневой
                 }
-                return ul;
-            },
+            }
+            return ul;
+        });
 
-            { //список атрибутов нумерации
-                aAttributes,
-                ulAttributes
-            });
+    init();
 
-        init();
+    function showPage(event, num) {
+        pagination.showPage(event, num);
+    }
 
-        function showPage(event, num) {
-            pagination.showPage(event, num);
-        }
-
-        async function init() {
-            await pagination.showPage(null, 1);
-        }
-    </script>
+    async function init() {
+        await pagination.showPage(null, 1);
+    }
+</script>
 </body>
 
 </html>
