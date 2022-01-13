@@ -1,38 +1,31 @@
-package com.javamentor.qa.platform.dao.impl.dto;
+package com.javamentor.qa.platform.dao.impl.pagination;
 
-import com.javamentor.qa.platform.dao.abstracts.dto.QuestionDtoDao;
-import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
-import com.javamentor.qa.platform.dao.util.SingleResultUtil;
+import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import org.hibernate.transform.ResultTransformer;
-import org.springframework.stereotype.Repository;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
-@Repository
-public class QuestionDtoDaoImpl implements QuestionDtoDao {
+public class QuestionPageWithoutAnswerDtoDao implements PageDtoDao<QuestionDto> {
+
     @PersistenceContext
-    private EntityManager entityManager;
-
-    public final TagDtoDao tagDtoDao;
-
-    public QuestionDtoDaoImpl(TagDtoDao tagDtoDao) {
-        this.tagDtoDao = tagDtoDao;
-    }
+    EntityManager entityManager;
 
     @Override
-    public Optional<QuestionDto> getQuestionDtoDaoById(Long id) {
-
-        TypedQuery<QuestionDto> dto = entityManager.createQuery("select q.id, q.title, u.id," +
+    public List<QuestionDto> getPaginationItems(PaginationData properties) {
+        int itemsOnPage = properties.getItemsOnPage();
+        int offset = (properties.getCurrentPage() - 1) * itemsOnPage;
+        List<QuestionDto> questionDtos =  entityManager.createQuery("select q.id, q.title, u.id," +
                         " u.fullName, u.imageLink, q.description, q.persistDateTime," +
                         " q.lastUpdateDateTime, (select sum(r.count) from Reputation r where r.author.id =u.id), " +
-                        "(select count (a.id) from Question q JOIN Answer a ON a.question.id = q.id WHERE q.id =:id)," +
-                        "(select sum(case when v.vote = 'UP_VOTE' then 1 else -1 end) from VoteQuestion v JOIN Question " +
-                        "q ON v.question.id = q.id where q.id =:id) from Question q JOIN q.user u WHERE q.id =:id")
-                .setParameter("id", id)
+                        "(select sum(case when v.vote = 'UP_VOTE' then 1 else -1 end) from VoteQuestion v JOIN Question q" +
+                        " ON v.question.id = q.id) from Question q JOIN q.user u LEFT OUTER JOIN q.answers")
+                .setFirstResult(offset)
+                .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)
                 .setResultTransformer(new ResultTransformer() {
                     @Override
@@ -47,20 +40,23 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                         questionDto.setPersistDateTime((LocalDateTime) tuple[6]);
                         questionDto.setLastUpdateDateTime((LocalDateTime) tuple[7]);
                         questionDto.setAuthorReputation((Long) tuple[8]);
-                        questionDto.setCountAnswer(((Number) tuple[9]).intValue());
-                        questionDto.setCountValuable(((Number) tuple[10]).intValue());
+                        questionDto.setCountAnswer(0);
+                        questionDto.setCountValuable(((Number) tuple[9]).intValue());
                         return questionDto;
                     }
+
                     @Override
                     public List transformList(List list) {
                         return list;
                     }
-                });
-        return SingleResultUtil.getSingleResultOrNull(dto);
+                })
+                .list();
+
+        return questionDtos;
     }
 
-//    @Override
-//    public List<QuestionDto> getQuestionDtoWithNoAnswer() {
-//
-//    }
+    @Override
+    public Long getTotalResultCount() {
+        return (Long) entityManager.createQuery("select count(q.id) from Question q LEFT OUTER JOIN q.answers").getSingleResult();
+    }
 }

@@ -1,7 +1,11 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageWithoutAnswerDtoDao;
 import com.javamentor.qa.platform.exception.ConstrainException;
+import com.javamentor.qa.platform.models.dto.AnswerDTO;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.models.dto.question.TagDto;
+import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
@@ -19,11 +23,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -116,6 +118,15 @@ public class QuestionResourceController {
             return new ResponseEntity<>(q.get(), HttpStatus.OK);
         }
         return new ResponseEntity<>("Question number not exist!", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("api/user/question/noAnswer")
+    public ResponseEntity<List<AnswerDTO>> getQuestionsWithNoAnswer(@RequestParam int page, @RequestParam(required = false, defaultValue = "10") int items,
+                                                                    @RequestParam(required = false) List<TagDto> trackedTags,
+                                                                    @RequestParam (required = false) List<TagDto> ignoredTags) {
+        PaginationData data = new PaginationData(page, items, QuestionPageWithoutAnswerDtoDao.class.getSimpleName());
+
+        return null;
     }
 }
 
