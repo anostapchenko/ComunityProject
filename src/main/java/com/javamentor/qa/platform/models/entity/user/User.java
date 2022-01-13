@@ -61,6 +61,7 @@ public class User implements UserDetails {
     @Column
     private String city;
 
+
     @Column(name = "link_site")
     private String linkSite;
 

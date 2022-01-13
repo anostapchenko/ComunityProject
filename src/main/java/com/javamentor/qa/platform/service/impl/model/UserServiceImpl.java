@@ -3,13 +3,17 @@ package com.javamentor.qa.platform.service.impl.model;
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImpl extends ReadWriteServiceImpl<User, Long> implements UserService {
@@ -74,4 +78,40 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User, Long> implements
         return userDao.getWithRoleByEmail(email);
     }
 
+    @Override
+    @Transactional
+    public ResponseEntity<?> changePassword(String password) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(password.length() < 6
+                || password.equals(SecurityContextHolder.getContext().getAuthentication().getCredentials())
+                || !password.chars().allMatch(Character::isLetterOrDigit)
+                || password.chars().noneMatch(Character::isDigit)
+                || password.chars().noneMatch(Character::isLetter)) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        String newPassword = passwordEncoder.encode(password);
+        userDao.changePassword(newPassword, username);
+        Authentication authentication
+                = new UsernamePasswordAuthenticationToken(
+                        SecurityContextHolder.getContext().getAuthentication().getPrincipal(), newPassword);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return new ResponseEntity<>(new StringResponse(password), HttpStatus.OK);
+    }
+
+}
+
+class StringResponse{
+    String password;
+
+    public StringResponse(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
