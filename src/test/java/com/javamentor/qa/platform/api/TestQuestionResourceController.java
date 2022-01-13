@@ -6,6 +6,7 @@ import com.javamentor.qa.platform.AbstractClassForDRRiderMockMVCTests;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,44 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class TestQuestionResourceController extends AbstractClassForDRRiderMockMVCTests {
+
+    @Test
+    @DataSet(value = {
+            "dataset/testQuestionIdCommentResource/comment.yml",
+            "dataset/testQuestionIdCommentResource/users.yml",
+            "dataset/testQuestionIdCommentResource/commentquestion.yml",
+            "dataset/testQuestionIdCommentResource/questions.yml",
+            "dataset/testQuestionIdCommentResource/reputations.yml",
+            "dataset/testQuestionIdCommentResource/roles.yml"
+    },
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanBefore = true
+    )
+    // Получение списка дто комментариев к вопросам
+    public void shouldGetQuestionIdComment() throws Exception {
+        mockMvc.perform(get("/api/user/question/1/comment")
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + getToken("test1@mail.ru","test15")))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].questionId").value(1))
+                .andExpect(jsonPath("$[0].lastRedactionDate").value("2021-12-13T23:09:52.716"))
+                .andExpect(jsonPath("$[0].persistDate").value("2021-12-13T23:09:52.716"))
+                .andExpect(jsonPath("$[0].text").value("Hello Test"))
+                .andExpect(jsonPath("$[0].userId").value(1))
+                .andExpect(jsonPath("$[0].imageLink").value("photo"))
+                .andExpect(jsonPath("$[0].reputation").value(100))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].questionId").value(1))
+                .andExpect(jsonPath("$[1].lastRedactionDate").value("2021-12-13T23:09:52.716"))
+                .andExpect(jsonPath("$[1].persistDate").value("2021-12-13T23:09:52.716"))
+                .andExpect(jsonPath("$[1].text").value("Hello Test2"))
+                .andExpect(jsonPath("$[1].userId").value(2))
+                .andExpect(jsonPath("$[1].imageLink").value("photo"))
+                .andExpect(jsonPath("$[1].reputation").value(500));
+    }
 
     @Test
     //Голосуем ПРОТИВ вопроса (DOWN_VOTE) и получаем ответ с количеством голосов: 1 и репутацией -5
