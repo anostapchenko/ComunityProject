@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.*;
 
 @Service
@@ -80,20 +81,11 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User, Long> implements
 
     @Override
     @Transactional
-    public ResponseEntity<?> changePassword(String password) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        if(password.length() < 6
-                || password.equals(SecurityContextHolder.getContext().getAuthentication().getCredentials())
-                || !password.chars().allMatch(Character::isLetterOrDigit)
-                || password.chars().noneMatch(Character::isDigit)
-                || password.chars().noneMatch(Character::isLetter)) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> changePassword(String password, Principal principal) {
         String newPassword = passwordEncoder.encode(password);
-        userDao.changePassword(newPassword, username);
+        userDao.changePassword(newPassword, principal.getName());
         Authentication authentication
-                = new UsernamePasswordAuthenticationToken(
-                        SecurityContextHolder.getContext().getAuthentication().getPrincipal(), newPassword);
+                = new UsernamePasswordAuthenticationToken(principal, newPassword);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return new ResponseEntity<>(new StringResponse(password), HttpStatus.OK);
     }

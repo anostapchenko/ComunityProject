@@ -1,6 +1,7 @@
 package com.javamentor.qa.platform.webapp.controllers;
 
 import com.javamentor.qa.platform.exception.ConstrainException;
+import com.javamentor.qa.platform.webapp.controllers.exceptions.WrongPasswordFormatException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,4 +28,10 @@ public class ExceptionController {
                 .body(exception.getMessage());
      }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleWrongPasswordFormatException(WrongPasswordFormatException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
 }
