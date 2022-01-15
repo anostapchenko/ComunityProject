@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -65,6 +66,17 @@ public class TagResourceController {
     @GetMapping("/popular")
     public ResponseEntity<List<PopularTagDto>> getTopPopularTags() {
         return new ResponseEntity<>(tagDtoService.getPopularTags(10),
+                HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Тэги в наименовании которых встречается строка",
+            description = "Возвращает список из максимум 10 тегов в наименовании которых встречается строка."
+    )
+
+    @GetMapping("/latter")
+    public ResponseEntity<List<TagDto>> getTagsLike(@RequestParam String value) {
+        return new ResponseEntity<>(tagDtoService.getTagsLike(value),
                 HttpStatus.OK);
     }
 }

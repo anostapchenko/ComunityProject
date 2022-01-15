@@ -39,4 +39,9 @@ public class TagDtoServiceImpl implements TagDtoService {
     public List<TagDto> getTagDtoServiceById(Long id) {
         return tagDtoDao.getTagDtoDaoById(id);
     }
+
+    @Override
+    public List<TagDto> getTagsLike(String value){
+        return tagDtoDao.getTagsLike(value);
+    }
 }

@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Locale;
 
 @Repository
 public class TagDtoDaoImpl implements TagDtoDao {
@@ -72,5 +73,24 @@ public class TagDtoDaoImpl implements TagDtoDao {
                 )
                 .unwrap(org.hibernate.query.Query.class)
                 .setResultTransformer(Transformers.aliasToBean(PopularTagDto.class));
+    }
+
+    @Override
+    public List<TagDto> getTagsLike(String value){
+        return getTagsLikeQuery(value).setMaxResults(10).getResultList();
+    }
+
+    private Query getTagsLikeQuery(String value) {
+        return entityManager.createQuery("SELECT " +
+                                                "t.id as id, " +
+                                                "t.name as name, " +
+                                                "t.description as description, " +
+                                                "t.persistDateTime as persistDateTime " +
+                                            "FROM Tag t " +
+                                            "WHERE lower(t.name) like :value " +
+                                            "ORDER BY t.questions.size desc, t.name")
+                .setParameter("value", "%"+value.toLowerCase(Locale.ROOT)+"%")
+                .unwrap(org.hibernate.query.Query.class)
+                .setResultTransformer(Transformers.aliasToBean(TagDto.class));
     }
 }
