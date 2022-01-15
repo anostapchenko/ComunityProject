@@ -368,6 +368,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             },
             strategy = SeedStrategy.REFRESH)
     public void shouldReturnUserWithChangedPassword() throws Exception{
+//                          Ставим новый пароль
         this.mockMvc.perform(patch("/api/user/change/password?password=test534")
                         .contentType("application/json")
                         .header("Authorization","Bearer " + getToken("test15@mail.ru","test15")))
@@ -376,7 +377,15 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.password").value("test534"))
         ;
-
+//                          Заходим под новым паролем
+        this.mockMvc.perform(patch("/api/user/change/password?password=anotherTest534")
+                        .contentType("application/json")
+                        .header("Authorization","Bearer " + getToken("test15@mail.ru","test534")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.password").value("anotherTest534"))
+        ;
     }
 
 }

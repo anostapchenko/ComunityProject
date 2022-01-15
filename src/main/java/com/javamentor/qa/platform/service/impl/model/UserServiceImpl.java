@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.service.impl.model;
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
+import com.javamentor.qa.platform.service.util.StringResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -81,29 +82,13 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User, Long> implements
 
     @Override
     @Transactional
-    public ResponseEntity<?> changePassword(String password, Principal principal) {
+    public StringResponse changePassword(String password, Authentication auth) {
         String newPassword = passwordEncoder.encode(password);
-        userDao.changePassword(newPassword, principal.getName());
+        userDao.changePassword(newPassword, auth.getName());
         Authentication authentication
-                = new UsernamePasswordAuthenticationToken(principal, newPassword);
+                = new UsernamePasswordAuthenticationToken(auth, newPassword);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>(new StringResponse(password), HttpStatus.OK);
+        return new StringResponse(password);
     }
 
-}
-
-class StringResponse{
-    String password;
-
-    public StringResponse(String password) {
-        this.password = password;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

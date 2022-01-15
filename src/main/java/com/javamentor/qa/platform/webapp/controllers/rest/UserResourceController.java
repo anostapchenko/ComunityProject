@@ -7,6 +7,7 @@ import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
+import com.javamentor.qa.platform.service.util.StringResponse;
 import com.javamentor.qa.platform.webapp.controllers.exceptions.WrongPasswordFormatException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -131,8 +132,9 @@ public class UserResourceController {
                 || password.chars().noneMatch(Character::isLetter)) {
             throw new WrongPasswordFormatException("Пароль должен содержать буквы и цифры");
         }
-        return userService.changePassword(password,
-                ((Principal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
+        StringResponse response = userService.changePassword(password,
+                SecurityContextHolder.getContext().getAuthentication());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
