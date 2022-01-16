@@ -71,9 +71,18 @@ public class TagResourceController {
 
     @Operation(
             summary = "Тэги в наименовании которых встречается строка",
-            description = "Возвращает список из максимум 10 тегов в наименовании которых встречается строка."
-    )
-
+            description = "Возвращает список из максимум 10 тегов в наименовании которых встречается строка.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает список TagDTO (id, name, persist_date)",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = List.class))
+                    }),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещён")
+    })
     @GetMapping("/latter")
     public ResponseEntity<List<TagDto>> getTagsLike(@RequestParam String value) {
         return new ResponseEntity<>(tagDtoService.getTagsLike(value),

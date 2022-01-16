@@ -144,7 +144,10 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
     }
 
     @Test
-    @DataSet(value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml", strategy = SeedStrategy.CLEAN_INSERT)
+    @DataSet(cleanBefore = true,
+            value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml",
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true)
     public void shouldReturnTop10PopularTagsLikeLowCase() throws Exception {
         mockMvc.perform(get("/api/user/tag/latter?value=j")
                         .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
@@ -167,7 +170,10 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
     }
 
     @Test
-    @DataSet(value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml", strategy = SeedStrategy.CLEAN_INSERT)
+    @DataSet(cleanBefore = true,
+            value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml",
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true)
     public void shouldReturnTop10PopularTagsLikeUpCase() throws Exception {
         mockMvc.perform(get("/api/user/tag/latter?value=J")
                         .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
@@ -190,7 +196,10 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
     }
 
     @Test
-    @DataSet(value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml", strategy = SeedStrategy.CLEAN_INSERT)
+    @DataSet(cleanBefore = true,
+            value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml",
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true)
     public void shouldReturnTop10PopularTagsLikeEmptyValue() throws Exception {
         mockMvc.perform(get("/api/user/tag/latter?value=")
                         .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
@@ -200,7 +209,10 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
     }
 
     @Test
-    @DataSet(value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml", strategy = SeedStrategy.CLEAN_INSERT)
+    @DataSet(cleanBefore = true,
+            value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml",
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true)
     public void shouldReturnTop10PopularTagsLikeSQLInjection() throws Exception {
         mockMvc.perform(get("/api/user/tag/latter?value=j or true")
                         .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
@@ -210,7 +222,10 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
     }
 
     @Test
-    @DataSet(value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml", strategy = SeedStrategy.CLEAN_INSERT)
+    @DataSet(cleanBefore = true,
+            value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml",
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true)
     public void shouldReturnTop10PopularTagsLike2() throws Exception {
         mockMvc.perform(get("/api/user/tag/latter?value=spring")
                         .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
@@ -218,8 +233,8 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(4))
 
-                .andExpect(jsonPath("$[0].id").value(104))
-                .andExpect(jsonPath("$[0].description").value("about JPA"))
-                .andExpect(jsonPath("$[0].name").value("JPA"));
+                .andExpect(jsonPath("$[0].id").value(103))
+                .andExpect(jsonPath("$[0].description").value("about spring boot"))
+                .andExpect(jsonPath("$[0].name").value("spring boot"));
     }
 }
