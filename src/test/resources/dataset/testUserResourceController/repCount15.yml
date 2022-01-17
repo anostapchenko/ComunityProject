@@ -1,0 +1,16 @@
+reputation:
+  - id: 100
+    count: 10
+    type: 2
+    author_id: 100
+    sender_id: 100
+  - id: 101
+    count: -5
+    type: 2
+    author_id: 100
+    sender_id: 101
+  - id: 102
+    count: 10
+    type: 2
+    author_id: 100
+    sender_id: 102

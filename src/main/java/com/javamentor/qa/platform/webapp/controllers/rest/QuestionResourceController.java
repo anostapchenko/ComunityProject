@@ -3,6 +3,8 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.models.dto.question.QuestionCommentDto;
+import com.javamentor.qa.platform.models.entity.question.CommentQuestion;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -68,6 +71,19 @@ public class QuestionResourceController {
     public ResponseEntity<Optional<Long>> getCountQuestion() {
         Optional<Long> countQusetion = questionService.getCountByQuestion();
         return new ResponseEntity<>(countQusetion, HttpStatus.OK);
+    }
+
+    @GetMapping("api/user/question/{questionId}/comment")
+    @Operation(summary = "Получить список комементариев к вопросу")
+    @ApiResponse(responseCode = "200", description = "OK", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = CommentQuestion.class))
+    })
+    @ApiResponse(responseCode = "400", description = "Неверные учетные данные", content = {
+            @Content(mediaType = "application/json")
+    })
+    public ResponseEntity<List<QuestionCommentDto>> getQuestionIdComment(@PathVariable("questionId") Long questionId) {
+        List<QuestionCommentDto> qustionIdComment = questionDtoService.getQuestionByIdComment(questionId);
+        return new ResponseEntity<>(qustionIdComment, HttpStatus.OK);
     }
 
     @PostMapping("api/user/question/{questionId}/upVote")

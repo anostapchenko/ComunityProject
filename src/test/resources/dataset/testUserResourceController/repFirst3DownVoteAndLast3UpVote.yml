@@ -1,0 +1,101 @@
+reputation:
+  - id: 100
+    count: -5
+    type: 2
+    author_id: 100
+    sender_id: 100
+  - id: 101
+    count: -5
+    type: 3
+    author_id: 101
+    sender_id: 101
+  - id: 102
+    count: -5
+    type: 2
+    author_id: 102
+    sender_id: 102
+  - id: 103
+    count: 10
+    type: 0
+    author_id: 103
+    sender_id: 103
+  - id: 104
+    count: 10
+    type: 0
+    author_id: 104
+    sender_id: 104
+  - id: 105
+    count: 10
+    type: 0
+    author_id: 105
+    sender_id: 105
+  - id: 106
+    count: 10
+    type: 0
+    author_id: 106
+    sender_id: 106
+  - id: 107
+    count: 10
+    type: 0
+    author_id: 107
+    sender_id: 107
+  - id: 108
+    count: 10
+    type: 0
+    author_id: 108
+    sender_id: 108
+  - id: 109
+    count: 10
+    type: 0
+    author_id: 109
+    sender_id: 109
+  - id: 110
+    count: 10
+    type: 0
+    author_id: 110
+    sender_id: 110
+  - id: 111
+    count: 10
+    type: 0
+    author_id: 111
+    sender_id: 111
+  - id: 112
+    count: 10
+    type: 0
+    author_id: 112
+    sender_id: 112
+  - id: 113
+    count: 10
+    type: 0
+    author_id: 113
+    sender_id: 113
+  - id: 114
+    count: 10
+    type: 0
+    author_id: 114
+    sender_id: 114
+  - id: 115
+    count: 10
+    type: 0
+    author_id: 115
+    sender_id: 115
+  - id: 116
+    count: 10
+    type: 0
+    author_id: 116
+    sender_id: 116
+  - id: 117
+    count: 10
+    type: 2
+    author_id: 117
+    sender_id: 117
+  - id: 118
+    count: 10
+    type: 3
+    author_id: 118
+    sender_id: 118
+  - id: 119
+    count: 10
+    type: 2
+    author_id: 119
+    sender_id: 119
