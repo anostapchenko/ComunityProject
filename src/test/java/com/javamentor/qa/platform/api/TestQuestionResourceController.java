@@ -9,10 +9,15 @@ import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
+import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -33,7 +38,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@AutoConfigureMockMvc
+@SpringBootTest(classes = JmApplication.class)
 public class TestQuestionResourceController extends AbstractClassForDRRiderMockMVCTests {
+
+    @Autowired
+    private MockMvc mvc;
 
     @Test
     @DataSet(value = {
@@ -224,9 +234,19 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceController/tag.yml"
+    },
+            disableConstraints = true,
+            cleanBefore = true
+    )
+//    @DataSet(value = {"dataset/QuestionResourceController/roles.yml",
+//            "dataset/QuestionResourceController/users.yml",
+//            "dataset/QuestionResourceController/tags.yml"
+//    },
+//            disableConstraints = true,
+//            cleanBefore = true
+//    )
     void questionCreateDtoWithoutTitle() throws Exception {
-
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setPassword("USER");
         authenticationRequest.setUsername("user@mail.ru");
@@ -241,7 +261,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         questionCreateDto.setTags(listTagDto);
 
         String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
+                        post("/api/auth/token")
                                 .content(new ObjectMapper().writeValueAsString(authenticationRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -278,7 +298,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         questionCreateDto.setTags(listTagDto);
 
         String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
+                        post("/api/auth/token")
                                 .content(new ObjectMapper().writeValueAsString(authenticationRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -310,7 +330,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         questionCreateDto.setDescription("Description");
 
         String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
+                        post("/api/auth/token")
                                 .content(new ObjectMapper().writeValueAsString(authenticationRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -348,7 +368,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         questionCreateDto.setTags(listTagDto);
 
         String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
+                        post("/api/auth/token")
                                 .content(new ObjectMapper().writeValueAsString(authenticationRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -386,7 +406,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         questionCreateDto.setTags(listTagDto);
 
         String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
+                        post("/api/auth/token")
                                 .content(new ObjectMapper().writeValueAsString(authenticationRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -420,7 +440,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         questionCreateDto.setTags(new ArrayList<>());
 
         String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
+                        post("/api/auth/token")
                                 .content(new ObjectMapper().writeValueAsString(authenticationRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -458,7 +478,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         questionCreateDto.setTags(listTagDto);
 
         String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
+                        post("/api/auth/token")
                                 .content(new ObjectMapper().writeValueAsString(authenticationRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -505,7 +525,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         questionCreateDto.setTags(listTagDto);
 
         String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
+                        post("/api/auth/token")
                                 .content(new ObjectMapper().writeValueAsString(authenticationRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -554,7 +574,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         questionCreateDto.setTags(listTagDto);
 
         String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
+                        post("/api/auth/token")
                                 .content(new ObjectMapper().writeValueAsString(authenticationRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -606,7 +626,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         questionCreateDto.setTags(listTagDto);
 
         String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
+                        post("/api/auth/token")
                                 .content(new ObjectMapper().writeValueAsString(authenticationRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -661,7 +681,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         questionCreateDto.setTags(listTagDto);
 
         String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
+                        post("/api/auth/token")
                                 .content(new ObjectMapper().writeValueAsString(authenticationRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
