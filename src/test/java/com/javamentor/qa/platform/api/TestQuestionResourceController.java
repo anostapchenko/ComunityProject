@@ -222,15 +222,6 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
 
     }
 
-
-
-
-
-
-//---------------------------------------------------------------------------------
-
-
-
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
@@ -239,13 +230,6 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             disableConstraints = true,
             cleanBefore = true
     )
-//    @DataSet(value = {"dataset/QuestionResourceController/roles.yml",
-//            "dataset/QuestionResourceController/users.yml",
-//            "dataset/QuestionResourceController/tags.yml"
-//    },
-//            disableConstraints = true,
-//            cleanBefore = true
-//    )
     void questionCreateDtoWithoutTitle() throws Exception {
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setPassword("USER");
