@@ -722,14 +722,4 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         Assertions.assertEquals(0, (int) JsonPath.read(questionDtoJsonString, "$.countAnswer"));
         Assertions.assertEquals(0, (int) JsonPath.read(questionDtoJsonString, "$.countValuable"));
     }
-
-
-
-
-
-
-
-
-
-
 }
