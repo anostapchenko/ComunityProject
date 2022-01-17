@@ -77,20 +77,19 @@ public class TagDtoDaoImpl implements TagDtoDao {
 
     @Override
     public List<TagDto> getTagsLike(String value){
-        return getTagsLikeQuery(value).setMaxResults(10).getResultList();
-    }
 
-    private Query getTagsLikeQuery(String value) {
         return entityManager.createQuery("SELECT " +
-                                                "t.id as id, " +
-                                                "t.name as name, " +
-                                                "t.description as description, " +
-                                                "t.persistDateTime as persistDateTime " +
-                                            "FROM Tag t " +
-                                            "WHERE lower(t.name) like :value " +
-                                            "ORDER BY t.questions.size desc, t.name")
+                        "t.id as id, " +
+                        "t.name as name, " +
+                        "t.description as description, " +
+                        "t.persistDateTime as persistDateTime " +
+                        "FROM Tag t " +
+                        "WHERE lower(t.name) like :value " +
+                        "ORDER BY t.questions.size desc, t.name")
                 .setParameter("value", "%"+value.toLowerCase(Locale.ROOT)+"%")
                 .unwrap(org.hibernate.query.Query.class)
-                .setResultTransformer(Transformers.aliasToBean(TagDto.class));
+                .setResultTransformer(Transformers.aliasToBean(TagDto.class))
+                .setMaxResults(10)
+                .getResultList();
     }
 }
