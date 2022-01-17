@@ -254,7 +254,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
         mockMvc.perform(
-                        post("/api/user/question/")
+                        post("/api/user/question")
                                 .header(AUTHORIZATION, USER_TOKEN)
                                 .content(new ObjectMapper().writeValueAsString(questionCreateDto))
                                 .contentType(MediaType.APPLICATION_JSON))
@@ -291,7 +291,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
         mockMvc.perform(
-                        post("/api/user/question/")
+                        post("/api/user/question")
                                 .header(AUTHORIZATION, USER_TOKEN)
                                 .content(new ObjectMapper().writeValueAsString(questionCreateDto))
                                 .contentType(MediaType.APPLICATION_JSON))
@@ -323,7 +323,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
         mockMvc.perform(
-                        post("/api/user/question/")
+                        post("/api/user/question")
                                 .header(AUTHORIZATION, USER_TOKEN)
                                 .content(new ObjectMapper().writeValueAsString(questionCreateDto))
                                 .contentType(MediaType.APPLICATION_JSON))
@@ -361,7 +361,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
         mockMvc.perform(
-                        post("/api/user/question/")
+                        post("/api/user/question")
                                 .header(AUTHORIZATION, USER_TOKEN)
                                 .content(new ObjectMapper().writeValueAsString(questionCreateDto))
                                 .contentType(MediaType.APPLICATION_JSON))
@@ -399,7 +399,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
         mockMvc.perform(
-                        post("/api/user/question/")
+                        post("/api/user/question")
                                 .header(AUTHORIZATION, USER_TOKEN)
                                 .content(new ObjectMapper().writeValueAsString(questionCreateDto))
                                 .contentType(MediaType.APPLICATION_JSON))
@@ -433,7 +433,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
         mockMvc.perform(
-                        post("/api/user/question/")
+                        post("/api/user/question")
                                 .header(AUTHORIZATION, USER_TOKEN)
                                 .content(new ObjectMapper().writeValueAsString(questionCreateDto))
                                 .contentType(MediaType.APPLICATION_JSON))
@@ -471,7 +471,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
         mockMvc.perform(
-                        post("/api/user/question/")
+                        post("/api/user/question")
                                 .header(AUTHORIZATION, USER_TOKEN)
                                 .content(new ObjectMapper().writeValueAsString(questionCreateDto))
                                 .contentType(MediaType.APPLICATION_JSON))
@@ -518,7 +518,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
         mockMvc.perform(
-                        post("/api/user/question/")
+                        post("/api/user/question")
                                 .header(AUTHORIZATION, USER_TOKEN)
                                 .content(new ObjectMapper().writeValueAsString(questionCreateDto))
                                 .contentType(MediaType.APPLICATION_JSON))
@@ -567,7 +567,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
         String questionDtoJsonString = mockMvc.perform(
-                        post("/api/user/question/")
+                        post("/api/user/question")
                                 .header(AUTHORIZATION, USER_TOKEN)
                                 .content(new ObjectMapper().writeValueAsString(questionCreateDto))
                                 .contentType(MediaType.APPLICATION_JSON))
@@ -619,7 +619,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
         String questionDtoJsonString = mockMvc.perform(
-                        post("/api/user/question/")
+                        post("/api/user/question")
                                 .header(AUTHORIZATION, USER_TOKEN)
                                 .content(new ObjectMapper().writeValueAsString(questionCreateDto))
                                 .contentType(MediaType.APPLICATION_JSON))
@@ -674,7 +674,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
         String questionDtoJsonString = mockMvc.perform(
-                        post("/api/user/question/")
+                        post("/api/user/question")
                                 .header(AUTHORIZATION, USER_TOKEN)
                                 .content(new ObjectMapper().writeValueAsString(questionCreateDto))
                                 .contentType(MediaType.APPLICATION_JSON))
