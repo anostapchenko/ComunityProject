@@ -13,6 +13,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.isA;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -355,5 +356,33 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+//  Проверяем изменение пароля
+    @DataSet(cleanBefore = true,
+            value = {
+                    "dataset/userresourcecontroller/roles.yml",
+                    "dataset/userresourcecontroller/users_with_deleted_user.yml",
+                    "dataset/userresourcecontroller/questions.yml",
+                    "dataset/userresourcecontroller/reputations.yml"
+            },
+            strategy = SeedStrategy.REFRESH)
+    public void shouldReturnUserWithChangedPassword() throws Exception{
+//                          Ставим новый пароль
+        this.mockMvc.perform(patch("/api/user/change/password?password=test534")
+                        .contentType("application/json")
+                        .header("Authorization","Bearer " + getToken("test15@mail.ru","test15")))
+                .andDo(print())
+                .andExpect(status().isOk())
+        ;
+//                          Заходим под новым паролем
+        this.mockMvc.perform(patch("/api/user/change/password?password=anotherTest534")
+                        .contentType("application/json")
+                        .header("Authorization","Bearer " + getToken("test15@mail.ru","test534")))
+                .andDo(print())
+                .andExpect(status().isOk())
+        ;
+    }
+
 }
 
