@@ -374,8 +374,6 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                         .header("Authorization","Bearer " + getToken("test15@mail.ru","test15")))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.password").value("test534"))
         ;
 //                          Заходим под новым паролем
         this.mockMvc.perform(patch("/api/user/change/password?password=anotherTest534")
@@ -383,8 +381,6 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                         .header("Authorization","Bearer " + getToken("test15@mail.ru","test534")))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.password").value("anotherTest534"))
         ;
     }
 

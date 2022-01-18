@@ -80,7 +80,7 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User, Long> implements
 
     @Override
     @Transactional
-    public void changePassword(String password, org.springframework.security.core.userdetails.User user) {
+    public void changePassword(String password, User user) {
         String encodedPassword = passwordEncoder.encode(password);
         if(password.length() < 6) {
             throw new WrongPasswordFormatException("Длина пароля должна быть больше 6 символов");

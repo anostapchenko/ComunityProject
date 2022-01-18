@@ -122,7 +122,7 @@ public class UserResourceController {
     })
     public ResponseEntity<?> changePassword(@RequestParam String password) {
         userService.changePassword(password,
-                ((User) SecurityContextHolder.getContext().getAuthentication()));
+                userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).get());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

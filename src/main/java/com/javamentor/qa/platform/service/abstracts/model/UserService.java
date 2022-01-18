@@ -7,6 +7,6 @@ public interface UserService extends ReadWriteService<User, Long> {
 
     Optional<User> getByEmail(String email);
 
-    void changePassword(String password, org.springframework.security.core.userdetails.User user);
+    void changePassword(String password, User user);
 
 }
