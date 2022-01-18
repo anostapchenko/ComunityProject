@@ -145,4 +145,98 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
+    @Test
+    @DataSet(cleanBefore = true,
+            value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml",
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true)
+    public void shouldReturnTop10PopularTagsLikeLowCase() throws Exception {
+        mockMvc.perform(get("/api/user/tag/latter?value=j")
+                        .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
+                .andDo(print())
+                .andExpect(status().isOk())
+
+                .andExpect(jsonPath("$.size()").value(3))
+
+                .andExpect(jsonPath("$[0].id").value(104))
+                .andExpect(jsonPath("$[0].description").value("about JPA"))
+                .andExpect(jsonPath("$[0].name").value("JPA"))
+
+                .andExpect(jsonPath("$[1].id").value(109))
+                .andExpect(jsonPath("$[1].description").value("about JUnit"))
+                .andExpect(jsonPath("$[1].name").value("JUnit"))
+
+                .andExpect(jsonPath("$[2].id").value(111))
+                .andExpect(jsonPath("$[2].description").value("about JAVA CORE"))
+                .andExpect(jsonPath("$[2].name").value("JAVA CORE"));
+    }
+
+    @Test
+    @DataSet(cleanBefore = true,
+            value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml",
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true)
+    public void shouldReturnTop10PopularTagsLikeUpCase() throws Exception {
+        mockMvc.perform(get("/api/user/tag/latter?value=J")
+                        .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
+                .andDo(print())
+                .andExpect(status().isOk())
+
+                .andExpect(jsonPath("$.size()").value(3))
+
+                .andExpect(jsonPath("$[0].id").value(104))
+                .andExpect(jsonPath("$[0].description").value("about JPA"))
+                .andExpect(jsonPath("$[0].name").value("JPA"))
+
+                .andExpect(jsonPath("$[1].id").value(109))
+                .andExpect(jsonPath("$[1].description").value("about JUnit"))
+                .andExpect(jsonPath("$[1].name").value("JUnit"))
+
+                .andExpect(jsonPath("$[2].id").value(111))
+                .andExpect(jsonPath("$[2].description").value("about JAVA CORE"))
+                .andExpect(jsonPath("$[2].name").value("JAVA CORE"));
+    }
+
+    @Test
+    @DataSet(cleanBefore = true,
+            value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml",
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true)
+    public void shouldReturnTop10PopularTagsLikeEmptyValue() throws Exception {
+        mockMvc.perform(get("/api/user/tag/latter?value=")
+                        .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(10));
+    }
+
+    @Test
+    @DataSet(cleanBefore = true,
+            value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml",
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true)
+    public void shouldReturnTop10PopularTagsLikeSQLInjection() throws Exception {
+        mockMvc.perform(get("/api/user/tag/latter?value=j or true")
+                        .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(0));
+    }
+
+    @Test
+    @DataSet(cleanBefore = true,
+            value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml",
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true)
+    public void shouldReturnTop10PopularTagsLike2() throws Exception {
+        mockMvc.perform(get("/api/user/tag/latter?value=spring")
+                        .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(4))
+
+                .andExpect(jsonPath("$[0].id").value(103))
+                .andExpect(jsonPath("$[0].description").value("about spring boot"))
+                .andExpect(jsonPath("$[0].name").value("spring boot"));
+    }
 }
