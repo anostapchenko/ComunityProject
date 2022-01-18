@@ -3,19 +3,17 @@ package com.javamentor.qa.platform.service.impl.model;
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
-import com.javamentor.qa.platform.service.util.StringResponse;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.javamentor.qa.platform.webapp.controllers.exceptions.WrongPasswordFormatException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl extends ReadWriteServiceImpl<User, Long> implements UserService {
@@ -64,7 +62,7 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User, Long> implements
     @Override
     public void update(User user) {
         // Check password for changes...
-        // This method don't allow empty passwords!
+        // This method doesn't allow empty passwords!
         String oldPassword = getById(user.getId()).get().getPassword();
         if (user.getPassword().trim().isEmpty()) {
             user.setPassword(oldPassword);
@@ -82,13 +80,23 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User, Long> implements
 
     @Override
     @Transactional
-    public StringResponse changePassword(String password, Authentication auth) {
-        String newPassword = passwordEncoder.encode(password);
-        userDao.changePassword(newPassword, auth.getName());
+    public void changePassword(String password, org.springframework.security.core.userdetails.User user) {
+        String encodedPassword = passwordEncoder.encode(password);
+        if(password.length() < 6) {
+            throw new WrongPasswordFormatException("Длина пароля должна быть больше 6 символов");
+        }
+        if(encodedPassword.equals(SecurityContextHolder.getContext().getAuthentication().getCredentials())) {
+           throw new WrongPasswordFormatException("Пароль должен отличаться от текущего");
+        }
+        if(!password.chars().allMatch(Character::isLetterOrDigit)
+                || password.chars().noneMatch(Character::isDigit)
+                || password.chars().noneMatch(Character::isLetter)) {
+            throw new WrongPasswordFormatException("Пароль должен содержать буквы и цифры");
+        }
+        userDao.changePassword(encodedPassword, user.getUsername());
         Authentication authentication
-                = new UsernamePasswordAuthenticationToken(auth, newPassword);
+                = new UsernamePasswordAuthenticationToken(user, encodedPassword);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new StringResponse(password);
     }
 
 }

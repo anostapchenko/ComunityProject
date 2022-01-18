@@ -7,8 +7,6 @@ import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
-import com.javamentor.qa.platform.service.util.StringResponse;
-import com.javamentor.qa.platform.webapp.controllers.exceptions.WrongPasswordFormatException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,9 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.Optional;
 
 @RestController
@@ -123,18 +121,9 @@ public class UserResourceController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещён")
     })
     public ResponseEntity<?> changePassword(@RequestParam String password) {
-        if(password.length() < 6) {
-            throw new WrongPasswordFormatException("Длина пароля должна быть больше 6 символов");
-        } else if(password.equals(SecurityContextHolder.getContext().getAuthentication().getCredentials())) {
-            throw new WrongPasswordFormatException("Пароль должен отличаться от текущего");
-        } else if(!password.chars().allMatch(Character::isLetterOrDigit)
-                || password.chars().noneMatch(Character::isDigit)
-                || password.chars().noneMatch(Character::isLetter)) {
-            throw new WrongPasswordFormatException("Пароль должен содержать буквы и цифры");
-        }
-        StringResponse response = userService.changePassword(password,
-                SecurityContextHolder.getContext().getAuthentication());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        userService.changePassword(password,
+                ((User) SecurityContextHolder.getContext().getAuthentication()));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
