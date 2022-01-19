@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 
+import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.isA;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -238,5 +239,40 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andExpect(jsonPath("$[0].id").value(103))
                 .andExpect(jsonPath("$[0].description").value("about spring boot"))
                 .andExpect(jsonPath("$[0].name").value("spring boot"));
+    }
+
+    @Test
+//  Получаем все Tag из БД отсортированных по имени
+    @DataSet(cleanBefore = true,
+            value = {
+                    "dataset/testTagResourceController/roles.yml",
+                    "dataset/testTagResourceController/users.yml",
+                    "dataset/testTagResourceController/tag5.yml"
+            },
+            strategy = SeedStrategy.REFRESH)
+    public void shouldReturnAllTagSortByName() throws Exception {
+        // указаны параметры page и items
+        this.mockMvc.perform(get("/api/user/tag/name?page=1&items=5")
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$").hasJsonPath())
+                .andExpect(jsonPath("$.currentPageNumber").value("1"))
+                .andExpect(jsonPath("$.totalPageCount").value("2"))
+                .andExpect(jsonPath("$.itemsOnPage").value("5"))
+                .andExpect(jsonPath("$.totalResultCount").value("6"))
+                .andExpect(jsonPath("$.items").isNotEmpty())
+                .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(102, 105, 106)));
+
+
+        // нет обязательного параметра - page
+        mockMvc.perform(get("/api/user/tag/name?items=3")
+                .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist());
     }
 }

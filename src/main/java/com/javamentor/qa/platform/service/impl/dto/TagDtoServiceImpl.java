@@ -1,19 +1,25 @@
 package com.javamentor.qa.platform.service.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
+import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.question.PopularTagDto;
 import com.javamentor.qa.platform.models.dto.question.TagDto;
 import com.javamentor.qa.platform.service.abstracts.dto.TagDtoService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
-public class TagDtoServiceImpl implements TagDtoService {
+
+public class TagDtoServiceImpl extends DtoServiceImpl<TagDto> implements TagDtoService {
 
     private final TagDtoDao tagDtoDao;
+
+    public TagDtoServiceImpl(Map<String, PageDtoDao<TagDto>> daoMap, TagDtoDao tagDtoDao) {
+        super(daoMap);
+        this.tagDtoDao = tagDtoDao;
+    }
 
     @Override
     public List<TagDto> getIgnoredTagsByUserId(Long userId){
