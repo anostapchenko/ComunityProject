@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pagination</title>
+</head>
+
+<body>
+<div id="pagination_objects" class="col mt-2"></div>
+<div id="navigation" class="col mt-2"></div>
+<script src="/js/getPagination.js"></script>
+<script>
+    //создаем новый объект пагинации и передаем аргументы в конструктор
+    let pagination = new Pagination(
+        'http://localhost:8091/api/user/vote',            //url
+        1,                                                //количество объектов
+        'pagination_objects',                             //id div куда будут вставляться объекты
+        'navigation',                                     //id div куду будет вставляться нумерация
+
+        function (arrayObjects) {                         //функция, которая задаёт - как будут вставляться объекты
+            let ul = document.createElement('ul');        //здесь был создан корневой узел(список)
+            if (arrayObjects != null && arrayObjects.length > 0) { //проверка массива с объектами
+                for (let num = 0; num < arrayObjects.length; num++) {
+                    let li = document.createElement('li'); //для каждого объекта создаем узел
+                    li.innerHTML = Object.values(arrayObjects[num]); //помещаем текстовое представление в узел
+                    ul.appendChild(li);             //добавляем узел в корневой
+                }
+            }
+            return ul;
+        });
+
+    init();
+
+    function showPage(event, num) {
+        pagination.showPage(event, num);
+    }
+
+    async function init() {
+        await pagination.showPage(null, 1);
+    }
+</script>
+</body>
+
+</html>

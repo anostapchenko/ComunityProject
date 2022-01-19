@@ -1,7 +1,10 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.exception.ConstrainException;
+import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.models.dto.question.QuestionCommentDto;
+import com.javamentor.qa.platform.models.entity.question.CommentQuestion;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
@@ -10,6 +13,8 @@ import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
 import com.javamentor.qa.platform.service.abstracts.model.VoteQuestionService;
+import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
+import com.javamentor.qa.platform.webapp.converters.TagConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,31 +27,37 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 @Tag(name = "Question Resource Controller", description = "Управление сущностями, которые связаны с вопросами")
 public class QuestionResourceController {
 
-    private final
-    QuestionService questionService;
+    private final QuestionService questionService;
+    private final VoteQuestionService voteQuestionService;
+    private final ReputationService reputationService;
+    private final QuestionDtoService questionDtoService;
+    private final QuestionConverter questionConverter;
+    private final TagConverter tagConverter;
 
-    private final
-    VoteQuestionService voteQuestionService;
-
-    private final
-    ReputationService reputationService;
-
-    private final
-    QuestionDtoService questionDtoService;
-
-    public QuestionResourceController(QuestionService questionService, VoteQuestionService voteQuestionService, ReputationService reputationService, QuestionDtoService questionDtoService) {
+    public QuestionResourceController(QuestionService questionService,
+                                      VoteQuestionService voteQuestionService,
+                                      ReputationService reputationService,
+                                      QuestionDtoService questionDtoService,
+                                      QuestionConverter questionConverter,
+                                      TagConverter tagConverter
+                                      ) {
         this.questionService = questionService;
         this.voteQuestionService = voteQuestionService;
         this.reputationService = reputationService;
         this.questionDtoService = questionDtoService;
+        this.questionConverter = questionConverter;
+        this.tagConverter = tagConverter;
     }
 
     @GetMapping("api/user/question/count")
@@ -60,6 +71,19 @@ public class QuestionResourceController {
     public ResponseEntity<Optional<Long>> getCountQuestion() {
         Optional<Long> countQusetion = questionService.getCountByQuestion();
         return new ResponseEntity<>(countQusetion, HttpStatus.OK);
+    }
+
+    @GetMapping("api/user/question/{questionId}/comment")
+    @Operation(summary = "Получить список комементариев к вопросу")
+    @ApiResponse(responseCode = "200", description = "OK", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = CommentQuestion.class))
+    })
+    @ApiResponse(responseCode = "400", description = "Неверные учетные данные", content = {
+            @Content(mediaType = "application/json")
+    })
+    public ResponseEntity<List<QuestionCommentDto>> getQuestionIdComment(@PathVariable("questionId") Long questionId) {
+        List<QuestionCommentDto> qustionIdComment = questionDtoService.getQuestionByIdComment(questionId);
+        return new ResponseEntity<>(qustionIdComment, HttpStatus.OK);
     }
 
     @PostMapping("api/user/question/{questionId}/upVote")
@@ -110,12 +134,35 @@ public class QuestionResourceController {
             @Content(mediaType = "application/json")
     })
 
-    public ResponseEntity<?> getQuestion(@PathVariable Long id){
+    public ResponseEntity<?> getQuestion(@PathVariable Long id) {
         Optional<QuestionDto> q = questionDtoService.getQuestionDtoServiceById(id);
-        if(q.isPresent()){
+        if (q.isPresent()) {
             return new ResponseEntity<>(q.get(), HttpStatus.OK);
         }
         return new ResponseEntity<>("Question number not exist!", HttpStatus.BAD_REQUEST);
     }
+
+    @Operation(
+            summary = "Добавление вопроса",
+            description = "Добавление вопроса"
+    )
+    @ApiResponse(responseCode = "200", description = "Вопрос добавлен", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionCreateDto.class))
+    })
+    @ApiResponse(responseCode = "400", description = "Вопрос не добавлен", content = {
+            @Content(mediaType = "application/json")
+    })
+    @PostMapping("api/user/question")
+    public ResponseEntity<?> createNewQuestion(@Valid @RequestBody QuestionCreateDto questionCreateDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Question question = questionConverter.questionDtoToQuestion(questionCreateDto);
+        question.setUser((User) authentication.getPrincipal());
+        question.setTags(tagConverter.listTagDtoToListTag(questionCreateDto.getTags()));
+        questionService.persist(question);
+        return new ResponseEntity<>(questionConverter.questionToQuestionDto(question), HttpStatus.OK);
+    }
+
+
+
 }
 
