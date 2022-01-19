@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Map;
 
 @Repository("TagPageDtoDaoAllTagsByNameImpl")
 public class TagPageDtoDaoAllTagsByNameImpl implements PageDtoDao<TagDto> {
@@ -26,7 +27,7 @@ public class TagPageDtoDaoAllTagsByNameImpl implements PageDtoDao<TagDto> {
     }
 
     @Override
-    public Long getTotalResultCount() {
+    public Long getTotalResultCount(Map<String, Object> properties) {
         return (Long) entityManager.createQuery("select count(t.id) from Tag t").getSingleResult();
     }
 }
