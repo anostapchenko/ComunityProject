@@ -1,7 +1,10 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.dao.impl.pagination.TagPageDtoDaoAllTagsByNameImpl;
+import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.question.PopularTagDto;
 import com.javamentor.qa.platform.models.dto.question.TagDto;
+import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.TagDtoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -87,5 +90,25 @@ public class TagResourceController {
     public ResponseEntity<List<TagDto>> getTagsLike(@RequestParam String value) {
         return new ResponseEntity<>(tagDtoService.getTagsLike(value),
                 HttpStatus.OK);
+    }
+
+    @Operation(summary = "Получение пагинированного списка всех тегов",
+            description = "Получение пагинированного списка всех тегов отсортированных по имени")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает пагинированный список <PageDTO<TagDto>> (id, name, persist_date)",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = PageDTO.class))
+                    }),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещён")
+    })
+    @GetMapping("/name")
+    public ResponseEntity<PageDTO<TagDto>> getAllTagPaginationByName(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
+        PaginationData data = new PaginationData(page, items,
+                TagPageDtoDaoAllTagsByNameImpl.class.getSimpleName());
+        return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);
     }
 }
