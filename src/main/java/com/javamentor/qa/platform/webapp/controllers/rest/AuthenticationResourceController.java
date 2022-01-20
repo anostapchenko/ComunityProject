@@ -13,12 +13,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -48,4 +52,18 @@ public class AuthenticationResourceController {
 
         return ResponseEntity.ok(new AuthenticationResponse(token));
     }
+
+    @GetMapping("check")
+    public void authorizationCheck(@AuthenticationPrincipal UserDetails userDetails, HttpServletResponse response){
+
+        if (userDetails == null){
+            try {
+                response.sendError(307);
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
+

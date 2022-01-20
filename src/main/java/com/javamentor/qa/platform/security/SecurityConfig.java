@@ -48,10 +48,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.authorizeRequests()
                 .antMatchers("/api/auth/token").permitAll()
+                .antMatchers("/api/auth/check").permitAll()
                 .antMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/api/admin/**").hasRole("ADMIN")
                 .antMatchers("/api/**").authenticated()
-                .anyRequest().permitAll();
+                .anyRequest().permitAll()
+                .and().exceptionHandling().accessDeniedPage("/accessDenied")
+                .and().exceptionHandling().authenticationEntryPoint(new UnauthorizedEntryPoint());
     }
 
     @Override
