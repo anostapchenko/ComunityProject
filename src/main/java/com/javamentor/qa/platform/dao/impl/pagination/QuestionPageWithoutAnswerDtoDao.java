@@ -2,14 +2,17 @@ package com.javamentor.qa.platform.dao.impl.pagination;
 
 import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.models.dto.question.TagDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import org.hibernate.transform.ResultTransformer;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Repository("QuestionPageWithoutAnswerDtoDao")
 public class QuestionPageWithoutAnswerDtoDao implements PageDtoDao<QuestionDto> {
 
     @PersistenceContext
@@ -19,11 +22,12 @@ public class QuestionPageWithoutAnswerDtoDao implements PageDtoDao<QuestionDto> 
     public List<QuestionDto> getPaginationItems(PaginationData properties) {
         int itemsOnPage = properties.getItemsOnPage();
         int offset = (properties.getCurrentPage() - 1) * itemsOnPage;
-        List<QuestionDto> questionDtos =  entityManager.createQuery("select q.id, q.title, u.id," +
+        List<QuestionDto> questionDtos =  entityManager.createQuery("SELECT q.id, q.title, u.id," +
                         " u.fullName, u.imageLink, q.description, q.persistDateTime," +
-                        " q.lastUpdateDateTime, (select sum(r.count) from Reputation r where r.author.id =u.id), " +
-                        "(select sum(case when v.vote = 'UP_VOTE' then 1 else -1 end) from VoteQuestion v JOIN Question q" +
-                        " ON v.question.id = q.id) from Question q JOIN q.user u LEFT OUTER JOIN q.answers")
+                        " q.lastUpdateDateTime, (SELECT SUM(r.count) from Reputation r WHERE r.author.id = q.user.id), " +
+                        " (select sum(case when v.vote = 'UP_VOTE' then 1 else -1 end) from VoteQuestion v JOIN Question q" +
+                        " ON v.question.id = q.id)" +
+                        " from Question q JOIN q.user u WHERE q.answers IS EMPTY")
                 .setFirstResult(offset)
                 .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)
@@ -57,6 +61,7 @@ public class QuestionPageWithoutAnswerDtoDao implements PageDtoDao<QuestionDto> 
 
     @Override
     public Long getTotalResultCount() {
-        return (Long) entityManager.createQuery("select count(q.id) from Question q LEFT OUTER JOIN q.answers").getSingleResult();
+        return (Long) entityManager.createQuery("select count(q.id) from Question q LEFT OUTER JOIN q.answers")
+                .getSingleResult();
     }
 }

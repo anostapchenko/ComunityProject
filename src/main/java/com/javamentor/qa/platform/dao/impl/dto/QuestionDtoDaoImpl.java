@@ -58,9 +58,4 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                 });
         return SingleResultUtil.getSingleResultOrNull(dto);
     }
-
-//    @Override
-//    public List<QuestionDto> getQuestionDtoWithNoAnswer() {
-//
-//    }
 }

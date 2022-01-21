@@ -2,7 +2,7 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageWithoutAnswerDtoDao;
 import com.javamentor.qa.platform.exception.ConstrainException;
-import com.javamentor.qa.platform.models.dto.AnswerDTO;
+import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.question.TagDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @Tag(name = "Question Resource Controller", description = "Управление сущностями, которые связаны с вопросами")
@@ -121,12 +123,31 @@ public class QuestionResourceController {
     }
 
     @GetMapping("api/user/question/noAnswer")
-    public ResponseEntity<List<AnswerDTO>> getQuestionsWithNoAnswer(@RequestParam int page, @RequestParam(required = false, defaultValue = "10") int items,
-                                                                    @RequestParam(required = false) List<TagDto> trackedTags,
-                                                                    @RequestParam (required = false) List<TagDto> ignoredTags) {
+    @Operation(summary = "Получение пагинированного списка всех вопросов, на которые еще не дан ответ. " +
+            "В запросе указываем page - номер страницы, items (по умолчанию 10) - количество результатов на странице",
+            description = "Получение пагинированного списка всех вопросов, на которые еще не дан ответ.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает пагинированный список PageDTO<QuestionDTO> (id, title, authorId" +
+                            "authorReputation, authorName, authorImage, description, viewCount, countAnswer" +
+                            "countValuable, LocalDateTime, LocalDateTime, listTagDto",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json")
+                    }),
+    })
+    public ResponseEntity<PageDTO<QuestionDto>> getQuestionsWithNoAnswer(@RequestParam int page, @RequestParam(required = false, defaultValue = "10") int items,
+                                                                       @RequestParam(required = false) List<TagDto> trackedTags,
+                                                                       @RequestParam (required = false) List<TagDto> ignoredTags) {
         PaginationData data = new PaginationData(page, items, QuestionPageWithoutAnswerDtoDao.class.getSimpleName());
 
-        return null;
+        PageDTO<QuestionDto> pageDTO = questionDtoService.getPageDto(data);
+        List<QuestionDto> questionDtos = pageDTO.getItems();
+
+        questionDtos.removeIf(dto -> !dto.getListTagDto().contains(trackedTags) && dto.getListTagDto().contains(ignoredTags));
+
+        return new ResponseEntity<>(pageDTO, HttpStatus.OK);
     }
 }
 

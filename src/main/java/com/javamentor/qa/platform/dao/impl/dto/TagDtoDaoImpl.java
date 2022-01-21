@@ -4,6 +4,8 @@ import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
 import com.javamentor.qa.platform.dao.impl.model.ReadWriteDaoImpl;
 import com.javamentor.qa.platform.models.dto.question.PopularTagDto;
 import com.javamentor.qa.platform.models.dto.question.TagDto;
+import com.javamentor.qa.platform.models.entity.question.Tag;
+import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +13,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class TagDtoDaoImpl implements TagDtoDao {
@@ -29,6 +35,37 @@ public class TagDtoDaoImpl implements TagDtoDao {
                 .setParameter("id", id);
         return q.getResultList();
     }
+
+    @Override
+    public Map<Long, List<TagDto>> getTagDtoByQuestionsId(List<Long> questionsId) {
+        Map<Long, List<TagDto>> tagDtoMap = new HashMap<>();
+        return (Map<Long, List<TagDto>>) entityManager.createQuery("SELECT t.id, t.name, t.description, t.persistDateTime, q.id" +
+                " FROM Tag t JOIN t.questions q WHERE q.id IN (:questionsId)")
+                .setParameter("questionsId", questionsId)
+                .unwrap(org.hibernate.query.Query.class)
+                .setResultTransformer(new ResultTransformer() {
+                    @Override
+                    public Object transformTuple(Object[] tuple, String[] strings) {
+                        TagDto tagDto = new TagDto();
+                        tagDto.setId((Long) tuple[0]);
+                        tagDto.setName((String) tuple[1]);
+                        tagDto.setDescription((String) tuple[2]);
+                        tagDto.setPersistDateTime((LocalDateTime) tuple[3]);
+                        tagDtoMap.computeIfPresent((Long) tuple[4], (id, dtoList) -> {
+                            dtoList.add(tagDto);
+                            return dtoList;
+                        });
+                        tagDtoMap.computeIfAbsent((Long) tuple[4], id -> new ArrayList<>()).add(tagDto);
+                        return tagDtoMap;
+                    }
+
+                    @Override
+                    public List transformList(List list) {
+                        return list;
+                    }
+                }).getSingleResult();
+    }
+
     @Override
     public List<TagDto> getIgnoredTagsByUserId(Long userId) {
         return entityManager.createQuery(

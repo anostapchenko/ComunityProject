@@ -6,6 +6,6 @@ import com.javamentor.qa.platform.service.abstracts.model.ReadWriteService;
 import java.util.Optional;
 
 
-public interface QuestionDtoService  {
+public interface QuestionDtoService extends PageDtoService<QuestionDto>  {
     Optional<QuestionDto> getQuestionDtoServiceById(Long id);
 }
