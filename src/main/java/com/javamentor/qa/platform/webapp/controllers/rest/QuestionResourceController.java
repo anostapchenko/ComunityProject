@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageWithoutAnswerDtoDao;
 import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.dto.PageDTO;
@@ -138,8 +139,8 @@ public class QuestionResourceController {
                     }),
     })
     public ResponseEntity<PageDTO<QuestionDto>> getQuestionsWithNoAnswer(@RequestParam int page, @RequestParam(required = false, defaultValue = "10") int items,
-                                                                       @RequestParam(required = false) List<TagDto> trackedTags,
-                                                                       @RequestParam (required = false) List<TagDto> ignoredTags) {
+                                                                       @RequestParam(required = false) String trackedTags,
+                                                                       @RequestParam (required = false) String ignoredTags) {
         PaginationData data = new PaginationData(page, items, QuestionPageWithoutAnswerDtoDao.class.getSimpleName());
 
         PageDTO<QuestionDto> pageDTO = questionDtoService.getPageDto(data);

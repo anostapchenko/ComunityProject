@@ -51,10 +51,6 @@ public class TagDtoDaoImpl implements TagDtoDao {
                         tagDto.setName((String) tuple[1]);
                         tagDto.setDescription((String) tuple[2]);
                         tagDto.setPersistDateTime((LocalDateTime) tuple[3]);
-                        tagDtoMap.computeIfPresent((Long) tuple[4], (id, dtoList) -> {
-                            dtoList.add(tagDto);
-                            return dtoList;
-                        });
                         tagDtoMap.computeIfAbsent((Long) tuple[4], id -> new ArrayList<>()).add(tagDto);
                         return tagDtoMap;
                     }
