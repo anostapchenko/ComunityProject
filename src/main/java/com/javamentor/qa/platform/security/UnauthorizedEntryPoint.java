@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.security;
 
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +11,7 @@ public class UnauthorizedEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
 
-        if (authException.getMessage() == "Full authentication is required to access this resource"){
+        if (authException instanceof InsufficientAuthenticationException){
             response.sendRedirect("/login");
         }
     }
