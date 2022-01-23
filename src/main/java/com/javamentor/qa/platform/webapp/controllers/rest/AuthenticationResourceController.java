@@ -10,20 +10,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,24 +48,4 @@ public class AuthenticationResourceController {
 
         return ResponseEntity.ok(new AuthenticationResponse(token));
     }
-
-    @GetMapping(
-            value = "check",
-            produces = "text/plain")
-    @Operation(summary = "Проверяет авторизован ли пользователь")
-    @ApiResponse(responseCode = "200", description = "Пользователь авторизован", content = {
-            @Content(mediaType = "text/plain")
-    })
-    @ApiResponse(responseCode = "403", description = "Пользователь не авторизован", content = {
-            @Content(mediaType = "text/plain")
-    })
-    public ResponseEntity<String> authorizationCheck(@AuthenticationPrincipal UserDetails userDetails, HttpServletResponse response){
-
-        if (userDetails == null){
-            return new ResponseEntity<>("User is not authenticated", HttpStatus.FORBIDDEN);
-        }else{
-            return new ResponseEntity<>("User is authenticated", HttpStatus.OK);
-        }
-    }
 }
-
