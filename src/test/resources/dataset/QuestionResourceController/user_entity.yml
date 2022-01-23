@@ -1,0 +1,17 @@
+user_entity:
+  - id: 101
+    full_name: "USER"
+    password: "$2a$10$t23DKH6ME2VrAKAvjTURKuF4/9fjiorE9kwg2SZ0yiwmiwIIv7/zm"
+    persist_date: "2021-12-09"
+    last_redaction_date: "2021-12-09"
+    email: "user@mail.ru"
+    about: "about1"
+    city: "city"
+    link_site: "site"
+    link_github: "github"
+    link_vk: "vk"
+    is_enabled: 1
+    is_deleted: false
+    image_link: "image"
+    nickname: "USR"
+    role_id: 101

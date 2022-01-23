@@ -23,5 +23,4 @@ public class JmApplication {
         return new BCryptPasswordEncoder();
     }
 
-
 }

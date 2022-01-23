@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Repository("QuestionPageDtoDaoByNoAnswersImpl")
 public class QuestionPageDtoDaoByNoAnswersImpl implements PageDtoDao<QuestionDto> {
@@ -59,8 +60,10 @@ public class QuestionPageDtoDaoByNoAnswersImpl implements PageDtoDao<QuestionDto
     }
 
     @Override
-    public Long getTotalResultCount() {
-        return (Long) entityManager.createQuery("select count(q.id) from Question q LEFT OUTER JOIN q.answers")
+    public Long getTotalResultCount(Map<String, Object> properties) {
+        return (Long) entityManager.createQuery("select count(q.id) from Question q WHERE q.answers IS EMPTY")
                 .getSingleResult();
     }
+
+
 }

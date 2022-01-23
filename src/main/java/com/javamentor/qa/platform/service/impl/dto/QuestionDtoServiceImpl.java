@@ -8,6 +8,7 @@ import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
 import com.javamentor.qa.platform.exception.NoSuchDaoException;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.models.dto.question.QuestionCommentDto;
 import com.javamentor.qa.platform.models.dto.question.TagDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
@@ -27,6 +28,11 @@ public class QuestionDtoServiceImpl extends DtoServiceImpl<QuestionDto> implemen
         super(daoMap);
         this.questionDtoDao = questionDtoDao;
         this.tagDtoDao = tagDtoDao;
+    }
+
+    @Override
+    public List<QuestionCommentDto> getQuestionByIdComment(Long id) {
+        return questionDtoDao.getQuestionIdComment(id);
     }
 
     @Override

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 @Repository
 public class TagDtoDaoImpl implements TagDtoDao {
@@ -105,5 +106,23 @@ public class TagDtoDaoImpl implements TagDtoDao {
                 )
                 .unwrap(org.hibernate.query.Query.class)
                 .setResultTransformer(Transformers.aliasToBean(PopularTagDto.class));
+    }
+
+    @Override
+    public List<TagDto> getTagsLike(String value){
+
+        return entityManager.createQuery("SELECT " +
+                        "t.id as id, " +
+                        "t.name as name, " +
+                        "t.description as description, " +
+                        "t.persistDateTime as persistDateTime " +
+                        "FROM Tag t " +
+                        "WHERE lower(t.name) like :value " +
+                        "ORDER BY t.questions.size desc, t.name")
+                .setParameter("value", "%"+value.toLowerCase(Locale.ROOT)+"%")
+                .unwrap(org.hibernate.query.Query.class)
+                .setResultTransformer(Transformers.aliasToBean(TagDto.class))
+                .setMaxResults(10)
+                .getResultList();
     }
 }

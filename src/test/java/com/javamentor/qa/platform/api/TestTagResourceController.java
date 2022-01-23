@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 
+import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.isA;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -145,4 +146,133 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
+    @Test
+    @DataSet(cleanBefore = true,
+            value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml",
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true)
+    public void shouldReturnTop10PopularTagsLikeLowCase() throws Exception {
+        mockMvc.perform(get("/api/user/tag/latter?value=j")
+                        .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
+                .andDo(print())
+                .andExpect(status().isOk())
+
+                .andExpect(jsonPath("$.size()").value(3))
+
+                .andExpect(jsonPath("$[0].id").value(104))
+                .andExpect(jsonPath("$[0].description").value("about JPA"))
+                .andExpect(jsonPath("$[0].name").value("JPA"))
+
+                .andExpect(jsonPath("$[1].id").value(109))
+                .andExpect(jsonPath("$[1].description").value("about JUnit"))
+                .andExpect(jsonPath("$[1].name").value("JUnit"))
+
+                .andExpect(jsonPath("$[2].id").value(111))
+                .andExpect(jsonPath("$[2].description").value("about JAVA CORE"))
+                .andExpect(jsonPath("$[2].name").value("JAVA CORE"));
+    }
+
+    @Test
+    @DataSet(cleanBefore = true,
+            value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml",
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true)
+    public void shouldReturnTop10PopularTagsLikeUpCase() throws Exception {
+        mockMvc.perform(get("/api/user/tag/latter?value=J")
+                        .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
+                .andDo(print())
+                .andExpect(status().isOk())
+
+                .andExpect(jsonPath("$.size()").value(3))
+
+                .andExpect(jsonPath("$[0].id").value(104))
+                .andExpect(jsonPath("$[0].description").value("about JPA"))
+                .andExpect(jsonPath("$[0].name").value("JPA"))
+
+                .andExpect(jsonPath("$[1].id").value(109))
+                .andExpect(jsonPath("$[1].description").value("about JUnit"))
+                .andExpect(jsonPath("$[1].name").value("JUnit"))
+
+                .andExpect(jsonPath("$[2].id").value(111))
+                .andExpect(jsonPath("$[2].description").value("about JAVA CORE"))
+                .andExpect(jsonPath("$[2].name").value("JAVA CORE"));
+    }
+
+    @Test
+    @DataSet(cleanBefore = true,
+            value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml",
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true)
+    public void shouldReturnTop10PopularTagsLikeEmptyValue() throws Exception {
+        mockMvc.perform(get("/api/user/tag/latter?value=")
+                        .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(10));
+    }
+
+    @Test
+    @DataSet(cleanBefore = true,
+            value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml",
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true)
+    public void shouldReturnTop10PopularTagsLikeSQLInjection() throws Exception {
+        mockMvc.perform(get("/api/user/tag/latter?value=j or true")
+                        .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(0));
+    }
+
+    @Test
+    @DataSet(cleanBefore = true,
+            value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml",
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true)
+    public void shouldReturnTop10PopularTagsLike2() throws Exception {
+        mockMvc.perform(get("/api/user/tag/latter?value=spring")
+                        .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(4))
+
+                .andExpect(jsonPath("$[0].id").value(103))
+                .andExpect(jsonPath("$[0].description").value("about spring boot"))
+                .andExpect(jsonPath("$[0].name").value("spring boot"));
+    }
+
+    @Test
+//  Получаем все Tag из БД отсортированных по имени
+    @DataSet(cleanBefore = true,
+            value = {
+                    "dataset/testTagResourceController/roles.yml",
+                    "dataset/testTagResourceController/users.yml",
+                    "dataset/testTagResourceController/tag5.yml"
+            },
+            strategy = SeedStrategy.REFRESH)
+    public void shouldReturnAllTagSortByName() throws Exception {
+        // указаны параметры page и items
+        this.mockMvc.perform(get("/api/user/tag/name?page=1&items=5")
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$").hasJsonPath())
+                .andExpect(jsonPath("$.currentPageNumber").value("1"))
+                .andExpect(jsonPath("$.totalPageCount").value("2"))
+                .andExpect(jsonPath("$.itemsOnPage").value("5"))
+                .andExpect(jsonPath("$.totalResultCount").value("6"))
+                .andExpect(jsonPath("$.items").isNotEmpty())
+                .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(102, 105, 106)));
+
+
+        // нет обязательного параметра - page
+        mockMvc.perform(get("/api/user/tag/name?items=3")
+                .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist());
+    }
 }

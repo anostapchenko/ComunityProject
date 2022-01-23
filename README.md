@@ -469,6 +469,7 @@ Swagger или OpenAPI framework состоит из 4 основных комп
 **@Hidden** - Скрывает ресурс, операцию или свойство
 
 ### Примеры использования:
+https://habr.com/ru/post/536388/
 
 ````
 @Tag(name = "User", description = "The User API")
@@ -672,6 +673,7 @@ public class UserController {
 Пример: ***V1_1_0__my_first_migration.sql*** или ***V001__InitDB.sql***
 
 ## Как работает Flyway.
+https://javarush.ru/groups/posts/3157-java-proekt-ot-a-do-ja-springboot--flyway
 
 Для отслеживания когда, кем и какие миграции были применены в схему базы данных добавляется специальная таблица с метаданными. В этой таблице также хранятся контрольные суммы миграций и информация о том, успешна была миграция или нет.
 
@@ -718,3 +720,54 @@ HTML код страницы с добавленными heading, side-bar, foot
 </body>
 </html>
 ```
+# Пагинация на стороне frontend
+Для получения пагинации, по-заданному url, был создан javascript объект Pagination,
+который находится в файле getPagination.js. Для его использования необходимо
+указать js файл в используемом html файле, настроить его поля через конструктор,
+и используя метод showPage отобразить необходимый массив объектов с нумерацией.
+
+##Описание объекта Pagination
+- pagination_url - url для получения пагинации
+- items - количество запрашиваемых объектов, может быть null
+- objectNodeId - id узла, куда будет вставляться массив объектов
+- navNodeId - id узла, куда будет вставляться нумерация
+- display - функция, которая задаёт как будут отображаться объекты
+
+Для получения пагинации используется token, который получаем из cookie.
+При загрузке скрипта происходит автоматическое добавление стиля для 
+отображения нумерации.
+
+При количестве страниц более 4 происходит сворачивание нумераций.
+![](src/main/resources/static/images/git_tutor/git_pagination_js_nums.png)
+##Простой пример использования
+```
+ <script>
+        //создаем новый объект пагинации и передаем аргументы в конструктор
+        let pagination = new Pagination(
+            'http://localhost:8091/api/user/vote',            //url
+            3,                                                //количество объектов
+            'pagination_objects',                             //id div куда будут вставляться объекты
+            'navigation',                                     //id div куду будет вставляться нумерация
+            
+            function (arrayObjects) {                         //функция, которая задаёт - как будут вставляться объекты
+                let ul = document.createElement('ul');        //здесь был создан корневой узел(список)
+                if (arrayObjects != null && arrayObjects.length > 0) { //проверка массива с объектами
+                    for (let num = 0; num < arrayObjects.length; num++) {
+                        let li = document.createElement('li'); //для каждого объекта создаем узел
+                        li.innerHTML = Object.values(arrayObjects[num]); //помещаем текстовое представление в узел
+                        ul.appendChild(li);             //добавляем узел в корневой
+                    }
+                }
+                return ul;
+            }, 
+            { //список атрибутов нумерации
+                aAttributes,
+                ulAttributes
+            });
+        
+        //вызываем функцию отображения страницы
+        function showPage(event, num) {
+            pagination.showPage(event, num);
+        }
+```
+Для просмотра примера необходимо залогироваться на сервере и перейти на /pagination
