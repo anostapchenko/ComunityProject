@@ -1,12 +1,10 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageWithoutAnswerDtoDao;
+import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoByNoAnswersImpl;
 import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
@@ -32,11 +30,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @Tag(name = "Question Resource Controller", description = "Управление сущностями, которые связаны с вопросами")
@@ -150,7 +146,7 @@ public class QuestionResourceController {
                                                                          @RequestParam(required = false) String trackedTags,
                                                                          @RequestParam(required = false) String ignoredTags) {
 
-        PaginationData data = new PaginationData(page, items, QuestionPageWithoutAnswerDtoDao.class.getSimpleName());
+        PaginationData data = new PaginationData(page, items, QuestionPageDtoDaoByNoAnswersImpl.class.getSimpleName());
 
         PageDTO<QuestionDto> pageDTO = questionDtoService.getPageDto(data);
         List<QuestionDto> questionDtoList = pageDTO.getItems();

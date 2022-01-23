@@ -2,7 +2,6 @@ package com.javamentor.qa.platform.dao.impl.pagination;
 
 import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
-import com.javamentor.qa.platform.models.dto.question.TagDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Repository;
@@ -12,8 +11,8 @@ import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Repository("QuestionPageWithoutAnswerDtoDao")
-public class QuestionPageWithoutAnswerDtoDao implements PageDtoDao<QuestionDto> {
+@Repository("QuestionPageDtoDaoByNoAnswersImpl")
+public class QuestionPageDtoDaoByNoAnswersImpl implements PageDtoDao<QuestionDto> {
 
     @PersistenceContext
     EntityManager entityManager;
