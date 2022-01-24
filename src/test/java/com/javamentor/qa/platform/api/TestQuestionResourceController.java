@@ -223,6 +223,30 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     }
 
     @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tags.yml",
+            "dataset/QuestionResourceController/questions.yml"
+    },
+            strategy = SeedStrategy.REFRESH,
+            cleanBefore = true
+    )
+    //Получение списка вопросов с сортировкой по времени и с нужными тегами
+    public void getQuestionSortedByDate() throws Exception {
+        mockMvc.perform(get("/api/user/question/new?page=1&trackedTag=1&ignoredTag=2")
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                .andDo(print())
+                .andExpect(status().isOk());
+        // Без обязательного параметра page
+        mockMvc.perform(get("http://localhost:8091/api/user/question/new")
+                        .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
             "dataset/QuestionResourceController/tag.yml"
