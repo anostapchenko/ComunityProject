@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface QuestionDtoService  {
+public interface QuestionDtoService extends PageDtoService<QuestionDto>{
     Optional<QuestionDto> getQuestionDtoServiceById(Long id);
 
     List<QuestionCommentDto> getQuestionByIdComment(Long id);

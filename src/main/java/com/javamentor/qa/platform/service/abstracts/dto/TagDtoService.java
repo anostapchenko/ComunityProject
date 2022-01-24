@@ -7,6 +7,7 @@ import com.javamentor.qa.platform.service.abstracts.model.ReadWriteService;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TagDtoService extends PageDtoService<TagDto>{
     List<TagDto> getIgnoredTagsByUserId(Long userId);
@@ -15,4 +16,5 @@ public interface TagDtoService extends PageDtoService<TagDto>{
     List<PopularTagDto> getPopularTags(Integer limit);
     List<TagDto> getTagDtoServiceById(Long id);
     List<TagDto> getTagsLike(String value);
+    Map<Long, List<TagDto>> getTagDtoDaoByQuestionIds(List<Long> questionIds);
 }

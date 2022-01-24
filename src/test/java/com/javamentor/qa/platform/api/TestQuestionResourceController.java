@@ -706,4 +706,83 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         Assertions.assertEquals(0, (int) JsonPath.read(questionDtoJsonString, "$.countAnswer"));
         Assertions.assertEquals(0, (int) JsonPath.read(questionDtoJsonString, "$.countValuable"));
     }
+
+    @Test
+//  Получаем все вопросы по id тега
+    @DataSet(cleanBefore = true,
+            value = {
+                    "dataset/testQuestionTagIdResource/questions.yml",
+                    "dataset/testQuestionTagIdResource/tag.yml",
+                    "dataset/testQuestionTagIdResource/questions_has_tag.yml",
+                    "dataset/testQuestionTagIdResource/reputations.yml",
+                    "dataset/testQuestionTagIdResource/answers.yml",
+                    "dataset/testQuestionTagIdResource/users.yml",
+                    "dataset/testQuestionTagIdResource/votes_on_questions.yml",
+                    "dataset/testQuestionTagIdResource/role.yml"
+            },
+            strategy = SeedStrategy.CLEAN_INSERT)
+    public void shouldReturnAllQuestionsByTagId() throws Exception {
+        mockMvc.perform(get("/api/user/question/tag/100?page=1")
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + getToken("test15@mail.ru","test15")))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.currentPageNumber").value("1"))
+                .andExpect(jsonPath("$.totalPageCount").value("1"))
+                .andExpect(jsonPath("$.totalResultCount").value("4"))
+
+                .andExpect(jsonPath("$.items[0].id").value("100"))
+                .andExpect(jsonPath("$.items[0].title").value("test1"))
+                .andExpect(jsonPath("$.items[0].authorId").value("100"))
+                .andExpect(jsonPath("$.items[0].authorReputation").value("100"))
+                .andExpect(jsonPath("$.items[0].authorName").value("USER"))
+                .andExpect(jsonPath("$.items[0].authorImage").value("image"))
+                .andExpect(jsonPath("$.items[0].description").value("test1"))
+                .andExpect(jsonPath("$.items[0].viewCount").value("0"))
+                .andExpect(jsonPath("$.items[0].countAnswer").value("1"))
+                .andExpect(jsonPath("$.items[0].countValuable").value("-1"))
+                .andExpect(jsonPath("$.items[0].persistDateTime").value("2021-12-13T18:09:55"))
+                .andExpect(jsonPath("$.items[0].lastUpdateDateTime").
+                        value("2021-12-13T18:09:52"))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].description").value("Some text here"))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].name").value("TAG100"))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].id").value("100"))
+
+                .andExpect(jsonPath("$.items[1].id").value("101"))
+                .andExpect(jsonPath("$.items[1].title").value("test2"))
+                .andExpect(jsonPath("$.items[1].authorId").value("100"))
+                .andExpect(jsonPath("$.items[1].authorReputation").value("100"))
+                .andExpect(jsonPath("$.items[1].authorName").value("USER"))
+                .andExpect(jsonPath("$.items[1].authorImage").value("image"))
+                .andExpect(jsonPath("$.items[1].description").value("test2"))
+                .andExpect(jsonPath("$.items[1].viewCount").value("0"))
+                .andExpect(jsonPath("$.items[1].countAnswer").value("1"))
+                .andExpect(jsonPath("$.items[1].countValuable").value("-1"))
+                .andExpect(jsonPath("$.items[1].persistDateTime").value("2021-12-13T18:09:54"))
+                .andExpect(jsonPath("$.items[1].lastUpdateDateTime").
+                        value("2021-12-13T18:09:52"))
+                .andExpect(jsonPath("$.items[1].listTagDto[0].description").value("Some text here"))
+                .andExpect(jsonPath("$.items[1].listTagDto[0].name").value("TAG100"))
+                .andExpect(jsonPath("$.items[1].listTagDto[0].id").value("100"))
+
+                .andExpect(jsonPath("$.items[2].id").value("102"))
+                .andExpect(jsonPath("$.items[2].title").value("test3"))
+                .andExpect(jsonPath("$.items[2].authorId").value("100"))
+                .andExpect(jsonPath("$.items[2].authorReputation").value("100"))
+                .andExpect(jsonPath("$.items[2].authorName").value("USER"))
+                .andExpect(jsonPath("$.items[2].authorImage").value("image"))
+                .andExpect(jsonPath("$.items[2].description").value("test3"))
+                .andExpect(jsonPath("$.items[2].viewCount").value("0"))
+                .andExpect(jsonPath("$.items[2].countAnswer").value("1"))
+                .andExpect(jsonPath("$.items[2].countValuable").value("-1"))
+                .andExpect(jsonPath("$.items[2].persistDateTime").value("2021-12-13T18:09:53"))
+                .andExpect(jsonPath("$.items[2].lastUpdateDateTime").
+                        value("2021-12-13T18:09:52"))
+                .andExpect(jsonPath("$.items[2].listTagDto[0].description").value("Some text here"))
+                .andExpect(jsonPath("$.items[2].listTagDto[0].name").value("TAG100"))
+                .andExpect(jsonPath("$.items[2].listTagDto[0].id").value("100"))
+        ;
+
+    }
 }
