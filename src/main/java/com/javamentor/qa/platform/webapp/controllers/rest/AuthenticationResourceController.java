@@ -4,6 +4,7 @@ import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.AuthenticationResponse;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.security.JwtUtil;
+import com.javamentor.qa.platform.service.abstracts.model.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Optional;
 
 @RestController
@@ -34,6 +36,7 @@ public class AuthenticationResourceController {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
+    private final RoleService roleService;
 
     @PostMapping("token")
     @Operation(summary = "Получение JWT токена для учетных данных пользователя")
@@ -67,10 +70,14 @@ public class AuthenticationResourceController {
     public ResponseEntity<String> authorizationCheck(@AuthenticationPrincipal UserDetails userDetails, HttpServletResponse response){
 
         if (userDetails == null){
-            return new ResponseEntity<>("User is not authenticated", HttpStatus.FORBIDDEN);
-        }else{
-            return new ResponseEntity<>("User is authenticated", HttpStatus.OK);
+            return new ResponseEntity<>("User is not authenticated", HttpStatus.TEMPORARY_REDIRECT);
         }
+
+        if (!userDetails.getAuthorities().contains(roleService.getById(1L).get())){
+            return new ResponseEntity<>("FORBIDDEN", HttpStatus.FORBIDDEN);
+        }
+
+        return new ResponseEntity<>("User is authenticated", HttpStatus.OK);
     }
 }
 
