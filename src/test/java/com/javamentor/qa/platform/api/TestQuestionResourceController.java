@@ -190,6 +190,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             "dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/questions.yml"
+
     },
             strategy = SeedStrategy.REFRESH,
             cleanBefore = true
@@ -200,6 +201,41 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                         .header("Authorization", "Bearer " + getToken("test15@mail.ru","test15")))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DataSet(cleanBefore = true,
+            value = {
+                    "dataset/testQuestionResourceController/questions.yml",
+                    "dataset/testQuestionResourceController/tag.yml",
+                    "dataset/testQuestionResourceController/questions_has_tag.yml",
+                    "dataset/QuestionResourceController/users.yml",
+                    "dataset/testQuestionResourceController/role.yml",
+                    "dataset/QuestionResourceController/votes_on_questions.yml"
+            },
+            strategy = SeedStrategy.CLEAN_INSERT
+    )
+    //Работа контроллера
+    public void getQuestionSortedByDate() throws Exception {
+        mockMvc.perform(get("/api/user/question/new?page=1")
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                .andDo(print())
+                .andExpect(status().isOk());
+        // Без обязательного параметра page
+        mockMvc.perform(get("/api/user/question/new")
+                        .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        //Проверка корректности возвращаемых json
+        mockMvc.perform(get("/api/user/question/new?page=1&trackedTag=1&ignoredTag=2")
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items[0].id").value(1))
+                .andExpect(jsonPath("$.items[1].id").value(3));
     }
 
     @Test
@@ -220,30 +256,6 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andDo(print())
                 .andExpect(status().isOk());
 
-    }
-
-    @Test
-    @DataSet(value = {
-            "dataset/QuestionResourceController/roles.yml",
-            "dataset/QuestionResourceController/users.yml",
-            "dataset/QuestionResourceController/tags.yml",
-            "dataset/QuestionResourceController/questions.yml"
-    },
-            strategy = SeedStrategy.REFRESH,
-            cleanBefore = true
-    )
-    //Получение списка вопросов с сортировкой по времени и с нужными тегами
-    public void getQuestionSortedByDate() throws Exception {
-        mockMvc.perform(get("/api/user/question/new?page=1&trackedTag=1&ignoredTag=2")
-                        .contentType("application/json")
-                        .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
-                .andDo(print())
-                .andExpect(status().isOk());
-        // Без обязательного параметра page
-        mockMvc.perform(get("http://localhost:8091/api/user/question/new")
-                        .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
     }
 
     @Test
