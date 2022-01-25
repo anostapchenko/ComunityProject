@@ -249,10 +249,12 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
             cleanAfter = true)
     public void shouldReturnPaginationItems() throws Exception {
 
+        String token = "Bearer " + getTokens("user100@mail.ru");
+
         //не заполнен реквизит items
         this.mockMvc.perform(get("/api/user/tag/new?page=1")
                         .contentType("application/json")
-                        .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
+                        .header("Authorization", token))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -268,7 +270,7 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
         //не заполнен реквизит items стрица 2
         this.mockMvc.perform(get("/api/user/tag/new?page=2")
                         .contentType("application/json")
-                        .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
+                        .header("Authorization", token))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -284,7 +286,7 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
         //заполнены все параметры
         this.mockMvc.perform(get("/api/user/tag/new?page=2&items=3")
                         .contentType("application/json")
-                        .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
+                        .header("Authorization", token))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -299,7 +301,7 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
 
         // нет обязательного параметра - page
         mockMvc.perform(get("/api/user/tag/new?items=3")
-                        .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
+                        .header("Authorization", token))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$").doesNotExist());
