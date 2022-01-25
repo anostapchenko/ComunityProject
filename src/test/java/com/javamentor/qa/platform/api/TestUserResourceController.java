@@ -387,7 +387,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
     }
 
     @Test
-//  Получаем всеx User из БД отсортированных по репутации
+//  Получаем всеx User из БД отсортированных по репутации c аттрибутом isDeleted=true
     @DataSet(cleanBefore = true,
             value = {
                     "dataset/userresourcecontroller/roles.yml",
@@ -396,7 +396,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                     "dataset/userresourcecontroller/reputations.yml"
             },
             strategy = SeedStrategy.REFRESH)
-    public void shouldReturnAllUsersSortByRep() throws Exception {
+    public void shouldReturnAllUsersSortByRepDelTrue() throws Exception {
         // указаны параметры page и items
         this.mockMvc.perform(get("/api/user/reputation?page=1&items=3")
                 .contentType("application/json")
@@ -423,17 +423,17 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
     }
 
     @Test
-//  Получаем всеx User из БД отсортированных по репутации c rep=null
+//  Получаем всеx User из БД отсортированных по репутации.
     @DataSet(cleanBefore = true,
             value = {
                     "dataset/userresourcecontroller/roles.yml",
-                    "dataset/userresourcecontroller/users.yml",
+                    "dataset/userresourcecontroller/users10.yml",
                     "dataset/userresourcecontroller/questions.yml",
-                    "dataset/userresourcecontroller/reputationsNull.yml"
+                    "dataset/userresourcecontroller/reputations10.yml"
             },
             strategy = SeedStrategy.REFRESH)
-    public void shouldReturnAllUsersSortByRepNull() throws Exception {
-        this.mockMvc.perform(get("/api/user/reputation?page=1&items=3")
+    public void shouldReturnAllUsersSortByRep() throws Exception {
+        this.mockMvc.perform(get("/api/user/reputation?page=1&items=10")
                 .contentType("application/json")
                 .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
                 .andDo(print())
@@ -443,9 +443,36 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                 .andExpect(jsonPath("$").hasJsonPath())
                 .andExpect(jsonPath("$.currentPageNumber").value("1"))
                 .andExpect(jsonPath("$.totalPageCount").value("1"))
-                .andExpect(jsonPath("$.itemsOnPage").value("3"))
-                .andExpect(jsonPath("$.totalResultCount").value("3"))
+                .andExpect(jsonPath("$.itemsOnPage").value("10"))
+                .andExpect(jsonPath("$.totalResultCount").value("10"))
                 .andExpect(jsonPath("$.items").isNotEmpty())
-                .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(102, 101, 103)));
+                .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(110, 107, 104, 106, 103, 109, 108, 102, 101, 105)));
+    }
+
+    @Test
+//  Получаем всеx User из БД отсортированных по репутации, допуская что 2 rep может быть у одного юзера .
+    @DataSet(cleanBefore = true,
+            value = {
+                    "dataset/userresourcecontroller/roles.yml",
+                    "dataset/userresourcecontroller/users10.yml",
+                    "dataset/userresourcecontroller/questions.yml",
+                    "dataset/userresourcecontroller/reputations101.yml"
+            },
+            strategy = SeedStrategy.REFRESH)
+    public void shouldReturnAllUsersSortByRepNull() throws Exception {
+        this.mockMvc.perform(get("/api/user/reputation?page=1&items=10")
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$").hasJsonPath())
+                .andExpect(jsonPath("$.currentPageNumber").value("1"))
+                .andExpect(jsonPath("$.totalPageCount").value("1"))
+                .andExpect(jsonPath("$.itemsOnPage").value("10"))
+                .andExpect(jsonPath("$.totalResultCount").value("10"))
+                .andExpect(jsonPath("$.items").isNotEmpty())
+                .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(110, 107, 104, 106, 103, 109, 101, 108, 105)));
     }
 }
