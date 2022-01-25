@@ -13,7 +13,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ArrayList;
 
 @Repository
 public class TagDtoDaoImpl implements TagDtoDao {
@@ -31,6 +35,7 @@ public class TagDtoDaoImpl implements TagDtoDao {
                 .setParameter("id", id);
         return q.getResultList();
     }
+
     @Override
     public List<TagDto> getIgnoredTagsByUserId(Long userId) {
         return entityManager.createQuery(
@@ -77,7 +82,7 @@ public class TagDtoDaoImpl implements TagDtoDao {
     }
 
     @Override
-    public List<TagDto> getTagsLike(String value){
+    public List<TagDto> getTagsLike(String value) {
 
         return entityManager.createQuery("SELECT " +
                         "t.id as id, " +
@@ -87,7 +92,7 @@ public class TagDtoDaoImpl implements TagDtoDao {
                         "FROM Tag t " +
                         "WHERE lower(t.name) like :value " +
                         "ORDER BY t.questions.size desc, t.name")
-                .setParameter("value", "%"+value.toLowerCase(Locale.ROOT)+"%")
+                .setParameter("value", "%" + value.toLowerCase(Locale.ROOT) + "%")
                 .unwrap(org.hibernate.query.Query.class)
                 .setResultTransformer(Transformers.aliasToBean(TagDto.class))
                 .setMaxResults(10)
@@ -100,7 +105,8 @@ public class TagDtoDaoImpl implements TagDtoDao {
         entityManager.createQuery(
                         "SELECT q.id, " +
                                 "t.id, t.name, t.description, t.persistDateTime" +
-                                " FROM Question q JOIN q.tags t WHERE q.id IN (:ids) ")
+                                " FROM Question q JOIN q.tags t WHERE q.id IN (:ids) "
+                )
                 .setParameter("ids", questionIds)
                 .unwrap(org.hibernate.query.Query.class)
                 .setResultTransformer(new ResultTransformer() {
@@ -110,7 +116,7 @@ public class TagDtoDaoImpl implements TagDtoDao {
                                 (String) tuple[2],
                                 (String) tuple[3],
                                 (LocalDateTime) tuple[4]);
-                        Long id = (Long)tuple[0];
+                        Long id = (Long) tuple[0];
                         resultMap.putIfAbsent(id, new ArrayList<>());
                         resultMap.get(id).add(tagDto);
                         return null;

@@ -50,9 +50,4 @@ public class TagDtoServiceImpl extends DtoServiceImpl<TagDto> implements TagDtoS
     public List<TagDto> getTagsLike(String value){
         return tagDtoDao.getTagsLike(value);
     }
-
-    @Override
-    public Map<Long, List<TagDto>> getTagDtoDaoByQuestionIds(List<Long> questionIds) {
-        return tagDtoDao.getTagDtoDaoByQuestionIds(questionIds);
-    }
 }
