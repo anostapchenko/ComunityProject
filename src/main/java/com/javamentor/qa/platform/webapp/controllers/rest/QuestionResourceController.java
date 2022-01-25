@@ -1,9 +1,6 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoByNoAnswersImpl;
 import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.dto.PageDTO;
@@ -44,6 +41,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @Tag(name = "Question Resource Controller", description = "Управление сущностями, которые связаны с вопросами")
@@ -80,8 +78,8 @@ public class QuestionResourceController {
             @Content(mediaType = "application/json")
     })
     public ResponseEntity<Optional<Long>> getCountQuestion() {
-        Optional<Long> countQusetion = questionService.getCountByQuestion();
-        return new ResponseEntity<>(countQusetion, HttpStatus.OK);
+        Optional<Long> countQuestion = questionService.getCountByQuestion();
+        return new ResponseEntity<>(countQuestion, HttpStatus.OK);
     }
 
     @GetMapping("api/user/question/{questionId}/comment")
@@ -193,28 +191,22 @@ public class QuestionResourceController {
     })
     public ResponseEntity<PageDTO<QuestionDto>> getQuestionsWithNoAnswer(@RequestParam int page,
                                                                          @RequestParam(required = false, defaultValue = "10") int items,
-                                                                         @RequestParam(required = false) String trackedTags,
-                                                                         @RequestParam(required = false) String ignoredTags) {
+                                                                         @RequestParam(required = false) List<Long> trackedTag,
+                                                                         @RequestParam(required = false) List<Long> ignoredTag) {
 
         PaginationData data = new PaginationData(page, items, QuestionPageDtoDaoByNoAnswersImpl.class.getSimpleName());
 
         PageDTO<QuestionDto> pageDTO = questionDtoService.getPageDto(data);
         List<QuestionDto> questionDtoList = pageDTO.getItems();
 
-        try {
-            ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        boolean trackedTagsIsPresent = trackedTag != null;
+        boolean ignoredTagsIsPresent = ignoredTag != null;
 
-            if(trackedTags != null) {
-                List<TagDto> trackedTagList = objectMapper.readValue(trackedTags, new TypeReference<>() {});
-                questionDtoList.removeIf(dto -> !dto.getListTagDto().containsAll(trackedTagList));
-            }
-            if(ignoredTags != null) {
-                List<TagDto> ignoredTagList = objectMapper.readValue(ignoredTags, new TypeReference<>() {});
-                questionDtoList.removeIf(dto -> !Collections.disjoint(dto.getListTagDto(), ignoredTagList));
-            }
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        questionDtoList.removeIf(questionDto -> {
+           List<Long> idList = questionDto.getListTagDto().stream().map(TagDto::getId).collect(Collectors.toList());
+           return trackedTagsIsPresent && Collections.disjoint(idList, trackedTag) ||
+                   ignoredTagsIsPresent && !Collections.disjoint(idList, ignoredTag);
+        });
 
         return new ResponseEntity<>(pageDTO, HttpStatus.OK);
     }

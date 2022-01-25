@@ -1,18 +1,13 @@
 package com.javamentor.qa.platform.dao.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
-import com.javamentor.qa.platform.dao.impl.model.ReadWriteDaoImpl;
 import com.javamentor.qa.platform.models.dto.question.PopularTagDto;
 import com.javamentor.qa.platform.models.dto.question.TagDto;
-import com.javamentor.qa.platform.models.entity.question.Tag;
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,8 +34,10 @@ public class TagDtoDaoImpl implements TagDtoDao {
 
     @Override
     public Map<Long, List<TagDto>> getTagDtoByQuestionsId(List<Long> questionsId) {
+
         Map<Long, List<TagDto>> tagDtoMap = new HashMap<>();
-        return (Map<Long, List<TagDto>>) entityManager.createQuery("SELECT t.id, t.name, t.description, t.persistDateTime, q.id" +
+
+        entityManager.createQuery("SELECT t.id, t.name, t.description, t.persistDateTime, q.id" +
                 " FROM Tag t JOIN t.questions q WHERE q.id IN (:questionsId)")
                 .setParameter("questionsId", questionsId)
                 .unwrap(org.hibernate.query.Query.class)
@@ -53,14 +50,16 @@ public class TagDtoDaoImpl implements TagDtoDao {
                         tagDto.setDescription((String) tuple[2]);
                         tagDto.setPersistDateTime((LocalDateTime) tuple[3]);
                         tagDtoMap.computeIfAbsent((Long) tuple[4], id -> new ArrayList<>()).add(tagDto);
-                        return tagDtoMap;
+                        return null;
                     }
 
                     @Override
                     public List transformList(List list) {
                         return list;
                     }
-                }).getSingleResult();
+                }).getResultList();
+
+        return tagDtoMap;
     }
 
     @Override

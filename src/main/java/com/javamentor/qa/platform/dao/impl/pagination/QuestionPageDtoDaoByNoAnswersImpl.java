@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,8 +45,9 @@ public class QuestionPageDtoDaoByNoAnswersImpl implements PageDtoDao<QuestionDto
                         questionDto.setPersistDateTime((LocalDateTime) tuple[6]);
                         questionDto.setLastUpdateDateTime((LocalDateTime) tuple[7]);
                         questionDto.setAuthorReputation((Long) tuple[8]);
-                        questionDto.setCountAnswer(0);
                         questionDto.setCountValuable(((Number) tuple[9]).intValue());
+                        questionDto.setCountAnswer(0);
+                        questionDto.setListTagDto(new ArrayList<>());
                         return questionDto;
                     }
 

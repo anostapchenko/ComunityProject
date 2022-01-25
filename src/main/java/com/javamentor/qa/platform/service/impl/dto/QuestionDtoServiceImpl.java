@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionDtoServiceImpl extends DtoServiceImpl<QuestionDto> implements QuestionDtoService {
@@ -48,20 +49,20 @@ public class QuestionDtoServiceImpl extends DtoServiceImpl<QuestionDto> implemen
     @Override
     public PageDTO<QuestionDto> getPageDto(PaginationData properties) {
         PageDTO<QuestionDto> pageDTO = super.getPageDto(properties);
-        List<Long> questionIds = new ArrayList<>();
+
         List<QuestionDto> questionDtoList = pageDTO.getItems();
 
-        for(QuestionDto questionDto: questionDtoList) {
-            questionIds.add(questionDto.getId());
-        }
+        List<Long> questionIds = questionDtoList.stream()
+                .map(QuestionDto::getId)
+                .collect(Collectors.toList());
 
         Map<Long, List<TagDto>> tagDtoMap = tagDtoDao.getTagDtoByQuestionsId(questionIds);
 
-        for(QuestionDto questionDto: questionDtoList) {
+        questionDtoList.forEach(questionDto -> {
             if(tagDtoMap.containsKey(questionDto.getId())) {
                 questionDto.setListTagDto(tagDtoMap.get(questionDto.getId()));
             }
-        }
+        });
         return pageDTO;
     }
 
