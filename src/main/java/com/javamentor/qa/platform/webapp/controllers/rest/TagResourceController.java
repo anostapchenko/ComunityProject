@@ -1,6 +1,7 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.dao.impl.pagination.TagPageDtoDaoAllTagsByNameImpl;
+import com.javamentor.qa.platform.dao.impl.pagination.TagPageDtoDaoAllTagsByPopularImpl;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.question.PopularTagDto;
 import com.javamentor.qa.platform.models.dto.question.TagDto;
@@ -66,7 +67,7 @@ public class TagResourceController {
             summary = "Теги с наибольшим количеством вопросов",
             description = "Возвращает список из максимум 10 тегов, отсортированный по убыванию количества вопросов по ним."
     )
-    @GetMapping("/popular")
+    @GetMapping("/related")
     public ResponseEntity<List<PopularTagDto>> getTopPopularTags() {
         return new ResponseEntity<>(tagDtoService.getPopularTags(10),
                 HttpStatus.OK);
@@ -92,7 +93,7 @@ public class TagResourceController {
                 HttpStatus.OK);
     }
 
-    @Operation(summary = "Получение пагинированного списка всех тегов",
+    @Operation(summary = "Получение пагинированного списка всех тегов по имени",
             description = "Получение пагинированного списка всех тегов отсортированных по имени")
     @ApiResponses(value = {
             @ApiResponse(
@@ -109,6 +110,27 @@ public class TagResourceController {
     public ResponseEntity<PageDTO<TagDto>> getAllTagPaginationByName(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
         PaginationData data = new PaginationData(page, items,
                 TagPageDtoDaoAllTagsByNameImpl.class.getSimpleName());
+        return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Получение пагинированного списка всех тегов по популярности",
+            description = "Получение пагинированного списка всех тегов отсортированных по популярности." +
+                    "Популярность тэгов определяется количеством вопросов за этим тэгом, чем больше за этим тэгом вопросов тем он популярнее.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает пагинированный список <PageDTO<TagDto>> (id, name, persist_date, countQuestion)",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = PageDTO.class))
+                    }),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещён")
+    })
+    @GetMapping("/popular")
+    public ResponseEntity<PageDTO<TagDto>> getAllTagPaginationByPopular(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
+        PaginationData data = new PaginationData(page, items,
+                TagPageDtoDaoAllTagsByPopularImpl.class.getSimpleName());
         return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);
     }
 }

@@ -123,7 +123,7 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
     @Test
     @DataSet(value = "dataset/testTagResourceController/popularTags.yml", strategy = SeedStrategy.CLEAN_INSERT)
     public void shouldReturnSortedByCountQuestionDesc() throws Exception {
-        mockMvc.perform(get("/api/user/tag/popular")
+        mockMvc.perform(get("/api/user/tag/related")
                         .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -138,7 +138,7 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
     @Test
     @DataSet(cleanBefore = true, value = "dataset/testTagResourceController/popularTagsNoTags.yml", strategy = SeedStrategy.CLEAN_INSERT)
     public void shouldReturnEmptyArray() throws Exception {
-        mockMvc.perform(get("/api/user/tag/popular")
+        mockMvc.perform(get("/api/user/tag/related")
                         .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -274,5 +274,26 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$").doesNotExist());
+    }
+
+    // Все Tag по аттрибуту популярности(QuestionCount чем выше, тем более популярный тэг)
+    @Test
+    @DataSet(value = "dataset/testTagResourceController/TagsByPopular.yml",
+            strategy = SeedStrategy.CLEAN_INSERT)
+    public void shouldReturnAllTagsSortByPopularQuest() throws Exception {
+        mockMvc.perform(get("/api/user/tag/popular?page=1&items=4")
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$").hasJsonPath())
+                .andExpect(jsonPath("$.currentPageNumber").value("1"))
+                .andExpect(jsonPath("$.totalPageCount").value("1"))
+                .andExpect(jsonPath("$.itemsOnPage").value("4"))
+                .andExpect(jsonPath("$.totalResultCount").value("4"))
+                .andExpect(jsonPath("$.items").isNotEmpty())
+                .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(103, 102, 104, 101)));
     }
 }
