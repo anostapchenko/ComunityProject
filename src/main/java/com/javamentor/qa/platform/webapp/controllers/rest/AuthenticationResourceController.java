@@ -23,9 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Optional;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -67,7 +65,7 @@ public class AuthenticationResourceController {
     @ApiResponse(responseCode = "403", description = "Пользователь не авторизован", content = {
             @Content(mediaType = "text/plain")
     })
-    public ResponseEntity<String> authorizationCheck(@AuthenticationPrincipal UserDetails userDetails, HttpServletResponse response){
+    public ResponseEntity<String> authorizationCheck(@AuthenticationPrincipal UserDetails userDetails){
 
         if (userDetails == null){
             return new ResponseEntity<>("User is not authenticated", HttpStatus.TEMPORARY_REDIRECT);
@@ -80,4 +78,3 @@ public class AuthenticationResourceController {
         return new ResponseEntity<>("User is authenticated", HttpStatus.OK);
     }
 }
-
