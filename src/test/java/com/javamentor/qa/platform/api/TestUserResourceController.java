@@ -6,19 +6,14 @@ import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.javamentor.qa.platform.AbstractClassForDRRiderMockMVCTests;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-
-import java.util.ArrayList;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.hamcrest.core.Is.isA;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTests {
 
@@ -398,9 +393,19 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.REFRESH)
     public void shouldReturnAllUsersSortByRepDelTrue() throws Exception {
         // указаны параметры page и items
+
+        String MyToken = mockMvc.perform(MockMvcRequestBuilders
+                .post("/api/auth/token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\" : \"test15@mail.ru\"," +
+                        " \"password\" : \"test15\"}")
+        ).andReturn().getResponse().getContentAsString();
+
+        MyToken = MyToken.substring(MyToken.indexOf(":") + 2, MyToken.length() - 2);
+
         this.mockMvc.perform(get("/api/user/reputation?page=1&items=3")
                 .contentType("application/json")
-                .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                .header("Authorization", "Bearer " + MyToken))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -416,7 +421,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
 
         // нет обязательного параметра - page
         mockMvc.perform(get("/api/user/reputation?items=3")
-                .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                .header("Authorization", "Bearer " + MyToken))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$").doesNotExist());
@@ -433,9 +438,19 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             },
             strategy = SeedStrategy.REFRESH)
     public void shouldReturnAllUsersSortByRep() throws Exception {
+
+        String MyToken = mockMvc.perform(MockMvcRequestBuilders
+                .post("/api/auth/token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\" : \"test15@mail.ru\"," +
+                        " \"password\" : \"test15\"}")
+        ).andReturn().getResponse().getContentAsString();
+
+        MyToken = MyToken.substring(MyToken.indexOf(":") + 2, MyToken.length() - 2);
+
         this.mockMvc.perform(get("/api/user/reputation?page=1&items=10")
                 .contentType("application/json")
-                .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                .header("Authorization", "Bearer " + MyToken))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -460,9 +475,19 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             },
             strategy = SeedStrategy.REFRESH)
     public void shouldReturnAllUsersSortByRepNull() throws Exception {
+
+        String MyToken = mockMvc.perform(MockMvcRequestBuilders
+                .post("/api/auth/token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\" : \"test15@mail.ru\"," +
+                        " \"password\" : \"test15\"}")
+        ).andReturn().getResponse().getContentAsString();
+
+        MyToken = MyToken.substring(MyToken.indexOf(":") + 2, MyToken.length() - 2);
+
         this.mockMvc.perform(get("/api/user/reputation?page=1&items=10")
                 .contentType("application/json")
-                .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                .header("Authorization", "Bearer " + MyToken))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
