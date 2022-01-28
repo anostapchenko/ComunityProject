@@ -45,7 +45,8 @@ public class QuestionPageDtoDaoByTagId implements PageDtoDao<QuestionDto> {
 
     @Override
     public Long getTotalResultCount(Map<String, Object> properties) {
-        return (Long) entityManager.createQuery("select count(a.id) from Question a")
+        return (Long) entityManager.createQuery("select count (q.id) from Question q Join q.tags t WHERE t.id = :id")
+                .setParameter("id", properties.get("id"))
                 .getSingleResult();
     }
 
