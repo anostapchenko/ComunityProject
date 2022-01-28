@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.dao.impl.pagination.UserPageDtoDaoAllUsersByRepImpl;
 import com.javamentor.qa.platform.dao.impl.pagination.UserPageDtoDaoAllUsersImpl;
 import com.javamentor.qa.platform.dao.impl.pagination.UserPageDtoDaoByVoteImpl;
 import com.javamentor.qa.platform.models.dto.PageDTO;
@@ -124,6 +125,25 @@ public class UserResourceController {
         userService.changePassword(password,
                 userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).get());
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "Получение пагинированного списка всех пользователей. " +
+            "В запросе указываем page - номер страницы, items (по умолчанию 10) - количество результатов на странице",
+            description = "Получение пагинированного списка всех пользователей отсортированных по репутации без учета удаленных пользователей (аттрибут isDeleted=false)")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает пагинированный список PageDTO<UserDto> (id, nickname, imageLink, city, reputation)",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json")
+                    }),
+    })
+    @GetMapping("/api/user/reputation")
+    public ResponseEntity<PageDTO<UserDto>> getAllUserPaginationByReputation(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
+        PaginationData data = new PaginationData(page, items,
+                UserPageDtoDaoAllUsersByRepImpl.class.getSimpleName());
+        return new ResponseEntity<>(userDtoService.getPageDto(data), HttpStatus.OK);
     }
 
 }
