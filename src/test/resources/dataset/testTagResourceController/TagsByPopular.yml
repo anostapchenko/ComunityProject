@@ -4,8 +4,8 @@ role:
 
 user_entity:
   - id: 100
-    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
-    email: "user100@mail.ru"
+    password: "$2a$10$p94zVhwJKsg6CzDQAg1tPOwgUUa66.ITiPyhvJbYKIIZQ1i86UEpm"
+    email: "user102@mail.ru"
     is_deleted : false
     is_enabled: true
     last_redaction_date: 2021-12-09 19:41:18.252588
@@ -64,55 +64,21 @@ question:
 
 tag:
   - id: 101
-    description: "about spring"
-    name: "spring"
-    persist_date: 2021-12-01
+    description: "Tag 1"
+    name: "tag1"
   - id: 102
-    description: "about spring security"
-    name: "spring security"
-#    persist_date: 2021-12-20
+    description: "Tag 2"
+    name: "tag2"
   - id: 103
-    description: "about spring boot"
-    name: "spring boot"
-    persist_date: 2021-12-20
-  - id : 104
-    name: "JPA"
-    description: "about JPA"
-    persist_date: 2021-12-05
-  - id: 105
-    description: "about hibernate"
-    name: "hibernate"
-    persist_date: 2021-12-12
-  - id: 106
-    description: "about spring MVC"
-    name: "spring MVC"
-    persist_date: 2021-12-17
-  - id: 107
-    description: "about REST"
-    name: "REST"
-    persist_date:
-  - id: 108
-    description: "about GIT"
-    name: "GIT"
-    persist_date: 2021-12-16
-  - id: 109
-    description: "about JUnit"
-    name: "JUnit"
-    persist_date: 2021-12-25
-  - id: 110
-    description: "about Maven"
-    name: "Maven"
-    persist_date: 0001-01-01
-  - id: 111
-    description: "about JAVA CORE"
-    name: "JAVA CORE"
-    persist_date: 2021-12-10
+    description: "Tag 3"
+    name: "tag3"
+  - id: 104
+    description: "Tag 4"
+    name: "tag4"
 
 question_has_tag:
   - question_id: 101
     tag_id: 101
-  - question_id: 101
-    tag_id: 109
   - question_id: 102
     tag_id: 102
   - question_id: 103
