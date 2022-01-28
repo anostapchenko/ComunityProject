@@ -730,7 +730,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.currentPageNumber").value("1"))
                 .andExpect(jsonPath("$.totalPageCount").value("1"))
-                .andExpect(jsonPath("$.totalResultCount").value("4"))
+                .andExpect(jsonPath("$.totalResultCount").value("3"))
 
                 .andExpect(jsonPath("$.items[0].id").value("100"))
                 .andExpect(jsonPath("$.items[0].title").value("test1"))

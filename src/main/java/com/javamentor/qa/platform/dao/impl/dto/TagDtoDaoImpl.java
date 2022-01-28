@@ -112,7 +112,8 @@ public class TagDtoDaoImpl implements TagDtoDao {
                 .setResultTransformer(new ResultTransformer() {
                     @Override
                     public Object transformTuple(Object[] tuple, String[] aliases) {
-                        TagDto tagDto = new TagDto((Long) tuple[1],
+                        TagDto tagDto = new TagDto(
+                                (Long) tuple[1],
                                 (String) tuple[2],
                                 (String) tuple[3],
                                 (LocalDateTime) tuple[4]);
