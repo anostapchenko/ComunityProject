@@ -1,6 +1,7 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.dao.impl.pagination.TagPageDtoDaoAllTagsByNameImpl;
+import com.javamentor.qa.platform.dao.impl.pagination.TagPageDtoDaoAllTagsByPersistDateTimeImpl;
 import com.javamentor.qa.platform.dao.impl.pagination.TagPageDtoDaoAllTagsByPopularImpl;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.question.PopularTagDto;
@@ -98,7 +99,7 @@ public class TagResourceController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Возвращает пагинированный список <PageDTO<TagDto>> (id, name, persist_date)",
+                    description = "Возвращает пагинированный список <PageDTO<TagDto>> (id, name, persistDateTime)",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -110,6 +111,26 @@ public class TagResourceController {
     public ResponseEntity<PageDTO<TagDto>> getAllTagPaginationByName(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
         PaginationData data = new PaginationData(page, items,
                 TagPageDtoDaoAllTagsByNameImpl.class.getSimpleName());
+        return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Получение пагинированного списка всех тегов",
+            description = "Получение пагинированного списка всех тегов отсортированных дате добавления")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает пагинированный список <PageDTO<TagDto>> (id, name, persist_date)",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = PageDTO.class))
+                    }),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещён")
+    })
+    @GetMapping("/new")
+    public ResponseEntity<PageDTO<TagDto>> getAllTagPaginationByPersistDateTime(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
+        PaginationData data = new PaginationData(page, items,
+                TagPageDtoDaoAllTagsByPersistDateTimeImpl.class.getSimpleName());
         return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);
     }
 

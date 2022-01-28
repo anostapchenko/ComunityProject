@@ -224,6 +224,7 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andExpect(jsonPath("$.size()").value(0));
     }
 
+
     @Test
     @DataSet(cleanBefore = true,
             value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml",
@@ -239,6 +240,72 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andExpect(jsonPath("$[0].id").value(103))
                 .andExpect(jsonPath("$[0].description").value("about spring boot"))
                 .andExpect(jsonPath("$[0].name").value("spring boot"));
+    }
+
+    @Test
+    @DataSet(cleanBefore = true,
+            value = "dataset/testTagResourceController/getTagsLike/tagsLike.yml",
+            strategy = SeedStrategy.CLEAN_INSERT,
+            cleanAfter = true)
+    public void shouldReturnPaginationItems() throws Exception {
+
+        String token = "Bearer " + getTokens("user100@mail.ru");
+
+        //не заполнен реквизит items
+        this.mockMvc.perform(get("/api/user/tag/new?page=1")
+                        .contentType("application/json")
+                        .header("Authorization", token))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$").hasJsonPath())
+                .andExpect(jsonPath("$.currentPageNumber").value("1"))
+                .andExpect(jsonPath("$.totalPageCount").value("2"))
+                .andExpect(jsonPath("$.itemsOnPage").value("10"))
+                .andExpect(jsonPath("$.totalResultCount").value("11"))
+                .andExpect(jsonPath("$.items").isNotEmpty())
+                .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(110, 101, 104, 111, 105, 108, 106, 103, 109, 107)));
+
+        //не заполнен реквизит items стрица 2
+        this.mockMvc.perform(get("/api/user/tag/new?page=2")
+                        .contentType("application/json")
+                        .header("Authorization", token))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$").hasJsonPath())
+                .andExpect(jsonPath("$.currentPageNumber").value("2"))
+                .andExpect(jsonPath("$.totalPageCount").value("2"))
+                .andExpect(jsonPath("$.itemsOnPage").value("1"))
+                .andExpect(jsonPath("$.totalResultCount").value("11"))
+                .andExpect(jsonPath("$.items").isNotEmpty())
+                .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(102)));
+
+        //заполнены все параметры
+        this.mockMvc.perform(get("/api/user/tag/new?page=2&items=3")
+                        .contentType("application/json")
+                        .header("Authorization", token))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$").hasJsonPath())
+                .andExpect(jsonPath("$.currentPageNumber").value("2"))
+                .andExpect(jsonPath("$.totalPageCount").value("4"))
+                .andExpect(jsonPath("$.itemsOnPage").value("3"))
+                .andExpect(jsonPath("$.totalResultCount").value("11"))
+                .andExpect(jsonPath("$.items").isNotEmpty())
+                .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(111, 105, 108)));
+
+        // нет обязательного параметра - page
+        mockMvc.perform(get("/api/user/tag/new?items=3")
+                        .header("Authorization", token))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist());
+
     }
 
     @Test
