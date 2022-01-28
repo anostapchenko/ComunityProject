@@ -11,6 +11,7 @@ import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -215,24 +216,37 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             },
             strategy = SeedStrategy.CLEAN_INSERT
     )
-    //Работа контроллера
     public void getQuestionSortedByDate() throws Exception {
-        mockMvc.perform(get("/api/user/question/new?page=1")
-                        .contentType("application/json")
-                        .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
-                .andDo(print())
-                .andExpect(status().isOk());
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("test15");
+        authenticationRequest.setUsername("test15@mail.ru");
+
+        QuestionCreateDto questionCreateDto = new QuestionCreateDto();
+        questionCreateDto.setTitle("Title");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
         // Без обязательного параметра page
         mockMvc.perform(get("/api/user/question/new")
-                        .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
-                .andDo(print())
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .content(new ObjectMapper().writeValueAsString(questionCreateDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isBadRequest());
 
         //Проверка корректности возвращаемых json
         mockMvc.perform(get("/api/user/question/new?page=1&trackedTag=1&ignoredTag=2")
-                        .contentType("application/json")
-                        .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
-                .andDo(print())
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .content(new ObjectMapper().writeValueAsString(questionCreateDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items[0].id").value(1))
                 .andExpect(jsonPath("$.items[1].id").value(3));

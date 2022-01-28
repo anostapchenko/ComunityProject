@@ -27,9 +27,9 @@ public class QuestionPageDtoSortedByDate implements PageDtoDao<QuestionDto> {
                         "(select count (a.id) from Question q JOIN Answer a ON a.question.id = q.id)," +
                         "(select sum(case when v.vote = 'UP_VOTE' then 1 else -1 end) from VoteQuestion v JOIN Question " +
                         " q ON v.question.id = q.id) from Question q JOIN q.user u" +
-                        " where exists (select 1 from Question q1 JOIN q1.tags t " +
+                        " where exists (select q.id from Question q1 JOIN q1.tags t " +
                         " where q.id = q1.id and (:trackedTag is NULL or :trackedTag = t.id))" +
-                        " and not exists (select 1 from Question q1 JOIN q1.tags t " +
+                        " and not exists (select q.id from Question q1 JOIN q1.tags t " +
                         " where q.id = q1.id and :ignoredTag = t.id)" +
                         " ORDER BY q.persistDateTime desc")
                 .setParameter("trackedTag", properties.getProps().get("trackedTag"))
@@ -43,7 +43,13 @@ public class QuestionPageDtoSortedByDate implements PageDtoDao<QuestionDto> {
 
     @Override
     public Long getTotalResultCount(Map<String, Object> properties) {
-        return (Long) entityManager.createQuery("select count(q.id) from Question q")
+        return (Long) entityManager.createQuery("select count(q.id) from Question q" +
+                        " where exists (select q.id from Question q1 JOIN q1.tags t " +
+                        " where q.id = q1.id and (:trackedTag is NULL or :trackedTag = t.id))" +
+                        " and not exists (select q.id from Question q1 JOIN q1.tags t " +
+                        " where q.id = q1.id and :ignoredTag = t.id)")
+                .setParameter("trackedTag", properties.get("trackedTag"))
+                .setParameter("ignoredTag", properties.get("ignoredTag"))
                 .getSingleResult();
     }
     @Override

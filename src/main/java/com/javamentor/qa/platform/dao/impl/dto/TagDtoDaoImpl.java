@@ -4,6 +4,7 @@ import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
 import com.javamentor.qa.platform.dao.impl.model.ReadWriteDaoImpl;
 import com.javamentor.qa.platform.models.dto.question.PopularTagDto;
 import com.javamentor.qa.platform.models.dto.question.TagDto;
+import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
@@ -11,8 +12,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.List;
-import java.util.Locale;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Repository
 public class TagDtoDaoImpl implements TagDtoDao {
@@ -91,5 +92,36 @@ public class TagDtoDaoImpl implements TagDtoDao {
                 .setResultTransformer(Transformers.aliasToBean(TagDto.class))
                 .setMaxResults(10)
                 .getResultList();
+    }
+
+    @Override
+    public Map<Long, List<TagDto>> getTagDtoDaoByQuestionIds(List<Long> questionIds) {
+        Map<Long, List<TagDto>> resultMap = new HashMap<>();
+        entityManager.createQuery(
+                        "SELECT q.id, " +
+                                "t.id, t.name, t.description, t.persistDateTime" +
+                                " FROM Question q JOIN q.tags t WHERE q.id IN (:ids) "
+                )
+                .setParameter("ids", questionIds)
+                .unwrap(org.hibernate.query.Query.class)
+                .setResultTransformer(new ResultTransformer() {
+                    @Override
+                    public Object transformTuple(Object[] tuple, String[] aliases) {
+                        TagDto tagDto = new TagDto((Long) tuple[1],
+                                (String) tuple[2],
+                                (String) tuple[3],
+                                (LocalDateTime) tuple[4]);
+                        Long id = (Long) tuple[0];
+                        resultMap.putIfAbsent(id, new ArrayList<>());
+                        resultMap.get(id).add(tagDto);
+                        return null;
+                    }
+
+                    @Override
+                    public List transformList(List collection) {
+                        return collection;
+                    }
+                }).getResultList();
+        return resultMap;
     }
 }

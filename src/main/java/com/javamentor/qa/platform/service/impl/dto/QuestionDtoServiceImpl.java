@@ -5,14 +5,18 @@ package com.javamentor.qa.platform.service.impl.dto;
 import com.javamentor.qa.platform.dao.abstracts.dto.QuestionDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
+import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.question.QuestionCommentDto;
+import com.javamentor.qa.platform.models.dto.question.TagDto;
+import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionDtoServiceImpl extends DtoServiceImpl<QuestionDto> implements QuestionDtoService {
@@ -31,6 +35,21 @@ public class QuestionDtoServiceImpl extends DtoServiceImpl<QuestionDto> implemen
     @Override
     public List<QuestionCommentDto> getQuestionByIdComment(Long id) {
         return questionDtoDao.getQuestionIdComment(id);
+    }
+
+    @Override
+    public Map<Long, List<TagDto>> getTagsByQuestionIds(List<Long> questionIds) {
+        return tagDtoDao.getTagDtoDaoByQuestionIds(questionIds);
+    }
+
+    @Override
+    public PageDTO<QuestionDto> getQuestionsSortedByDate(PaginationData data) {
+        var pageDto = this.getPageDto(data);
+        var map = this.getTagsByQuestionIds(
+                pageDto.getItems().stream().map(QuestionDto::getId).collect(Collectors.toList())
+        );
+        pageDto.getItems().forEach(q -> q.setListTagDto(map.get(q.getId())));
+        return pageDto;
     }
 
     @Override
