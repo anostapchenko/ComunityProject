@@ -71,7 +71,7 @@ public class AuthenticationResourceController {
             return new ResponseEntity<>("User is not authenticated", HttpStatus.TEMPORARY_REDIRECT);
         }
 
-        if (!userDetails.getAuthorities().contains(roleService.getById(1L).get())){
+        if (!userDetails.getAuthorities().contains(roleService.getByName("ROLE_USER").get())){
             return new ResponseEntity<>("FORBIDDEN", HttpStatus.FORBIDDEN);
         }
 
