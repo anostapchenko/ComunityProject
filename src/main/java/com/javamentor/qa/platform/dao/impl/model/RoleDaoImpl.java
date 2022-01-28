@@ -17,7 +17,7 @@ public class RoleDaoImpl extends ReadWriteDaoImpl<Role, Long> implements RoleDao
     private EntityManager entityManager;
 
     public Optional<Role> getByName(String name) {
-        String hql = "select r.id, r.name from Role r where r.name = :name";
+        String hql = "select r as name from Role r where r.name = :name";
         TypedQuery<Role> query = (TypedQuery<Role>) entityManager.createQuery(hql).setParameter("name", name);
         return SingleResultUtil.getSingleResultOrNull(query);
     }
