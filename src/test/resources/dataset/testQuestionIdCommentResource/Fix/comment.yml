@@ -1,0 +1,14 @@
+comment:
+  - id : 1
+    comment_type : 2
+    text : "Hello Test"
+    persist_date : 2021-12-13T23:09:52.716+03:00
+    last_redaction_date : 2021-12-13T23:09:52.716+03:00
+    user_id : 1
+
+  - id: 2
+    comment_type: 2
+    text: "Hello Test2"
+    persist_date: 2021-12-13T23:09:52.716+03:00
+    last_redaction_date: 2021-12-13T23:09:52.716+03:00
+    user_id: 2
