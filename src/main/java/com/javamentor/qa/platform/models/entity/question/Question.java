@@ -14,6 +14,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -37,10 +38,12 @@ public class Question implements Serializable {
 
     @Column
     @NotNull
+    @NotEmpty
     private String title;
 
     @Column
     @NotNull
+    @NotEmpty
     @Type(type = "org.hibernate.type.TextType")
     private String description;
 
