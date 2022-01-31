@@ -43,8 +43,8 @@ public class QuestionDtoServiceImpl extends DtoServiceImpl<QuestionDto> implemen
     }
 
     @Override
-    public PageDTO<QuestionDto> getQuestionsSortedByDate(PaginationData data) {
-        var pageDto = this.getPageDto(data);
+    public PageDTO<QuestionDto> getPageDto(PaginationData properties) {
+        var pageDto = super.getPageDto(properties);
         var map = this.getTagsByQuestionIds(
                 pageDto.getItems().stream().map(QuestionDto::getId).collect(Collectors.toList())
         );

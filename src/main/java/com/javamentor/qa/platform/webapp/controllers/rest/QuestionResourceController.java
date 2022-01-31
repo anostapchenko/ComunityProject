@@ -178,7 +178,7 @@ public class QuestionResourceController {
                 QuestionPageDtoSortedByDate.class.getSimpleName());
         data.getProps().put("trackedTag", trackedTag);
         data.getProps().put("ignoredTag", ignoredTag);
-        return new ResponseEntity<>(questionDtoService.getQuestionsSortedByDate(data), HttpStatus.OK);
+        return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
     }
 
 
