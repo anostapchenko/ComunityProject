@@ -32,6 +32,13 @@ public class TagDto {
         this.persistDateTime = persistDateTime;
     }
 
+    public TagDto(Long id, String name, String description, LocalDateTime persistDateTime) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.persistDateTime = persistDateTime;
+    }
+
     public TagDto(Long id, String name, LocalDateTime persistDateTime, Long countQuestion) {
         this.id = id;
         this.name = name;

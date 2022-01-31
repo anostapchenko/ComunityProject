@@ -103,7 +103,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                 .andExpect(jsonPath("$.items[2].fullName").value("test 103"))
                 .andExpect(jsonPath("$.items[2].imageLink").value("photo"))
                 .andExpect(jsonPath("$.items[2].city").value("Moscow"))
-                .andExpect(jsonPath("$.items[2].reputation").value("80"))
+                .andExpect(jsonPath("$.items[2].reputation").value("800"))
                 .andExpect(jsonPath("$.itemsOnPage").value("3"))
         ;
 
@@ -182,7 +182,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                 .andExpect(jsonPath("$.items[1].fullName").value("test 103"))
                 .andExpect(jsonPath("$.items[1].imageLink").value("photo"))
                 .andExpect(jsonPath("$.items[1].city").value("Moscow"))
-                .andExpect(jsonPath("$.items[1].reputation").value("80"))
+                .andExpect(jsonPath("$.items[1].reputation").value("800"))
                 .andExpect(jsonPath("$.itemsOnPage").value("2"));
     }
 

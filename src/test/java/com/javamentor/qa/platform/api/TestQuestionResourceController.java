@@ -47,7 +47,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
 
     @Test
     @DataSet(value = {
-            "dataset/testQuestionIdCommentResource/comment.yml",
+            "dataset/testQuestionIdCommentResource/Fix/comment.yml",
             "dataset/testQuestionIdCommentResource/users.yml",
             "dataset/testQuestionIdCommentResource/commentquestion.yml",
             "dataset/testQuestionIdCommentResource/questions.yml",
@@ -55,7 +55,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             "dataset/testQuestionIdCommentResource/roles.yml"
     },
             strategy = SeedStrategy.CLEAN_INSERT,
-            cleanBefore = true
+            cleanAfter = true, cleanBefore = true
     )
     // Получение списка дто комментариев к вопросам
     public void shouldGetQuestionIdComment() throws Exception {
@@ -85,7 +85,9 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
 
     @Test
     //Голосуем ПРОТИВ вопроса (DOWN_VOTE) и получаем ответ с количеством голосов: 1 и репутацией -5
-    @DataSet(cleanBefore = true, value = "dataset/questionresourcecontroller/data.yml", strategy = SeedStrategy.REFRESH )
+    @DataSet(cleanAfter = true, cleanBefore = true,
+            value = "dataset/questionresourcecontroller/data.yml",
+            strategy = SeedStrategy.REFRESH )
     public void shouldReturnSetupDownVoteDownReputation() throws Exception {
         this.mockMvc.perform(post("/api/user/question/2/downVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("1")));
@@ -97,7 +99,9 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     }
 
     @Test
-    @DataSet(cleanBefore = true, value = "dataset/questionresourcecontroller/data.yml", strategy = SeedStrategy.REFRESH )
+    @DataSet(cleanAfter = true, cleanBefore = true,
+            value = "dataset/questionresourcecontroller/data.yml",
+            strategy = SeedStrategy.REFRESH )
     //Голосуем ЗА вопрос (UP_VOTE) и получаем ответ с количеством голосов: 1 и репутация увеличена на +10.
     public void shouldReturnSetupUpVoteUpReputation() throws Exception {
         this.mockMvc.perform(post("/api/user/question/1/upVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isOk())
@@ -111,7 +115,9 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     //Повторно голосуем ПРОТИВ вопроса (DOWN_VOTE) и получаем ответ: "User was voting"
     // повторный голос не учитывается.
-    @DataSet(cleanBefore = true,value = "dataset/questionresourcecontroller/data2.yml", strategy = SeedStrategy.REFRESH )
+    @DataSet(cleanAfter = true, cleanBefore = true,
+            value = "dataset/questionresourcecontroller/data2.yml",
+            strategy = SeedStrategy.REFRESH )
     public void shouldValidateUserVoteDownVote() throws Exception {
         this.mockMvc.perform(post("/api/user/question/2/downVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("User was voting")));
@@ -119,7 +125,9 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     //Повторно голосуем ЗА вопроса (UP_VOTE) и получаем ответ: "User was voting"
     // повторный голос не учитывается.
-    @DataSet(cleanBefore = true, value = "dataset/questionresourcecontroller/data2.yml", strategy = SeedStrategy.REFRESH )
+    @DataSet(cleanAfter = true, cleanBefore = true,
+            value = "dataset/questionresourcecontroller/data2.yml",
+            strategy = SeedStrategy.REFRESH )
     public void shouldValidateUserVoteUpVote() throws Exception {
         this.mockMvc.perform(post("/api/user/question/1/upVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("User was voting")));
@@ -132,11 +140,11 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/questions_has_tag.yml",
             "dataset/QuestionResourceController/answers.yml",
-            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/Fix/reputations.yml",
             "dataset/QuestionResourceController/votes_on_questions.yml"
     },
             strategy = SeedStrategy.CLEAN_INSERT,
-            cleanAfter = true
+            cleanAfter = true, cleanBefore = true
     )
     // Получение json по существующему вопросу
     public void getCorrectQuestionDtoByIdTest() throws Exception {
@@ -171,11 +179,11 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/questions_has_tag.yml",
             "dataset/QuestionResourceController/answers.yml",
-            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/Fix/reputations.yml",
             "dataset/QuestionResourceController/votes_on_questions.yml"
     },
             strategy = SeedStrategy.CLEAN_INSERT,
-            cleanAfter = true
+            cleanAfter = true, cleanBefore = true
     )
     // получение ответа по не существующему в тестовой базе вопросу
     public void getWrongQuestionDtoByIdTest() throws Exception {
@@ -192,7 +200,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             "dataset/QuestionResourceController/questions.yml"
     },
             strategy = SeedStrategy.REFRESH,
-            cleanBefore = true
+            cleanAfter = true, cleanBefore = true
     )
     // получение количество вопросов
     public void getQuestionCount() throws Exception {
@@ -209,7 +217,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             "dataset/QuestionResourceController/questions.yml"
     },
             strategy = SeedStrategy.REFRESH,
-            cleanBefore = true
+            cleanAfter = true, cleanBefore = true
     )
     //Обновляем один вопрос на удаленный и выводим только существующие
     @Transactional(readOnly = false, isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
@@ -228,7 +236,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             "dataset/QuestionResourceController/tag.yml"
     },
             disableConstraints = true,
-            cleanBefore = true
+            cleanAfter = true, cleanBefore = true
     )
     void questionCreateDtoWithoutTitle() throws Exception {
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -265,7 +273,8 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true,
+            cleanAfter = true, cleanBefore = true)
     void questionCreateDtoWithoutDescription() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -302,7 +311,8 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true,
+            cleanAfter = true, cleanBefore = true)
     void questionCreateDtoWithoutTags() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -334,7 +344,8 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true,
+            cleanAfter = true, cleanBefore = true)
     void questionCreateDtoWithEmptyTitle() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -372,7 +383,8 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true,
+            cleanAfter = true, cleanBefore = true)
     void questionCreateDtoWithEmptyDescription() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -410,7 +422,8 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true,
+            cleanAfter = true, cleanBefore = true)
     void questionCreateDtoWithEmptyTags() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -444,7 +457,8 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true,
+            cleanAfter = true, cleanBefore = true)
     void questionCreateDtoWithNameTagWhenExist() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -491,7 +505,8 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true,
+            cleanAfter = true, cleanBefore = true)
     void questionCreateDtoWithNameTagWhenNotExist() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -534,7 +549,8 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true,
+            cleanAfter = true, cleanBefore = true)
     void questionHasBeenCreated() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -586,7 +602,8 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true,
+            cleanAfter = true, cleanBefore = true)
     void questionHasBeenCreated_CheckTagList() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -641,7 +658,8 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true,
+            cleanAfter = true, cleanBefore = true)
     void checkFieldsQuestionInReturnedQuestionDto() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();

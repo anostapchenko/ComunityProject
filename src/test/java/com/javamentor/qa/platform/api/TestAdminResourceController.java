@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class TestAdminResourceController extends AbstractClassForDRRiderMockMVCTests {
 
-    private final String publicUrl = "/api/user/answer/id?page=1&items=10";
+    private final String publicUrl = "/api/user/question/count";
     private final String testUsername = "user1@mail.ru";
     private final String testPassword = "user1";
     private final long id = 1;
@@ -38,7 +38,7 @@ public class TestAdminResourceController extends AbstractClassForDRRiderMockMVCT
         // Проверка того, что состояние флага enable изменилось на false
         Query query = entityManager.createQuery("select u from User u where u.id=:id").setParameter("id", id);
         User user = (User) query.getSingleResult();
-        assertThat(user.getIsEnabled()).isEqualTo(false);
+        assertThat(user.getIsDeleted()).isEqualTo(true);
 
         // Проверка того, что заблокированный юзер не может использовать api
         this.mockMvc.perform(get(publicUrl)
