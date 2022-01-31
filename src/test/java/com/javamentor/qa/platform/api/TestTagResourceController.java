@@ -346,7 +346,7 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
     // Все Tag по аттрибуту популярности(QuestionCount чем выше, тем более популярный тэг)
     @Test
     @DataSet(value = "dataset/testTagResourceController/TagsByPopular.yml",
-            strategy = SeedStrategy.CLEAN_INSERT)
+            strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true, cleanAfter = true)
     public void shouldReturnAllTagsSortByPopularQuest() throws Exception {
         mockMvc.perform(get("/api/user/tag/popular?page=1&items=4")
                 .contentType("application/json")
