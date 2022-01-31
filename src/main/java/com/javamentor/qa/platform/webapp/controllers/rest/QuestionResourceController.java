@@ -198,7 +198,8 @@ public class QuestionResourceController {
         PaginationData data = new PaginationData(
                 page, items, QuestionPageDtoDaoByTagId.class.getSimpleName()
         );
-        return new ResponseEntity<>(questionDtoService.getPageQuestionsByTagId(id, data), HttpStatus.OK);
+        data.getProps().put("id", id);
+        return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
     }
 
 }

@@ -50,8 +50,4 @@ public class QuestionPageDtoDaoByTagId implements PageDtoDao<QuestionDto> {
                 .getSingleResult();
     }
 
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
 }

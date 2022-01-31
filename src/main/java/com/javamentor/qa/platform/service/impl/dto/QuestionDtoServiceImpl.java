@@ -52,13 +52,23 @@ public class QuestionDtoServiceImpl extends DtoServiceImpl<QuestionDto> implemen
     }
 
     @Override
-    public PageDTO<QuestionDto> getPageQuestionsByTagId(Long id, PaginationData data) {
-        data.getProps().put("id", id);
-        var pageDto = this.getPageDto(data);
+    public PageDTO<QuestionDto> getPageDto(PaginationData properties) {
+        var pageDto = super.getPageDto(properties);
         var map = this.getTagsByQuestionIds(
                 pageDto.getItems().stream().map(QuestionDto::getId).collect(Collectors.toList())
         );
         pageDto.getItems().forEach(q -> q.setListTagDto(map.get(q.getId())));
         return pageDto;
     }
+
+    //    @Override
+//    public PageDTO<QuestionDto> getPageQuestionsByTagId(Long id, PaginationData data) {
+//        data.getProps().put("id", id);
+//        var pageDto = this.getPageDto(data);
+//        var map = this.getTagsByQuestionIds(
+//                pageDto.getItems().stream().map(QuestionDto::getId).collect(Collectors.toList())
+//        );
+//        pageDto.getItems().forEach(q -> q.setListTagDto(map.get(q.getId())));
+//        return pageDto;
+//    }
 }
