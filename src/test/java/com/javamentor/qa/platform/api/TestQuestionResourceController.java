@@ -740,7 +740,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             },
             strategy = SeedStrategy.CLEAN_INSERT)
     public void shouldReturnAllQuestionsByTagId() throws Exception {
-        mockMvc.perform(get("/api/user/question/tag/100?page=1")
+        mockMvc.perform(get("/api/user/question/tag/100?page=1&items=5")
                         .contentType("application/json")
                         .header("Authorization", "Bearer " + getToken("test15@mail.ru","test15")))
                 .andExpect(status().isOk())

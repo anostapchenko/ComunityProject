@@ -18,5 +18,4 @@ public interface QuestionDtoService extends PageDtoService<QuestionDto> {
 
     List<QuestionCommentDto> getQuestionByIdComment(Long id);
 
-    Map<Long, List<TagDto>> getTagsByQuestionIds(List<Long> questionIds);
 }
