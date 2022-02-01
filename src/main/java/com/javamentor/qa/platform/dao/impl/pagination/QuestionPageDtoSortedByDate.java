@@ -52,8 +52,4 @@ public class QuestionPageDtoSortedByDate implements PageDtoDao<QuestionDto> {
                 .setParameter("ignoredTag", properties.get("ignoredTag"))
                 .getSingleResult();
     }
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
 }

@@ -39,7 +39,7 @@ public class QuestionDtoServiceImpl extends DtoServiceImpl<QuestionDto> implemen
 
     @Override
     public Map<Long, List<TagDto>> getTagsByQuestionIds(List<Long> questionIds) {
-        return tagDtoDao.getTagDtoDaoByQuestionIds(questionIds);
+        return tagDtoDao.getTagDtoByQuestionIds(questionIds);
     }
 
     @Override
