@@ -4,6 +4,7 @@ import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.question.PopularTagDto;
 import com.javamentor.qa.platform.models.dto.question.TagDto;
+import com.javamentor.qa.platform.models.dto.question.TagViewDto;
 import com.javamentor.qa.platform.service.abstracts.dto.TagDtoService;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +13,11 @@ import java.util.Map;
 
 @Service
 
-public class TagDtoServiceImpl extends DtoServiceImpl<TagDto> implements TagDtoService {
+public class TagDtoServiceImpl extends DtoServiceImpl<TagViewDto> implements TagDtoService {
 
     private final TagDtoDao tagDtoDao;
 
-    public TagDtoServiceImpl(Map<String, PageDtoDao<TagDto>> daoMap, TagDtoDao tagDtoDao) {
+    public TagDtoServiceImpl(Map<String, PageDtoDao<TagViewDto>> daoMap, TagDtoDao tagDtoDao) {
         super(daoMap);
         this.tagDtoDao = tagDtoDao;
     }

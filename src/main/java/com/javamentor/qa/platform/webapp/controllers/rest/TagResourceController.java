@@ -6,6 +6,7 @@ import com.javamentor.qa.platform.dao.impl.pagination.TagPageDtoDaoAllTagsByPopu
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.question.PopularTagDto;
 import com.javamentor.qa.platform.models.dto.question.TagDto;
+import com.javamentor.qa.platform.models.dto.question.TagViewDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.TagDtoService;
@@ -108,7 +109,7 @@ public class TagResourceController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещён")
     })
     @GetMapping("/name")
-    public ResponseEntity<PageDTO<TagDto>> getAllTagPaginationByName(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
+    public ResponseEntity<PageDTO<TagViewDto>> getAllTagPaginationByName(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
         PaginationData data = new PaginationData(page, items,
                 TagPageDtoDaoAllTagsByNameImpl.class.getSimpleName());
         return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);
@@ -128,7 +129,7 @@ public class TagResourceController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещён")
     })
     @GetMapping("/new")
-    public ResponseEntity<PageDTO<TagDto>> getAllTagPaginationByPersistDateTime(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
+    public ResponseEntity<PageDTO<TagViewDto>> getAllTagPaginationByPersistDateTime(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
         PaginationData data = new PaginationData(page, items,
                 TagPageDtoDaoAllTagsByPersistDateTimeImpl.class.getSimpleName());
         return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);
@@ -149,7 +150,7 @@ public class TagResourceController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещён")
     })
     @GetMapping("/popular")
-    public ResponseEntity<PageDTO<TagDto>> getAllTagPaginationByPopular(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
+    public ResponseEntity<PageDTO<TagViewDto>> getAllTagPaginationByPopular(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
         PaginationData data = new PaginationData(page, items,
                 TagPageDtoDaoAllTagsByPopularImpl.class.getSimpleName());
         return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);

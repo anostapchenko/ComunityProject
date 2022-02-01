@@ -25,7 +25,7 @@ public class TagDtoDaoImpl implements TagDtoDao {
 
         TypedQuery<TagDto> q = entityManager.createQuery(
                         "SELECT new com.javamentor.qa.platform.models.dto.question.TagDto(" +
-                                "t.id, t.name, t.description, t.persistDateTime)" +
+                                "t.id, t.name, t.persistDateTime)" +
                                 " FROM Question q JOIN q.tags t WHERE q.id =: id ", TagDto.class)
                 .setParameter("id", id);
         return q.getResultList();
