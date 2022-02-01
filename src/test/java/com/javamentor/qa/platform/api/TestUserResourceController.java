@@ -6,19 +6,14 @@ import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.javamentor.qa.platform.AbstractClassForDRRiderMockMVCTests;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-
-import java.util.ArrayList;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.hamcrest.core.Is.isA;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTests {
 
@@ -108,7 +103,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                 .andExpect(jsonPath("$.items[2].fullName").value("test 103"))
                 .andExpect(jsonPath("$.items[2].imageLink").value("photo"))
                 .andExpect(jsonPath("$.items[2].city").value("Moscow"))
-                .andExpect(jsonPath("$.items[2].reputation").value("80"))
+                .andExpect(jsonPath("$.items[2].reputation").value("800"))
                 .andExpect(jsonPath("$.itemsOnPage").value("3"))
         ;
 
@@ -187,7 +182,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                 .andExpect(jsonPath("$.items[1].fullName").value("test 103"))
                 .andExpect(jsonPath("$.items[1].imageLink").value("photo"))
                 .andExpect(jsonPath("$.items[1].city").value("Moscow"))
-                .andExpect(jsonPath("$.items[1].reputation").value("80"))
+                .andExpect(jsonPath("$.items[1].reputation").value("800"))
                 .andExpect(jsonPath("$.itemsOnPage").value("2"));
     }
 
@@ -387,7 +382,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
     }
 
     @Test
-//  Получаем всеx User из БД отсортированных по репутации
+//  Получаем всеx User из БД отсортированных по репутации c аттрибутом isDeleted=true
     @DataSet(cleanBefore = true,
             value = {
                     "dataset/userresourcecontroller/roles.yml",
@@ -396,11 +391,21 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                     "dataset/userresourcecontroller/reputations.yml"
             },
             strategy = SeedStrategy.REFRESH)
-    public void shouldReturnAllUsersSortByRep() throws Exception {
+    public void shouldReturnAllUsersSortByRepDelTrue() throws Exception {
         // указаны параметры page и items
+
+        String MyToken = mockMvc.perform(MockMvcRequestBuilders
+                .post("/api/auth/token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\" : \"test15@mail.ru\"," +
+                        " \"password\" : \"test15\"}")
+        ).andReturn().getResponse().getContentAsString();
+
+        MyToken = MyToken.substring(MyToken.indexOf(":") + 2, MyToken.length() - 2);
+
         this.mockMvc.perform(get("/api/user/reputation?page=1&items=3")
                 .contentType("application/json")
-                .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                .header("Authorization", "Bearer " + MyToken))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -416,26 +421,36 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
 
         // нет обязательного параметра - page
         mockMvc.perform(get("/api/user/reputation?items=3")
-                .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                .header("Authorization", "Bearer " + MyToken))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$").doesNotExist());
     }
 
     @Test
-//  Получаем всеx User из БД отсортированных по репутации c rep=null
+//  Получаем всеx User из БД отсортированных по репутации.
     @DataSet(cleanBefore = true,
             value = {
                     "dataset/userresourcecontroller/roles.yml",
-                    "dataset/userresourcecontroller/users.yml",
+                    "dataset/userresourcecontroller/users10.yml",
                     "dataset/userresourcecontroller/questions.yml",
-                    "dataset/userresourcecontroller/reputationsNull.yml"
+                    "dataset/userresourcecontroller/reputations10.yml"
             },
             strategy = SeedStrategy.REFRESH)
-    public void shouldReturnAllUsersSortByRepNull() throws Exception {
-        this.mockMvc.perform(get("/api/user/reputation?page=1&items=3")
+    public void shouldReturnAllUsersSortByRep() throws Exception {
+
+        String MyToken = mockMvc.perform(MockMvcRequestBuilders
+                .post("/api/auth/token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\" : \"test15@mail.ru\"," +
+                        " \"password\" : \"test15\"}")
+        ).andReturn().getResponse().getContentAsString();
+
+        MyToken = MyToken.substring(MyToken.indexOf(":") + 2, MyToken.length() - 2);
+
+        this.mockMvc.perform(get("/api/user/reputation?page=1&items=10")
                 .contentType("application/json")
-                .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                .header("Authorization", "Bearer " + MyToken))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -443,9 +458,46 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                 .andExpect(jsonPath("$").hasJsonPath())
                 .andExpect(jsonPath("$.currentPageNumber").value("1"))
                 .andExpect(jsonPath("$.totalPageCount").value("1"))
-                .andExpect(jsonPath("$.itemsOnPage").value("3"))
-                .andExpect(jsonPath("$.totalResultCount").value("3"))
+                .andExpect(jsonPath("$.itemsOnPage").value("10"))
+                .andExpect(jsonPath("$.totalResultCount").value("10"))
                 .andExpect(jsonPath("$.items").isNotEmpty())
-                .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(102, 101, 103)));
+                .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(110, 107, 104, 106, 103, 109, 108, 102, 101, 105)));
+    }
+
+    @Test
+//  Получаем всеx User из БД отсортированных по репутации, допуская что 2 rep может быть у одного юзера .
+    @DataSet(cleanBefore = true,
+            value = {
+                    "dataset/userresourcecontroller/roles.yml",
+                    "dataset/userresourcecontroller/users10.yml",
+                    "dataset/userresourcecontroller/questions.yml",
+                    "dataset/userresourcecontroller/reputations101.yml"
+            },
+            strategy = SeedStrategy.REFRESH)
+    public void shouldReturnAllUsersSortByRepNull() throws Exception {
+
+        String MyToken = mockMvc.perform(MockMvcRequestBuilders
+                .post("/api/auth/token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\" : \"test15@mail.ru\"," +
+                        " \"password\" : \"test15\"}")
+        ).andReturn().getResponse().getContentAsString();
+
+        MyToken = MyToken.substring(MyToken.indexOf(":") + 2, MyToken.length() - 2);
+
+        this.mockMvc.perform(get("/api/user/reputation?page=1&items=10")
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + MyToken))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$").hasJsonPath())
+                .andExpect(jsonPath("$.currentPageNumber").value("1"))
+                .andExpect(jsonPath("$.totalPageCount").value("1"))
+                .andExpect(jsonPath("$.itemsOnPage").value("10"))
+                .andExpect(jsonPath("$.totalResultCount").value("10"))
+                .andExpect(jsonPath("$.items").isNotEmpty())
+                .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(110, 107, 104, 106, 103, 109, 101, 108, 105)));
     }
 }
