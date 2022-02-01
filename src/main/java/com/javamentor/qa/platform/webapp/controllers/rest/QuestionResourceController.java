@@ -6,7 +6,6 @@ import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
-import com.javamentor.qa.platform.models.dto.question.TagDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import com.javamentor.qa.platform.models.dto.question.QuestionCommentDto;
 import com.javamentor.qa.platform.models.entity.question.CommentQuestion;
@@ -38,10 +37,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
-import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @Tag(name = "Question Resource Controller", description = "Управление сущностями, которые связаны с вопросами")
@@ -195,18 +194,13 @@ public class QuestionResourceController {
                                                                          @RequestParam(required = false) List<Long> ignoredTag) {
 
         PaginationData data = new PaginationData(page, items, QuestionPageDtoDaoByNoAnswersImpl.class.getSimpleName());
+        Map<String, Object> tagMap = new HashMap<>();
+        tagMap.put("trackedTags", trackedTag);
+        tagMap.put("ignoredTags", ignoredTag);
+        data.setProps(tagMap);
 
         PageDTO<QuestionDto> pageDTO = questionDtoService.getPageDto(data);
-        List<QuestionDto> questionDtoList = pageDTO.getItems();
 
-        boolean trackedTagsIsPresent = trackedTag != null;
-        boolean ignoredTagsIsPresent = ignoredTag != null;
-
-        questionDtoList.removeIf(questionDto -> {
-           List<Long> idList = questionDto.getListTagDto().stream().map(TagDto::getId).collect(Collectors.toList());
-           return trackedTagsIsPresent && Collections.disjoint(idList, trackedTag) ||
-                   ignoredTagsIsPresent && !Collections.disjoint(idList, ignoredTag);
-        });
 
         return new ResponseEntity<>(pageDTO, HttpStatus.OK);
     }

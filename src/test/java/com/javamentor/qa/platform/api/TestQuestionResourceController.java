@@ -722,28 +722,59 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     public void getCorrectListOfQuestionsWithoutAnswers() throws Exception {
         // Проверяет, пришли ли только вопросы без ответов: приходят вопросы 2 и 3, так как на первый вопрос есть ответ,
         // а параметр itemsOnPage = 2
-        String USER_TOKEN = getToken("test15@mail.ru","test15");
+        String userToken = getToken("test15@mail.ru","test15");
         mockMvc.perform(get("/api/user/question/noAnswer?page=1&items=2")
-                        .header("Authorization", "Bearer " + USER_TOKEN))
+                        .header("Authorization", "Bearer " + userToken))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andDo(print())
                 .andExpect(jsonPath("$.items.[0].id").value(2))
                 .andExpect(jsonPath("$.items.[1].id").value(3))
-                .andExpect(jsonPath("$.totalResultCount").value(3));
+                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.items.size()").value(2))
+                .andExpect(jsonPath("$.totalPageCount").value(2));
 
         // Проверяет работоспособность тегов: вопрос 2 приходит, потому что содержит trackedTag, вопрос 3 отсекается,
         // так как содержит tracked и ignored тэги, вопрос 4 отсекается, так как содержит ignoredTag, вопрос 1
         // отсекается, так как на него дан ответ
         mockMvc.perform(get("/api/user/question/noAnswer?page=1&items=2&trackedTag=101&trackedTag=102&trackedTag=103&ignoredTag=103&ignoredTag=104")
-                        .header("Authorization", "Bearer " + USER_TOKEN))
+                        .header("Authorization", "Bearer " + userToken))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andDo(print())
                 .andExpect(jsonPath("$.items.[0].id").value(2))
                 .andExpect(jsonPath("$.items.[0].listTagDto.[0].id").value(102))
                 .andExpect(jsonPath("$.items.[0].listTagDto.[1].id").value(105))
-                .andExpect(jsonPath("$.totalResultCount").value(3));
+                .andExpect(jsonPath("$.totalResultCount").value(1))
+                .andExpect(jsonPath("$.items.size()").value(1))
+                .andExpect(jsonPath("$.itemsOnPage").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(1));
+
+
+        // Проверяет запрос без необязательного параметра itemsOnPage
+        mockMvc.perform(get("/api/user/question/noAnswer?page=1")
+                        .header("Authorization", "Bearer " + userToken))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andDo(print())
+                .andExpect(jsonPath("$.items.[0].id").value(2))
+                .andExpect(jsonPath("$.items.[1].id").value(3))
+                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.items.size()").value(3))
+                .andExpect(jsonPath("$.itemsOnPage").value(3))
+                .andExpect(jsonPath("$.totalPageCount").value(1));
+
+        // Проверяет разделение на страницы
+        mockMvc.perform(get("/api/user/question/noAnswer?page=2&items=2")
+                        .header("Authorization", "Bearer " + userToken))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andDo(print())
+                .andExpect(jsonPath("$.items.[0].id").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.items.size()").value(1))
+                .andExpect(jsonPath("$.itemsOnPage").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(2));
 
 
 
@@ -763,9 +794,9 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     // Получение json по вопросам без ответов, когда нет таких ответов
     public void getQuestionsWithoutAnswersWhenThereIsNoSuchQuestions() throws Exception {
 
-        String USER_TOKEN = getToken("test15@mail.ru","test15");
+        String userToken = getToken("test15@mail.ru","test15");
         mockMvc.perform(get("/api/user/question/noAnswer?page=1&items=2")
-                        .header("Authorization", "Bearer " + USER_TOKEN))
+                        .header("Authorization", "Bearer " + userToken))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andDo(print())
