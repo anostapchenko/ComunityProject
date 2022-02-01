@@ -15,4 +15,50 @@ votes_on_questions:
     user_id : 102
     vote : "DOWN_VOTE"
 
+  - id : 103
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 103
+    user_id : 102
+    vote : "DOWN_VOTE"
 
+  - id : 104
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 104
+    user_id : 102
+    vote : "DOWN_VOTE"
+
+  - id : 105
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 105
+    user_id : 102
+    vote : "DOWN_VOTE"
+
+  - id : 106
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 106
+    user_id : 102
+    vote : "DOWN_VOTE"
+
+  - id : 107
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 107
+    user_id : 102
+    vote : "DOWN_VOTE"
+
+  - id : 108
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 108
+    user_id : 102
+    vote : "DOWN_VOTE"
+
+  - id : 109
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 109
+    user_id : 102
+    vote : "DOWN_VOTE"
+
+  - id : 110
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 110
+    user_id : 102
+    vote : "DOWN_VOTE"

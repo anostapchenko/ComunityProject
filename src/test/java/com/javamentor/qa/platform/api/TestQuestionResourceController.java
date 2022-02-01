@@ -726,7 +726,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     }
 
     @Test
-//  Получаем все вопросы по id тега
+//  Получаем все вопросы по id тега, с items и без
     @DataSet(cleanBefore = true,
             value = {
                     "dataset/testQuestionTagIdResource/questions.yml",
@@ -740,15 +740,31 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             },
             strategy = SeedStrategy.CLEAN_INSERT)
     public void shouldReturnAllQuestionsByTagId() throws Exception {
-        mockMvc.perform(get("/api/user/question/tag/100?page=1&items=5")
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("test15");
+        authenticationRequest.setUsername("test15@mail.ru");
+
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(get("/api/user/question/tag/100?page=1&items=2")
                         .contentType("application/json")
-                        .header("Authorization", "Bearer " + getToken("test15@mail.ru","test15")))
+                .header(AUTHORIZATION, USER_TOKEN))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.currentPageNumber").value("1"))
-                .andExpect(jsonPath("$.totalPageCount").value("1"))
+                .andExpect(jsonPath("$.totalPageCount").value("2"))
                 .andExpect(jsonPath("$.totalResultCount").value("3"))
+                .andExpect(jsonPath("$.items.length()").value("2"))
 
                 .andExpect(jsonPath("$.items[0].id").value("100"))
                 .andExpect(jsonPath("$.items[0].title").value("test1"))
@@ -782,25 +798,17 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                         value("2021-12-13T18:09:52"))
                 .andExpect(jsonPath("$.items[1].listTagDto[0].description").value("Some text here"))
                 .andExpect(jsonPath("$.items[1].listTagDto[0].name").value("TAG100"))
-                .andExpect(jsonPath("$.items[1].listTagDto[0].id").value("100"))
+                .andExpect(jsonPath("$.items[1].listTagDto[0].id").value("100"));
 
-                .andExpect(jsonPath("$.items[2].id").value("102"))
-                .andExpect(jsonPath("$.items[2].title").value("test3"))
-                .andExpect(jsonPath("$.items[2].authorId").value("100"))
-                .andExpect(jsonPath("$.items[2].authorReputation").value("100"))
-                .andExpect(jsonPath("$.items[2].authorName").value("USER"))
-                .andExpect(jsonPath("$.items[2].authorImage").value("image"))
-                .andExpect(jsonPath("$.items[2].description").value("test3"))
-                .andExpect(jsonPath("$.items[2].viewCount").value("0"))
-                .andExpect(jsonPath("$.items[2].countAnswer").value("1"))
-                .andExpect(jsonPath("$.items[2].countValuable").value("-1"))
-                .andExpect(jsonPath("$.items[2].persistDateTime").value("2021-12-13T18:09:53"))
-                .andExpect(jsonPath("$.items[2].lastUpdateDateTime").
-                        value("2021-12-13T18:09:52"))
-                .andExpect(jsonPath("$.items[2].listTagDto[0].description").value("Some text here"))
-                .andExpect(jsonPath("$.items[2].listTagDto[0].name").value("TAG100"))
-                .andExpect(jsonPath("$.items[2].listTagDto[0].id").value("100"))
-        ;
-
+        mockMvc.perform(get("/api/user/question/tag/101?page=1")
+                        .contentType("application/json")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.currentPageNumber").value("1"))
+                .andExpect(jsonPath("$.totalPageCount").value("1"))
+                .andExpect(jsonPath("$.totalResultCount").value("10"))
+                .andExpect(jsonPath("$.items.length()").value("10"));
     }
 }
