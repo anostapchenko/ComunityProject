@@ -2,12 +2,14 @@ package com.javamentor.qa.platform.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.javamentor.qa.platform.AbstractClassForDRRiderMockMVCTests;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
+import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
@@ -18,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -723,5 +726,50 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         Assertions.assertEquals(0, (int) JsonPath.read(questionDtoJsonString, "$.viewCount"));
         Assertions.assertEquals(0, (int) JsonPath.read(questionDtoJsonString, "$.countAnswer"));
         Assertions.assertEquals(0, (int) JsonPath.read(questionDtoJsonString, "$.countValuable"));
+    }
+
+    @Test
+    @DataSet(
+            value = {
+                    "dataset/QuestionResourceController/question_viewed/question_viewed.yml"
+                    },
+            cleanBefore = true, cleanAfter = true,
+            strategy = SeedStrategy.CLEAN_INSERT)
+    @ExpectedDataSet(value = {
+            "dataset/QuestionResourceController/expected/question_viewed.yml"
+            },
+            ignoreCols = {"persist_date"})
+    public void shouldMarkQuestionLikeViewed() throws Exception {
+
+        String token100 = "Bearer " + getToken("user100@mail.ru", "password");
+        String token101 = "Bearer " + getToken("user101@mail.ru", "user101");
+
+        //добавляю новый вопрос
+        mockMvc.perform(get("/api/user/question/101/view")
+                        .contentType("application/json")
+                        .header("Authorization", token100))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        //добавляю уже существующий вопрос для user100
+        mockMvc.perform(get("/api/user/question/102/view")
+                        .contentType("application/json")
+                        .header("Authorization", token100))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        //добавляю несуществующий вопрос
+        mockMvc.perform(get("/api/user/question/999/view")
+                        .contentType("application/json")
+                        .header("Authorization", token100))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        //добавляю уже существующий вопрос для user101
+        mockMvc.perform(get("/api/user/question/102/view")
+                        .contentType("application/json")
+                        .header("Authorization", token101))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

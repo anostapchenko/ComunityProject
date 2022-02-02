@@ -6,11 +6,13 @@ import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.question.QuestionCommentDto;
 import com.javamentor.qa.platform.models.entity.question.CommentQuestion;
 import com.javamentor.qa.platform.models.entity.question.Question;
+import com.javamentor.qa.platform.models.entity.question.QuestionViewed;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
+import com.javamentor.qa.platform.service.abstracts.model.QuestionViewedService;
 import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
 import com.javamentor.qa.platform.service.abstracts.model.VoteQuestionService;
 import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
@@ -23,7 +25,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,13 +48,15 @@ public class QuestionResourceController {
     private final QuestionDtoService questionDtoService;
     private final QuestionConverter questionConverter;
     private final TagConverter tagConverter;
+    private final QuestionViewedService questionViewedService;
 
     public QuestionResourceController(QuestionService questionService,
                                       VoteQuestionService voteQuestionService,
                                       ReputationService reputationService,
                                       QuestionDtoService questionDtoService,
                                       QuestionConverter questionConverter,
-                                      TagConverter tagConverter
+                                      TagConverter tagConverter,
+                                      QuestionViewedService questionViewedService
                                       ) {
         this.questionService = questionService;
         this.voteQuestionService = voteQuestionService;
@@ -58,6 +64,7 @@ public class QuestionResourceController {
         this.questionDtoService = questionDtoService;
         this.questionConverter = questionConverter;
         this.tagConverter = tagConverter;
+        this.questionViewedService = questionViewedService;
     }
 
     @GetMapping("api/user/question/count")
@@ -162,7 +169,27 @@ public class QuestionResourceController {
         return new ResponseEntity<>(questionConverter.questionToQuestionDto(question), HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Помечает вопрос как прочитанный",
+            description = "Помечает вопрос как прочитанный"
+    )
+    @ApiResponse(responseCode = "200", description = "Метод выполнен без ошибок", content = {
+            @Content(mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "403", description = "Пользователь не аутентифицирован", content = {
+            @Content(mediaType = "application/json")
+    })
+    @GetMapping("api/user/question/{id}/view")
+    public ResponseEntity<String> markQuestionLikeViewed(@PathVariable Long id, Authentication auth) {
 
+        User user = (User) auth.getPrincipal();
 
+        if (user == null){
+            return new ResponseEntity<>("User is not authenticated", HttpStatus.FORBIDDEN);
+        }
+
+        questionViewedService.markQuestionLikeViewed(user, id);
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
 }
 

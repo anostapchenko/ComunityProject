@@ -1,0 +1,17 @@
+question_viewed:
+  - id : 1
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 101
+    user_id : 100
+  - id : 2
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 102
+    user_id : 100
+  - id : 3
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 102
+    user_id : 100
+  - id : 4
+    persist_date: 2021-12-13 15:09:52.715570
+    question_id: 102
+    user_id: 101
