@@ -793,9 +793,6 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(jsonPath("$.items.size()").value(1))
                 .andExpect(jsonPath("$.itemsOnPage").value(1))
                 .andExpect(jsonPath("$.totalPageCount").value(2));
-
-
-
     }
 
     @Test
