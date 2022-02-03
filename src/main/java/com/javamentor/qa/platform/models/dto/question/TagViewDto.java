@@ -27,6 +27,12 @@ public class TagViewDto {
     @Schema(description = "Количество вопросов по тегу")
     private Long countQuestion;
 
+    @Schema(description = "Количество вопросов по тегу за день")
+    private Long questionCountOneDay;
+
+    @Schema(description = "Количество вопросов по тегу за неделю")
+    private Long questionCountWeekDay;
+
     public TagViewDto(Long id, String name, LocalDateTime persistDateTime) {
         this.id = id;
         this.name = name;

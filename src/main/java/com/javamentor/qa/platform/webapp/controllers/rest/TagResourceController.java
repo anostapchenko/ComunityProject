@@ -1,8 +1,8 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.dao.impl.pagination.TagPageDtoDaoAllTagsByNameImpl;
-import com.javamentor.qa.platform.dao.impl.pagination.TagPageDtoDaoAllTagsByPersistDateTimeImpl;
-import com.javamentor.qa.platform.dao.impl.pagination.TagPageDtoDaoAllTagsByPopularImpl;
+import com.javamentor.qa.platform.dao.impl.pagination.tagdto.TagPageDtoDaoAllTagsByNameImpl;
+import com.javamentor.qa.platform.dao.impl.pagination.tagdto.TagPageDtoDaoAllTagsByPersistDateTimeImpl;
+import com.javamentor.qa.platform.dao.impl.pagination.tagdto.TagPageDtoDaoAllTagsByPopularImpl;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.question.PopularTagDto;
 import com.javamentor.qa.platform.models.dto.question.TagDto;

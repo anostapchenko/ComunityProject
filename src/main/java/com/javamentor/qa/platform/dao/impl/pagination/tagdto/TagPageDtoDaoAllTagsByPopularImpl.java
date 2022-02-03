@@ -1,4 +1,4 @@
-package com.javamentor.qa.platform.dao.impl.pagination;
+package com.javamentor.qa.platform.dao.impl.pagination.tagdto;
 
 import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.question.TagViewDto;
@@ -10,8 +10,8 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Map;
 
-@Repository("TagPageDtoDaoAllTagsByPersistDateTimeImpl")
-public class TagPageDtoDaoAllTagsByPersistDateTimeImpl implements PageDtoDao<TagViewDto> {
+@Repository("TagPageDtoDaoAllTagsByPopularImpl")
+public class TagPageDtoDaoAllTagsByPopularImpl implements PageDtoDao<TagViewDto> {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -21,8 +21,9 @@ public class TagPageDtoDaoAllTagsByPersistDateTimeImpl implements PageDtoDao<Tag
         int itemsOnPage = properties.getItemsOnPage();
         int offset = (properties.getCurrentPage() - 1) * itemsOnPage;
         return entityManager.createQuery("select new com.javamentor.qa.platform.models.dto.question.TagViewDto " +
-                                            "(t.id, t.name, t.persistDateTime) " +
-                                            "from Tag t order by t.persistDateTime", TagViewDto.class)
+                                            "(t.id, t.name, t.persistDateTime, " +
+                                            "(select count(q.id) from t.questions q) as countQuestion )" +
+                                            "from Tag t order by t.questions.size desc", TagViewDto.class)
                 .setFirstResult(offset)
                 .setMaxResults(itemsOnPage)
                 .getResultList();
