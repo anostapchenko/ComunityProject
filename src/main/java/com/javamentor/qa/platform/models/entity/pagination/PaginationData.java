@@ -22,5 +22,6 @@ public class PaginationData {
         this.currentPage = currentPage;
         this.itemsOnPage = itemsOnPage;
         this.daoName = daoName;
+        this.props = new HashMap<>();
     }
 }

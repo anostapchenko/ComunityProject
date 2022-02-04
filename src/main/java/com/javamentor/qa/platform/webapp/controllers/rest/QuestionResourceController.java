@@ -13,6 +13,7 @@ import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
+import com.javamentor.qa.platform.service.abstracts.dto.TagDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
 import com.javamentor.qa.platform.service.abstracts.model.VoteQuestionService;
@@ -27,12 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -48,13 +44,15 @@ public class QuestionResourceController {
     private final QuestionDtoService questionDtoService;
     private final QuestionConverter questionConverter;
     private final TagConverter tagConverter;
+    private final TagDtoService tagDtoService;
 
     public QuestionResourceController(QuestionService questionService,
                                       VoteQuestionService voteQuestionService,
                                       ReputationService reputationService,
                                       QuestionDtoService questionDtoService,
                                       QuestionConverter questionConverter,
-                                      TagConverter tagConverter
+                                      TagConverter tagConverter,
+                                      TagDtoService tagDtoService
                                       ) {
         this.questionService = questionService;
         this.voteQuestionService = voteQuestionService;
@@ -62,6 +60,7 @@ public class QuestionResourceController {
         this.questionDtoService = questionDtoService;
         this.questionConverter = questionConverter;
         this.tagConverter = tagConverter;
+        this.tagDtoService = tagDtoService;
     }
 
     @GetMapping("api/user/question/count")
@@ -73,8 +72,8 @@ public class QuestionResourceController {
             @Content(mediaType = "application/json")
     })
     public ResponseEntity<Optional<Long>> getCountQuestion() {
-        Optional<Long> countQusetion = questionService.getCountByQuestion();
-        return new ResponseEntity<>(countQusetion, HttpStatus.OK);
+        Optional<Long> countQuestion = questionService.getCountByQuestion();
+        return new ResponseEntity<>(countQuestion, HttpStatus.OK);
     }
 
     @GetMapping("api/user/question/{questionId}/comment")
@@ -86,8 +85,8 @@ public class QuestionResourceController {
             @Content(mediaType = "application/json")
     })
     public ResponseEntity<List<QuestionCommentDto>> getQuestionIdComment(@PathVariable("questionId") Long questionId) {
-        List<QuestionCommentDto> qustionIdComment = questionDtoService.getQuestionByIdComment(questionId);
-        return new ResponseEntity<>(qustionIdComment, HttpStatus.OK);
+        List<QuestionCommentDto> questionIdComment = questionDtoService.getQuestionByIdComment(questionId);
+        return new ResponseEntity<>(questionIdComment, HttpStatus.OK);
     }
 
     @PostMapping("api/user/question/{questionId}/upVote")
@@ -165,6 +164,33 @@ public class QuestionResourceController {
         questionService.persist(question);
         return new ResponseEntity<>(questionConverter.questionToQuestionDto(question), HttpStatus.OK);
     }
+    @GetMapping("api/user/question/tag/{id}")
+    @Operation(
+            summary = "Получение списка вопросов по tag id",
+            description = "Получение пагинированного списка dto вопросов по id тэга"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Возвращает пагинированный список QuestionDto " +
+                    "(id, title, authorId, authorReputation, authorName, authorImage, description, viewCount," +
+                    "countAnswer, countValuable, persistDateTime, lastUpdateDateTime, listTagDto)",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = QuestionDto.class)
+                    )
+            }
+    )
+    public ResponseEntity<PageDTO<QuestionDto>> getPageQuestionsByTagId(@PathVariable Long id,
+                                                                        @RequestParam int page,
+                                                                        @RequestParam(defaultValue = "10") int items) {
+        PaginationData data = new PaginationData(
+                page, items, QuestionPageDtoDaoByTagId.class.getSimpleName()
+        );
+        data.getProps().put("id", id);
+        return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
+    }
+
     @GetMapping("api/user/question/new")
     @Operation(
             summary = "Получение вопросов",
@@ -180,7 +206,6 @@ public class QuestionResourceController {
         data.getProps().put("ignoredTag", ignoredTag);
         return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
     }
-
 
 
 }
