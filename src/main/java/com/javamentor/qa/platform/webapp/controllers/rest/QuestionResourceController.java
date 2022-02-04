@@ -1,7 +1,7 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoByTagId;
-import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoSortedByDate;
+import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoSortedByDate;
 import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
@@ -199,10 +199,10 @@ public class QuestionResourceController {
     )
     public ResponseEntity<PageDTO<QuestionDto>> getQuestionsSortedByDate(@RequestParam int page,
                                                                          @RequestParam(defaultValue = "10") int items,
-                                                                         @RequestParam(required = false) Long trackedTag,
-                                                                         @RequestParam(required = false) Long ignoredTag) {
+                                                                         @RequestParam(required = false) List<Long> trackedTag,
+                                                                         @RequestParam(required = false) List<Long> ignoredTag) {
         PaginationData data = new PaginationData(page, items,
-                QuestionPageDtoSortedByDate.class.getSimpleName());
+                QuestionPageDtoDaoSortedByDate.class.getSimpleName());
         data.getProps().put("trackedTag", trackedTag);
         data.getProps().put("ignoredTag", ignoredTag);
         return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);

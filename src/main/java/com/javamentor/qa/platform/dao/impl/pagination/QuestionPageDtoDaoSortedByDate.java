@@ -11,8 +11,8 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Map;
 
-@Repository("QuestionPageDtoSortedByDate")
-public class QuestionPageDtoSortedByDate implements PageDtoDao<QuestionDto> {
+@Repository("QuestionPageDtoDaoSortedByDate")
+public class QuestionPageDtoDaoSortedByDate implements PageDtoDao<QuestionDto> {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -28,9 +28,9 @@ public class QuestionPageDtoSortedByDate implements PageDtoDao<QuestionDto> {
                         "(select sum(case when v.vote = 'UP_VOTE' then 1 else -1 end) from VoteQuestion v JOIN Question " +
                         " q ON v.question.id = q.id) from Question q JOIN q.user u" +
                         " where exists (select q.id from Question q1 JOIN q1.tags t " +
-                        " where q.id = q1.id and (:trackedTag is NULL or :trackedTag = t.id))" +
+                        " where q.id = q1.id and (t.id in :trackedTag))" +
                         " and not exists (select q.id from Question q1 JOIN q1.tags t " +
-                        " where q.id = q1.id and :ignoredTag = t.id)" +
+                        " where q.id = q1.id and t.id in :ignoredTag )" +
                         " ORDER BY q.persistDateTime desc")
                 .setParameter("trackedTag", properties.getProps().get("trackedTag"))
                 .setParameter("ignoredTag", properties.getProps().get("ignoredTag"))
@@ -45,9 +45,9 @@ public class QuestionPageDtoSortedByDate implements PageDtoDao<QuestionDto> {
     public Long getTotalResultCount(Map<String, Object> properties) {
         return (Long) entityManager.createQuery("select count(q.id) from Question q" +
                         " where exists (select q.id from Question q1 JOIN q1.tags t " +
-                        " where q.id = q1.id and (:trackedTag is NULL or :trackedTag = t.id))" +
+                        " where q.id = q1.id and (t.id in :trackedTag))" +
                         " and not exists (select q.id from Question q1 JOIN q1.tags t " +
-                        " where q.id = q1.id and :ignoredTag = t.id)")
+                        " where q.id = q1.id and t.id in :ignoredTag)")
                 .setParameter("trackedTag", properties.get("trackedTag"))
                 .setParameter("ignoredTag", properties.get("ignoredTag"))
                 .getSingleResult();

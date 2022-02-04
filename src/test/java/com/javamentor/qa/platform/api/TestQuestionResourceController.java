@@ -214,7 +214,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     @DataSet(cleanBefore = true,
             value = {
-                    "dataset/testQuestionResourceController/questions.yml",
+                    "dataset/testQuestionResourceController/question.yml",
                     "dataset/testQuestionResourceController/tag.yml",
                     "dataset/testQuestionResourceController/questions_has_tag.yml",
                     "dataset/QuestionResourceController/users.yml",
@@ -248,15 +248,31 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isBadRequest());
 
-        //Проверка корректности возвращаемых json
-        mockMvc.perform(get("/api/user/question/new?page=1&trackedTag=1&ignoredTag=2")
+        //Проверка корректности возвращаемых json, количества items, тегов
+        mockMvc.perform(get("/api/user/question/new?page=1&trackedTag=1&ignoredTag=2&items=2")
                         .header(AUTHORIZATION, USER_TOKEN)
                         .content(new ObjectMapper().writeValueAsString(questionCreateDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items[0].id").value(1))
-                .andExpect(jsonPath("$.items[1].id").value(3));
+                .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(1))
+                .andExpect(jsonPath("$.items[1].id").value(3))
+                .andExpect(jsonPath("$.items[1].listTagDto[0].id").value(1))
+                .andExpect(jsonPath("$.items.length()").value(2));
+
+        //Передаем 2 tracked тега и 2 ignored тега, 1 tracked tag и 1 ignored тег совпадают и не должны выводиться
+        mockMvc.perform(get("/api/user/question/new?page=1&trackedTag=1&trackedTag=2&ignoredTag=2&ignoredTag=3")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .content(new ObjectMapper().writeValueAsString(questionCreateDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items[0].id").value(1))
+                .andExpect(jsonPath("$.items[1].id").value(3))
+                .andExpect(jsonPath("$.items[2].id").value(5))
+                .andExpect(jsonPath("$.items.length()").value(3));
+
     }
 
     @Test
