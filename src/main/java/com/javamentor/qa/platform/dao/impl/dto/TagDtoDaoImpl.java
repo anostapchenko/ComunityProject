@@ -34,37 +34,6 @@ public class TagDtoDaoImpl implements TagDtoDao {
                 .setParameter("id", id);
         return q.getResultList();
     }
-
-    @Override
-    public Map<Long, List<TagDto>> getTagDtoByQuestionsId(List<Long> questionsId) {
-
-        Map<Long, List<TagDto>> tagDtoMap = new HashMap<>();
-
-        entityManager.createQuery("SELECT t.id, t.name, t.description, t.persistDateTime, q.id" +
-                " FROM Tag t JOIN t.questions q WHERE q.id IN (:questionsId)")
-                .setParameter("questionsId", questionsId)
-                .unwrap(org.hibernate.query.Query.class)
-                .setResultTransformer(new ResultTransformer() {
-                    @Override
-                    public Object transformTuple(Object[] tuple, String[] strings) {
-                        TagDto tagDto = new TagDto();
-                        tagDto.setId((Long) tuple[0]);
-                        tagDto.setName((String) tuple[1]);
-                        tagDto.setDescription((String) tuple[2]);
-                        tagDto.setPersistDateTime((LocalDateTime) tuple[3]);
-                        tagDtoMap.computeIfAbsent((Long) tuple[4], id -> new ArrayList<>()).add(tagDto);
-                        return null;
-                    }
-
-                    @Override
-                    public List transformList(List list) {
-                        return list;
-                    }
-                }).getResultList();
-
-        return tagDtoMap;
-    }
-
     @Override
     public List<TagDto> getIgnoredTagsByUserId(Long userId) {
         return entityManager.createQuery(
@@ -111,7 +80,7 @@ public class TagDtoDaoImpl implements TagDtoDao {
     }
 
     @Override
-    public List<TagDto> getTagsLike(String value){
+    public List<TagDto> getTagsLike(String value) {
 
         return entityManager.createQuery("SELECT " +
                         "t.id as id, " +
@@ -121,10 +90,42 @@ public class TagDtoDaoImpl implements TagDtoDao {
                         "FROM Tag t " +
                         "WHERE lower(t.name) like :value " +
                         "ORDER BY t.questions.size desc, t.name")
-                .setParameter("value", "%"+value.toLowerCase(Locale.ROOT)+"%")
+                .setParameter("value", "%" + value.toLowerCase(Locale.ROOT) + "%")
                 .unwrap(org.hibernate.query.Query.class)
                 .setResultTransformer(Transformers.aliasToBean(TagDto.class))
                 .setMaxResults(10)
                 .getResultList();
+    }
+
+    @Override
+    public Map<Long, List<TagDto>> getTagDtoDaoByQuestionIds(List<Long> questionIds) {
+        Map<Long, List<TagDto>> resultMap = new HashMap<>();
+        entityManager.createQuery(
+                        "SELECT q.id, " +
+                                "t.id, t.name, t.description, t.persistDateTime" +
+                                " FROM Question q JOIN q.tags t WHERE q.id IN (:ids) "
+                )
+                .setParameter("ids", questionIds)
+                .unwrap(org.hibernate.query.Query.class)
+                .setResultTransformer(new ResultTransformer() {
+                    @Override
+                    public Object transformTuple(Object[] tuple, String[] aliases) {
+                        TagDto tagDto = new TagDto(
+                                (Long) tuple[1],
+                                (String) tuple[2],
+                                (String) tuple[3],
+                                (LocalDateTime) tuple[4]);
+                        Long id = (Long) tuple[0];
+                        resultMap.putIfAbsent(id, new ArrayList<>());
+                        resultMap.get(id).add(tagDto);
+                        return null;
+                    }
+
+                    @Override
+                    public List transformList(List collection) {
+                        return collection;
+                    }
+                }).getResultList();
+        return resultMap;
     }
 }

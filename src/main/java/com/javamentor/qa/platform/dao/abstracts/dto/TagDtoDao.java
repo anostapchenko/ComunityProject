@@ -13,5 +13,6 @@ public interface TagDtoDao {
     List<TagDto> getTagDtoDaoById(Long id);
     Map<Long, List<TagDto>> getTagDtoByQuestionsId(List<Long> questionsIds);
     List<TagDto> getTagsLike(String value);
+    Map<Long, List<TagDto>> getTagDtoDaoByQuestionIds(List<Long> questionIds);
 }
 
