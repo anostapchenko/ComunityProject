@@ -2,6 +2,7 @@ package com.javamentor.qa.platform.dao.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.QuestionDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
+import com.javamentor.qa.platform.dao.impl.pagination.transformer.QuestionDtoResultTransformer;
 import com.javamentor.qa.platform.dao.util.SingleResultUtil;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.question.QuestionCommentDto;
@@ -51,28 +52,7 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                         "q ON v.question.id = q.id where q.id =:id) from Question q JOIN q.user u WHERE q.id =:id")
                 .setParameter("id", id)
                 .unwrap(org.hibernate.query.Query.class)
-                .setResultTransformer(new ResultTransformer() {
-                    @Override
-                    public Object transformTuple(Object[] tuple, String[] strings) {
-                        QuestionDto questionDto = new QuestionDto();
-                        questionDto.setId((Long) tuple[0]);
-                        questionDto.setTitle((String) tuple[1]);
-                        questionDto.setAuthorId((Long) tuple[2]);
-                        questionDto.setAuthorName((String) tuple[3]);
-                        questionDto.setAuthorImage((String) tuple[4]);
-                        questionDto.setDescription((String) tuple[5]);
-                        questionDto.setPersistDateTime((LocalDateTime) tuple[6]);
-                        questionDto.setLastUpdateDateTime((LocalDateTime) tuple[7]);
-                        questionDto.setAuthorReputation((Long) tuple[8]);
-                        questionDto.setCountAnswer(((Number) tuple[9]).intValue());
-                        questionDto.setCountValuable(((Number) tuple[10]).intValue());
-                        return questionDto;
-                    }
-                    @Override
-                    public List transformList(List list) {
-                        return list;
-                    }
-                });
+                .setResultTransformer(new QuestionDtoResultTransformer());
         return SingleResultUtil.getSingleResultOrNull(dto);
     }
 }
