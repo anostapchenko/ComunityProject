@@ -1,0 +1,77 @@
+reputation:
+  - id : 100
+    author_id : 100
+    count : 100
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 100
+    type : 0
+
+  - id : 101
+    author_id : 101
+    count : 100
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 101
+    type : 0
+
+  - id : 102
+    author_id : 102
+    count : 100
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 102
+    type : 0
+
+  - id : 103
+    author_id : 102
+    count : 100
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 103
+    type : 0
+
+  - id : 104
+    author_id : 102
+    count : 100
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 104
+    type : 0
+
+  - id : 105
+    author_id : 102
+    count : 100
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 105
+    type : 0
+
+  - id : 106
+    author_id : 102
+    count : 100
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 106
+    type : 0
+
+  - id : 107
+    author_id : 102
+    count : 100
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 107
+    type : 0
+
+  - id : 108
+    author_id : 102
+    count : 100
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 108
+    type : 0
+
+  - id: 109
+    author_id: 102
+    count: 100
+    persist_date: 2021-12-13 15:09:52.715570
+    question_id: 109
+    type: 0
+
+  - id : 110
+    author_id : 102
+    count : 100
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 110
+    type : 0
