@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Getter
@@ -21,5 +22,6 @@ public class PaginationData {
         this.currentPage = currentPage;
         this.itemsOnPage = itemsOnPage;
         this.daoName = daoName;
+        this.props = new HashMap<>();
     }
 }

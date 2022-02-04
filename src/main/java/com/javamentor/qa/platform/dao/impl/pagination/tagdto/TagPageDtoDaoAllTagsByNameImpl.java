@@ -20,7 +20,8 @@ public class TagPageDtoDaoAllTagsByNameImpl implements PageDtoDao<TagViewDto> {
     public List<TagViewDto> getPaginationItems(PaginationData properties) {
         int itemsOnPage = properties.getItemsOnPage();
         int offset = (properties.getCurrentPage() - 1) * itemsOnPage;
-        return entityManager.createQuery("select new com.javamentor.qa.platform.models.dto.question.TagViewDto (t.id, t.name, t.persistDateTime) from Tag t order by t.name", TagViewDto.class)
+        return entityManager.createQuery("select new com.javamentor.qa.platform.models.dto.question.TagViewDto " +
+                        "(t.id, t.name, t.persistDateTime) from Tag t order by t.name", TagViewDto.class)
                 .setFirstResult(offset)
                 .setMaxResults(itemsOnPage)
                 .getResultList();
