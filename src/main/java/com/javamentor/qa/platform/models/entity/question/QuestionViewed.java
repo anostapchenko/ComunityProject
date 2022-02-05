@@ -1,9 +1,13 @@
 package com.javamentor.qa.platform.models.entity.question;
 
 import com.javamentor.qa.platform.models.entity.user.User;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Builder;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
