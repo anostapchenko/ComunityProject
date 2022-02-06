@@ -5,12 +5,15 @@ import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.javamentor.qa.platform.AbstractClassForDRRiderMockMVCTests;
+import com.javamentor.qa.platform.dao.abstracts.model.QuestionDao;
+import com.javamentor.qa.platform.dao.abstracts.model.QuestionViewedDao;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
+import com.javamentor.qa.platform.service.abstracts.model.QuestionViewedService;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
@@ -18,6 +21,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -35,6 +40,8 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -815,6 +822,13 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(jsonPath("$.items.length()").value("10"));
     }
 
+    @Autowired
+    CacheManager cacheManager;
+    @Autowired
+    QuestionViewedDao questionViewedDao;
+    @Autowired
+    QuestionViewedService QuestionViewedService;
+
     @Test
     @DataSet(
             value = {
@@ -838,6 +852,17 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andDo(print())
                 .andExpect(status().isOk());
 
+        assertNull(cacheManager.getCache("QuestionViewed").get("101user100@mail.ru"));
+
+        //добавляю его же повторно
+        mockMvc.perform(get("/api/user/question/101/view")
+                        .contentType("application/json")
+                        .header("Authorization", token100))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        assertNotNull(cacheManager.getCache("QuestionViewed").get("101user100@mail.ru"));
+
         //добавляю уже существующий вопрос для user100
         mockMvc.perform(get("/api/user/question/102/view")
                         .contentType("application/json")
@@ -845,12 +870,20 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andDo(print())
                 .andExpect(status().isOk());
 
+        assertNotNull(cacheManager.getCache("QuestionViewed").get("102user100@mail.ru"));
+
         //добавляю несуществующий вопрос
         mockMvc.perform(get("/api/user/question/999/view")
                         .contentType("application/json")
                         .header("Authorization", token100))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isBadRequest());
+
+        assertNull(cacheManager.getCache("QuestionViewed").get("999user100@mail.ru"));
+
+        questionViewedDao.getQuestionViewedByUserAndQuestion("user100@mail.ru", 999L);
+
+        assertNotNull(cacheManager.getCache("QuestionViewed").get("999user100@mail.ru"));
 
         //добавляю уже существующий вопрос для user101
         mockMvc.perform(get("/api/user/question/102/view")
@@ -858,5 +891,8 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                         .header("Authorization", token101))
                 .andDo(print())
                 .andExpect(status().isOk());
+
+        assertNotNull(cacheManager.getCache("QuestionViewed").get("102user101@mail.ru"));
+
     }
 }

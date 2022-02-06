@@ -28,6 +28,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -209,6 +212,9 @@ public class QuestionResourceController {
         return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
     }
 
+    @Autowired
+    CacheManager cacheManager;
+
     @Operation(
             summary = "Помечает вопрос как прочитанный",
             description = "Помечает вопрос как прочитанный"
@@ -228,10 +234,18 @@ public class QuestionResourceController {
             return new ResponseEntity<>("User is not authenticated", HttpStatus.FORBIDDEN);
         }
 
-        questionViewedService.markQuestionLikeViewed(user, id);
+        Optional<Question> question = questionService.getById(id);
+
+        if (question.isPresent()) {
+
+            Cache cache = cacheManager.getCache("QuestionViewed");
+
+            questionViewedService.markQuestionLikeViewed(user, question.get());
+        }else{
+            return new ResponseEntity<>("There is no question "+id.toString(), HttpStatus.BAD_REQUEST);
+        }
+
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
-
-
 }
 

@@ -2,7 +2,10 @@ package com.javamentor.qa.platform.dao.impl.model;
 
 import com.javamentor.qa.platform.dao.abstracts.model.QuestionViewedDao;
 import com.javamentor.qa.platform.dao.util.SingleResultUtil;
+import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.QuestionViewed;
+import com.javamentor.qa.platform.models.entity.user.User;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -16,10 +19,11 @@ public class QuestionViewedDaoImpl extends ReadWriteDaoImpl<QuestionViewed, Long
     private EntityManager entityManager;
 
     @Override
-    public List<QuestionViewed> getQuestionViewedByUserAndQuestion(Long userId, Long questionId) {
+    @Cacheable(value = "QuestionViewed", key = "#questionId+#email")
+    public List<QuestionViewed> getQuestionViewedByUserAndQuestion(String email, Long questionId) {
         return entityManager.createQuery(
-                        "select q from QuestionViewed q where q.user.id =:userId and q.question.id =:questionId", QuestionViewed.class)
-                .setParameter("userId", userId)
+                        "select q from QuestionViewed q where q.user.email =:email and q.question.id =:questionId", QuestionViewed.class)
+                .setParameter("email", email)
                 .setParameter("questionId", questionId)
                 .getResultList();
     }

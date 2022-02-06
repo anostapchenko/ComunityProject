@@ -4,6 +4,8 @@ import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.models.entity.user.UserFavoriteQuestion;
+import com.javamentor.qa.platform.service.impl.model.QuestionServiceImpl;
+import com.javamentor.qa.platform.service.impl.model.QuestionViewedServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +31,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "question")
+@EntityListeners(QuestionServiceImpl.class)
 public class Question implements Serializable {
 
     private static final long serialVersionUID = -4612026867697897418L;

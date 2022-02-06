@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface QuestionViewedDao extends ReadWriteDao<QuestionViewed, Long>{
 
-    List<QuestionViewed> getQuestionViewedByUserAndQuestion (Long userId, Long questionId);
+    List<QuestionViewed> getQuestionViewedByUserAndQuestion (String email, Long questionId);
 
 }
