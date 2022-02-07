@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTests {
 
     @Test
-    //У пользовател с id = 102 есть игнорируемые тэги
+    //У пользователя с id = 102 есть игнорируемые теги
     @DataSet(cleanBefore = true,
             value = {
             "dataset/testTagResourceController/roles.yml",

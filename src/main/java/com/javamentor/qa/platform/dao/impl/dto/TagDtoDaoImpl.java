@@ -1,6 +1,7 @@
 package com.javamentor.qa.platform.dao.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
+import com.javamentor.qa.platform.dao.impl.model.ReadWriteDaoImpl;
 import com.javamentor.qa.platform.models.dto.question.PopularTagDto;
 import com.javamentor.qa.platform.models.dto.question.TagDto;
 import org.hibernate.transform.ResultTransformer;
@@ -12,11 +13,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Locale;
+import java.util.Map;
+import java.util.ArrayList;
 
 @Repository
 public class TagDtoDaoImpl implements TagDtoDao {
@@ -34,6 +35,7 @@ public class TagDtoDaoImpl implements TagDtoDao {
                 .setParameter("id", id);
         return q.getResultList();
     }
+
     @Override
     public List<TagDto> getIgnoredTagsByUserId(Long userId) {
         return entityManager.createQuery(

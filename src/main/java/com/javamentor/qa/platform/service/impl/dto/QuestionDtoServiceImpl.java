@@ -5,11 +5,9 @@ package com.javamentor.qa.platform.service.impl.dto;
 import com.javamentor.qa.platform.dao.abstracts.dto.QuestionDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
-import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoByTagId;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.question.QuestionCommentDto;
-import com.javamentor.qa.platform.models.dto.question.TagDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import org.springframework.stereotype.Service;
@@ -24,12 +22,13 @@ public class QuestionDtoServiceImpl extends DtoServiceImpl<QuestionDto> implemen
     public final QuestionDtoDao questionDtoDao;
     public final TagDtoDao tagDtoDao;
 
-    public QuestionDtoServiceImpl(QuestionDtoDao questionDtoDao, TagDtoDao tagDtoDao, Map<String,
-            PageDtoDao<QuestionDto>> daoMap) {
+    public QuestionDtoServiceImpl(QuestionDtoDao questionDtoDao, TagDtoDao tagDtoDao,
+                                  Map<String, PageDtoDao<QuestionDto>> daoMap) {
         super(daoMap);
         this.questionDtoDao = questionDtoDao;
         this.tagDtoDao = tagDtoDao;
     }
+
 
     @Override
     public List<QuestionCommentDto> getQuestionByIdComment(Long id) {
@@ -55,5 +54,4 @@ public class QuestionDtoServiceImpl extends DtoServiceImpl<QuestionDto> implemen
         pageDto.getItems().forEach(q -> q.setListTagDto(map.get(q.getId())));
         return pageDto;
     }
-
 }

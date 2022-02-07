@@ -1,13 +1,12 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-
 import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoByNoAnswersImpl;
 import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoByTagId;
+import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoSortedByDate;
 import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
-import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.dto.question.QuestionCommentDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
@@ -43,8 +42,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -67,7 +66,7 @@ public class QuestionResourceController {
                                       QuestionConverter questionConverter,
                                       TagConverter tagConverter,
                                       TagDtoService tagDtoService
-                                        ) {
+    ) {
         this.questionService = questionService;
         this.voteQuestionService = voteQuestionService;
         this.reputationService = reputationService;
@@ -196,7 +195,7 @@ public class QuestionResourceController {
                             schema = @Schema(implementation = QuestionDto.class)
                     )
             }
-            )
+    )
     public ResponseEntity<PageDTO<QuestionDto>> getPageQuestionsByTagId(@PathVariable Long id,
                                                                         @RequestParam int page,
                                                                         @RequestParam(defaultValue = "10") int items) {
@@ -207,6 +206,21 @@ public class QuestionResourceController {
         return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
     }
 
+    @GetMapping("api/user/question/new")
+    @Operation(
+            summary = "Получение вопросов",
+            description = "Сортировка по дате добавления(сначала самые новые)"
+    )
+    public ResponseEntity<PageDTO<QuestionDto>> getQuestionsSortedByDate(@RequestParam int page,
+                                                                         @RequestParam(defaultValue = "10") int items,
+                                                                         @RequestParam(required = false) List<Long> trackedTag,
+                                                                         @RequestParam(required = false) List<Long> ignoredTag) {
+        PaginationData data = new PaginationData(page, items,
+                QuestionPageDtoDaoSortedByDate.class.getSimpleName());
+        data.getProps().put("trackedTag", trackedTag);
+        data.getProps().put("ignoredTag", ignoredTag);
+        return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
+    }
 
     @GetMapping("api/user/question/noAnswer")
     @Operation(summary = "Получение пагинированного списка всех вопросов, на которые еще не дан ответ. " +
