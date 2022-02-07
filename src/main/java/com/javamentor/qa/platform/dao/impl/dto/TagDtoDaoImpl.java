@@ -100,7 +100,7 @@ public class TagDtoDaoImpl implements TagDtoDao {
     }
 
     @Override
-    public Map<Long, List<TagDto>> getTagDtoDaoByQuestionIds(List<Long> questionIds) {
+    public Map<Long, List<TagDto>> getTagDtoByQuestionIds(List<Long> questionIds) {
         Map<Long, List<TagDto>> resultMap = new HashMap<>();
         entityManager.createQuery(
                         "SELECT q.id, " +

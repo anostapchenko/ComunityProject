@@ -1,6 +1,8 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoByNoAnswersImpl;
 import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoByTagId;
+import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoSortedByDate;
 import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
@@ -46,7 +48,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -115,14 +119,14 @@ public class QuestionResourceController {
     )
     public ResponseEntity<?> upVote(@PathVariable("questionId") Long questionId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user =(User) auth.getPrincipal();
+        User user = (User) auth.getPrincipal();
         Long userId = user.getId();
         Question question = questionService
                 .getQuestionByIdWithAuthor(questionId)
                 .orElseThrow(() -> new ConstrainException("Can't find question with id:" + questionId));
         int countUpVote = 10;
         if (voteQuestionService.validateUserVoteByQuestionIdAndUserId(questionId, userId)) {
-            VoteQuestion voteQuestion = new VoteQuestion(user,question,VoteType.UP_VOTE,countUpVote);
+            VoteQuestion voteQuestion = new VoteQuestion(user, question, VoteType.UP_VOTE, countUpVote);
             voteQuestionService.persist(voteQuestion);
             return new ResponseEntity<>(voteQuestionService.getVoteByQuestionId(questionId), HttpStatus.OK);
         }
@@ -136,14 +140,14 @@ public class QuestionResourceController {
     )
     public ResponseEntity<?> downVote(@PathVariable("questionId") Long questionId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user =(User) auth.getPrincipal();
+        User user = (User) auth.getPrincipal();
         Long userId = user.getId();
         Question question = questionService
                 .getQuestionByIdWithAuthor(questionId)
                 .orElseThrow(() -> new ConstrainException("Can't find question with id:" + questionId));
         int countDownVote = -5;
         if (voteQuestionService.validateUserVoteByQuestionIdAndUserId(questionId, userId)) {
-            VoteQuestion voteQuestion = new VoteQuestion(user,question,VoteType.DOWN_VOTE,countDownVote);
+            VoteQuestion voteQuestion = new VoteQuestion(user, question, VoteType.DOWN_VOTE, countDownVote);
             voteQuestionService.persist(voteQuestion);
             return new ResponseEntity<>(voteQuestionService.getVoteByQuestionId(questionId), HttpStatus.OK);
         }
@@ -212,6 +216,53 @@ public class QuestionResourceController {
         return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
     }
 
+    @GetMapping("api/user/question/new")
+    @Operation(
+            summary = "Получение вопросов",
+            description = "Сортировка по дате добавления(сначала самые новые)"
+    )
+    public ResponseEntity<PageDTO<QuestionDto>> getQuestionsSortedByDate(@RequestParam int page,
+                                                                         @RequestParam(defaultValue = "10") int items,
+                                                                         @RequestParam(required = false) List<Long> trackedTag,
+                                                                         @RequestParam(required = false) List<Long> ignoredTag) {
+        PaginationData data = new PaginationData(page, items,
+                QuestionPageDtoDaoSortedByDate.class.getSimpleName());
+        data.getProps().put("trackedTag", trackedTag);
+        data.getProps().put("ignoredTag", ignoredTag);
+        return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
+    }
+
+    @GetMapping("api/user/question/noAnswer")
+    @Operation(summary = "Получение пагинированного списка всех вопросов, на которые еще не дан ответ. " +
+            "В запросе указываем page - номер страницы, items (по умолчанию 10) - количество результатов на странице",
+            description = "Получение пагинированного списка всех вопросов, на которые еще не дан ответ.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает пагинированный список PageDTO<QuestionDTO> (id, title, authorId" +
+                            "authorReputation, authorName, authorImage, description, viewCount, countAnswer" +
+                            "countValuable, LocalDateTime, LocalDateTime, listTagDto",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json")
+                    }),
+    })
+    public ResponseEntity<PageDTO<QuestionDto>> getQuestionsWithNoAnswer(@RequestParam int page,
+                                                                         @RequestParam(required = false, defaultValue = "10") int items,
+                                                                         @RequestParam(required = false) List<Long> trackedTag,
+                                                                         @RequestParam(required = false) List<Long> ignoredTag) {
+
+        PaginationData data = new PaginationData(page, items, QuestionPageDtoDaoByNoAnswersImpl.class.getSimpleName());
+        Map<String, Object> tagMap = new HashMap<>();
+        tagMap.put("trackedTags", trackedTag);
+        tagMap.put("ignoredTags", ignoredTag);
+        data.setProps(tagMap);
+
+        PageDTO<QuestionDto> pageDTO = questionDtoService.getPageDto(data);
+
+
+        return new ResponseEntity<>(pageDTO, HttpStatus.OK);
+    }
     @Autowired
     CacheManager cacheManager;
 

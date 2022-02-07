@@ -19,12 +19,6 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public final TagDtoDao tagDtoDao;
-
-    public QuestionDtoDaoImpl(TagDtoDao tagDtoDao) {
-        this.tagDtoDao = tagDtoDao;
-    }
-
     @Override
     public List<QuestionCommentDto> getQuestionIdComment(Long id) {
         return entityManager.createQuery(
