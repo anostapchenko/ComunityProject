@@ -49,7 +49,7 @@ public class QuestionDtoServiceImpl extends DtoServiceImpl<QuestionDto> implemen
     @Override
     public PageDTO<QuestionDto> getPageDto(PaginationData properties) {
         var pageDto = super.getPageDto(properties);
-        var map = tagDtoDao.getTagDtoDaoByQuestionIds(
+        var map = tagDtoDao.getTagDtoByQuestionIds(
                 pageDto.getItems().stream().map(QuestionDto::getId).collect(Collectors.toList())
         );
         pageDto.getItems().forEach(q -> q.setListTagDto(map.get(q.getId())));

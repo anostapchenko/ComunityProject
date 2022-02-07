@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 
 
-public interface QuestionDtoService extends PageDtoService<QuestionDto> {
+public interface QuestionDtoService extends PageDtoService<QuestionDto>  {
     Optional<QuestionDto> getQuestionDtoServiceById(Long id);
 
     List<QuestionCommentDto> getQuestionByIdComment(Long id);
