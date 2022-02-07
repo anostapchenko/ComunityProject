@@ -1,6 +1,7 @@
 package com.javamentor.qa.platform.dao.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
+import com.javamentor.qa.platform.dao.impl.model.ReadWriteDaoImpl;
 import com.javamentor.qa.platform.models.dto.question.PopularTagDto;
 import com.javamentor.qa.platform.models.dto.question.TagDto;
 import org.hibernate.transform.ResultTransformer;
@@ -12,7 +13,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ArrayList;
 
 @Repository
 public class TagDtoDaoImpl implements TagDtoDao {
@@ -30,6 +35,7 @@ public class TagDtoDaoImpl implements TagDtoDao {
                 .setParameter("id", id);
         return q.getResultList();
     }
+
     @Override
     public List<TagDto> getIgnoredTagsByUserId(Long userId) {
         return entityManager.createQuery(
@@ -76,7 +82,7 @@ public class TagDtoDaoImpl implements TagDtoDao {
     }
 
     @Override
-    public List<TagDto> getTagsLike(String value){
+    public List<TagDto> getTagsLike(String value) {
 
         return entityManager.createQuery("SELECT " +
                         "t.id as id, " +
@@ -86,7 +92,7 @@ public class TagDtoDaoImpl implements TagDtoDao {
                         "FROM Tag t " +
                         "WHERE lower(t.name) like :value " +
                         "ORDER BY t.questions.size desc, t.name")
-                .setParameter("value", "%"+value.toLowerCase(Locale.ROOT)+"%")
+                .setParameter("value", "%" + value.toLowerCase(Locale.ROOT) + "%")
                 .unwrap(org.hibernate.query.Query.class)
                 .setResultTransformer(Transformers.aliasToBean(TagDto.class))
                 .setMaxResults(10)
@@ -94,7 +100,7 @@ public class TagDtoDaoImpl implements TagDtoDao {
     }
 
     @Override
-    public Map<Long, List<TagDto>> getTagDtoByQuestionIds(List<Long> questionIds) {
+    public Map<Long, List<TagDto>> getTagDtoDaoByQuestionIds(List<Long> questionIds) {
         Map<Long, List<TagDto>> resultMap = new HashMap<>();
         entityManager.createQuery(
                         "SELECT q.id, " +
@@ -106,7 +112,8 @@ public class TagDtoDaoImpl implements TagDtoDao {
                 .setResultTransformer(new ResultTransformer() {
                     @Override
                     public Object transformTuple(Object[] tuple, String[] aliases) {
-                        TagDto tagDto = new TagDto((Long) tuple[1],
+                        TagDto tagDto = new TagDto(
+                                (Long) tuple[1],
                                 (String) tuple[2],
                                 (String) tuple[3],
                                 (LocalDateTime) tuple[4]);
