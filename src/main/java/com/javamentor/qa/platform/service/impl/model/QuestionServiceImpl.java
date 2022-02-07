@@ -8,6 +8,8 @@ import com.javamentor.qa.platform.models.entity.question.Tag;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import org.springframework.cache.CacheManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +70,12 @@ public class QuestionServiceImpl extends ReadWriteServiceImpl<Question, Long> im
 
     @PostPersist
     void cacheHandler(Question e) {
-        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        cacheManager.getCache("QuestionViewed").evictIfPresent(e.getId()+user.getEmail());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authentication != null){
+            User user = (User)authentication.getPrincipal();
+            cacheManager.getCache("QuestionViewed").evictIfPresent(e.getId()+user.getEmail());
+        }
     }
 }
