@@ -1,8 +1,6 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.dao.abstracts.dto.AnswerDtoDao;
 import com.javamentor.qa.platform.models.dto.AnswerDTO;
-import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
@@ -38,19 +36,16 @@ public class AnswerResourceController {
     private AnswerService answerService;
     private QuestionService questionService;
     private AnswerDtoService answerDtoService;
-    private AnswerDtoDao answerDtoDao;
 
     @Autowired
     public AnswerResourceController(VoteAnswerService voteAnswerService,
                                     AnswerService answerService,
                                     QuestionService questionService,
-                                    AnswerDtoService answerDtoService,
-                                    AnswerDtoDao answerDtoDao) {
+                                    AnswerDtoService answerDtoService) {
         this.voteAnswerService = voteAnswerService;
         this.answerService = answerService;
         this.questionService = questionService;
         this.answerDtoService = answerDtoService;
-        this.answerDtoDao = answerDtoDao;
     }
 
     @Operation(summary = "Голосовать \"за\" (Up Vote)", description =
@@ -148,7 +143,7 @@ public class AnswerResourceController {
         Answer answer = new Answer(question.get(), user, bodyAnswer);
         answerService.persist(answer);
 
-        return new ResponseEntity<>(answerDtoDao.getAnswerDtoById(answer.getId()), HttpStatus.OK);
+        return new ResponseEntity<>(answerDtoService.getAnswerDtoById(answer.getId()), HttpStatus.OK);
     }
 }
 
