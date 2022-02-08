@@ -970,4 +970,88 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(jsonPath("$.items").isEmpty())
                 .andExpect(jsonPath("$.totalResultCount").value(0));
     }
+    // Получение json по cписку вопросов
+    public void testAllQuestionsWithTrackedTagsAndIgnoredTags() throws Exception {
+
+        String USER_TOKEN = getToken("test15@mail.ru","test15");
+        mockMvc.perform(get("/api/user/question?page=1&items=2")
+                        .header("Authorization", "Bearer " + USER_TOKEN))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andDo(print())
+                .andExpect(jsonPath("$.items.[0].id").value(1))
+                .andExpect(jsonPath("$.items.[1].id").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(4));
+
+
+        mockMvc.perform(get("/api/user/question?page=1")
+                        .header("Authorization", "Bearer " + USER_TOKEN))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andDo(print())
+                .andExpect(jsonPath("$.items.[0].id").value(1))
+                .andExpect(jsonPath("$.items.[1].id").value(2))
+                .andExpect(jsonPath("$.items.[2].id").value(3))
+                .andExpect(jsonPath("$.items.[3].id").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(4));
+
+
+
+        mockMvc.perform(get("/api/user/question?page=1&items=4&trackedTag=101")
+                        .header("Authorization", "Bearer " + USER_TOKEN))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andDo(print())
+                .andExpect(jsonPath("$.items.[0].id").value(1))
+                .andExpect(jsonPath("$.items.[0].listTagDto.[0].id").value(101))
+                .andExpect(jsonPath("$.totalResultCount").value(1));
+
+        mockMvc.perform(get("/api/user/question?page=1&items=4&trackedTag=102")
+                        .header("Authorization", "Bearer " + USER_TOKEN))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andDo(print())
+                .andExpect(jsonPath("$.items.[0].id").value(2))
+                .andExpect(jsonPath("$.items.[0].listTagDto.[0].id").value(102))
+                .andExpect(jsonPath("$.items.[0].listTagDto.[1].id").value(105))
+                .andExpect(jsonPath("$.items.[1].id").value(3))
+                .andExpect(jsonPath("$.items.[1].listTagDto.[0].id").value(102))
+                .andExpect(jsonPath("$.items.[1].listTagDto.[1].id").value(103))
+                .andExpect(jsonPath("$.totalResultCount").value(2));
+
+        mockMvc.perform(get("/api/user/question?page=1&items=4&ignoredTag=101")
+                        .header("Authorization", "Bearer " + USER_TOKEN))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andDo(print())
+                .andExpect(jsonPath("$.items.[0].id").value(2))
+                .andExpect(jsonPath("$.items.[0].listTagDto.[0].id").value(102))
+                .andExpect(jsonPath("$.items.[0].listTagDto.[1].id").value(105))
+                .andExpect(jsonPath("$.items.[1].id").value(3))
+                .andExpect(jsonPath("$.items.[1].listTagDto.[0].id").value(102))
+                .andExpect(jsonPath("$.items.[1].listTagDto.[1].id").value(103))
+                .andExpect(jsonPath("$.items.[2].id").value(4))
+                .andExpect(jsonPath("$.items.[2].listTagDto.[0].id").value(104))
+                .andExpect(jsonPath("$.totalResultCount").value(3));
+
+        mockMvc.perform(get("/api/user/question?page=1&items=4&ignoredTag=102")
+                        .header("Authorization", "Bearer " + USER_TOKEN))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andDo(print())
+                .andExpect(jsonPath("$.items.[0].id").value(1))
+                .andExpect(jsonPath("$.items.[0].listTagDto.[0].id").value(101))
+                .andExpect(jsonPath("$.items.[1].id").value(4))
+                .andExpect(jsonPath("$.items.[1].listTagDto.[0].id").value(104))
+                .andExpect(jsonPath("$.totalResultCount").value(2));
+
+        mockMvc.perform(get("/api/user/question?page=1&items=4&trackedTag=101&ignoredTag=102")
+                        .header("Authorization", "Bearer " + USER_TOKEN))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andDo(print())
+                .andExpect(jsonPath("$.items.[0].id").value(1))
+                .andExpect(jsonPath("$.items.[0].listTagDto.[0].id").value(101))
+                .andExpect(jsonPath("$.totalResultCount").value(1));
+    }
 }

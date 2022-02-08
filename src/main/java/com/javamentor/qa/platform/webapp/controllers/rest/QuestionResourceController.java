@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoAllQuestionsImpl;
 import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoByNoAnswersImpl;
 import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoByTagId;
 import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoSortedByDate;
@@ -251,6 +252,27 @@ public class QuestionResourceController {
         PageDTO<QuestionDto> pageDTO = questionDtoService.getPageDto(data);
 
 
+        return new ResponseEntity<>(pageDTO, HttpStatus.OK);
+    }
+    @GetMapping("/api/user/question")
+    @Operation(summary = "Получение пагинированного списка вопросов с возможностью учета trackedTag и ignoredTag",
+            description = "Получение пагинированного списка вопросов пользователя, " +
+                    "в запросе указываем page - номер страницы, обязательный параметр, items (по умолчанию 10) - количество результатов на странице," +
+                    "не обязательный на фронте, trackedTag - не обязательный параметр, ignoredTag - не обязательный параметр")
+    @ApiResponse(responseCode = "200", description = "Возвращает пагинированный список PageDTO<QuestionDTO> (id, title, authorId," +
+            " authorReputation, authorName, authorImage, description, viewCount, countAnswer, countValuable," +
+            " LocalDateTime, LocalDateTime, listTagDto", content = {
+            @Content(mediaType = "application/json")
+    })
+    public ResponseEntity<PageDTO<QuestionDto>> allQuestionsWithTrackedTagsAndIgnoredTags(@RequestParam int page, @RequestParam(required = false, defaultValue = "10") int items,
+                                                                                          @RequestParam(required = false) List<Long> trackedTag,
+                                                                                          @RequestParam (required = false) List<Long> ignoredTag) {
+        PaginationData data = new PaginationData(page, items, QuestionPageDtoDaoAllQuestionsImpl.class.getSimpleName());
+        Map<String, Object> trackedIgnorMapa = new HashMap<>();
+        trackedIgnorMapa.put("trackedTags", trackedTag);
+        trackedIgnorMapa.put("ignoredTags", ignoredTag);
+        data.setProps(trackedIgnorMapa);
+        PageDTO<QuestionDto> pageDTO = questionDtoService.getPageDto(data);
         return new ResponseEntity<>(pageDTO, HttpStatus.OK);
     }
 }
