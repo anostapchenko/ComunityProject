@@ -300,7 +300,7 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
         String token100 = "Bearer " + getToken("user100@mail.ru", "password");
         String token101 = "Bearer " + getToken("user101@mail.ru", "user101");
 
-        //добавляю новый ответ
+        //добавляю новый ответ user 100 по вопросу 101
         mockMvc.perform(MockMvcRequestBuilders.post("/api/user/question/101/answer/add")
                         .contentType("application/json")
                         .content("answer # 1 about Question 1")
@@ -309,6 +309,7 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.htmlBody").value("answer # 1 about Question 1"));
 
+        //добавляю новый ответ user 101 по вопросу 101
         mockMvc.perform(MockMvcRequestBuilders.post("/api/user/question/101/answer/add")
                         .contentType("application/json")
                         .content("answer # 2 about Question 1")
@@ -317,6 +318,7 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.htmlBody").value("answer # 2 about Question 1"));
 
+        //добавляю новый ответ user 101 по несуществующему вопросу 999
         mockMvc.perform(MockMvcRequestBuilders.post("/api/user/question/999/answer/add")
                         .contentType("application/json")
                         .content("answer # 1 about Question 999")
