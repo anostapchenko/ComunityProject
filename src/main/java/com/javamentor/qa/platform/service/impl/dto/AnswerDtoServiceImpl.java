@@ -14,4 +14,6 @@ public class AnswerDtoServiceImpl extends DtoServiceImpl<AnswerDTO> implements A
     public AnswerDtoServiceImpl(Map<String, PageDtoDao<AnswerDTO>> daoMap) {
         super(daoMap);
     }
+
+
 }
