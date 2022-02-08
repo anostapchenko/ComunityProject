@@ -15,7 +15,7 @@ import java.util.Map;
 public class PaginationData {
     private int currentPage;
     private int itemsOnPage;
-    private Map<String, Object> props;
+    private Map<String, Object> props = new HashMap<>();
     private String daoName;
 
     public PaginationData(int currentPage, int itemsOnPage, String daoName) {

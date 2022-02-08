@@ -198,6 +198,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             "dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/questions.yml"
+
     },
             strategy = SeedStrategy.REFRESH,
             cleanAfter = true, cleanBefore = true
@@ -208,6 +209,70 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                         .header("Authorization", "Bearer " + getToken("test15@mail.ru","test15")))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DataSet(cleanBefore = true,
+            value = {
+                    "dataset/testQuestionResourceController/question.yml",
+                    "dataset/testQuestionResourceController/tag.yml",
+                    "dataset/testQuestionResourceController/questions_has_tag.yml",
+                    "dataset/QuestionResourceController/users.yml",
+                    "dataset/testQuestionResourceController/role.yml",
+                    "dataset/QuestionResourceController/votes_on_questions.yml"
+            },
+            strategy = SeedStrategy.CLEAN_INSERT
+    )
+    public void getQuestionSortedByDate() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("test15");
+        authenticationRequest.setUsername("test15@mail.ru");
+
+        QuestionCreateDto questionCreateDto = new QuestionCreateDto();
+        questionCreateDto.setTitle("Title");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        // Без обязательного параметра page
+        mockMvc.perform(get("/api/user/question/new")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .content(new ObjectMapper().writeValueAsString(questionCreateDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest());
+
+        //Проверка корректности возвращаемых json, количества items, тегов
+        mockMvc.perform(get("/api/user/question/new?page=1&trackedTag=1&ignoredTag=2&items=2")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .content(new ObjectMapper().writeValueAsString(questionCreateDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items[0].id").value(1))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(1))
+                .andExpect(jsonPath("$.items[1].id").value(3))
+                .andExpect(jsonPath("$.items[1].listTagDto[0].id").value(1))
+                .andExpect(jsonPath("$.items.length()").value(2));
+
+        //Передаем 2 tracked тега и 2 ignored тега, 1 tracked tag и 1 ignored тег совпадают и не должны выводиться
+        mockMvc.perform(get("/api/user/question/new?page=1&trackedTag=1&trackedTag=2&ignoredTag=2&ignoredTag=3")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .content(new ObjectMapper().writeValueAsString(questionCreateDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items[0].id").value(1))
+                .andExpect(jsonPath("$.items[1].id").value(3))
+                .andExpect(jsonPath("$.items[2].id").value(5))
+                .andExpect(jsonPath("$.items.length()").value(3));
+
     }
 
     @Test
@@ -810,5 +875,99 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(jsonPath("$.totalPageCount").value("1"))
                 .andExpect(jsonPath("$.totalResultCount").value("10"))
                 .andExpect(jsonPath("$.items.length()").value("10"));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/more_questions_has_tags.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml"
+    }
+    )
+    // Получение json по вопросам без ответов
+    public void getCorrectListOfQuestionsWithoutAnswers() throws Exception {
+        // Проверяет, пришли ли только вопросы без ответов: приходят вопросы 2 и 3, так как на первый вопрос есть ответ,
+        // а параметр itemsOnPage = 2
+        String userToken = getToken("test15@mail.ru","test15");
+        mockMvc.perform(get("/api/user/question/noAnswer?page=1&items=2")
+                        .header("Authorization", "Bearer " + userToken))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andDo(print())
+                .andExpect(jsonPath("$.items.[0].id").value(2))
+                .andExpect(jsonPath("$.items.[1].id").value(3))
+                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.items.size()").value(2))
+                .andExpect(jsonPath("$.totalPageCount").value(2));
+
+        // Проверяет работоспособность тегов: вопрос 2 приходит, потому что содержит trackedTag, вопрос 3 отсекается,
+        // так как содержит tracked и ignored тэги, вопрос 4 отсекается, так как содержит ignoredTag, вопрос 1
+        // отсекается, так как на него дан ответ
+        mockMvc.perform(get("/api/user/question/noAnswer?page=1&items=2&trackedTag=101&trackedTag=102&trackedTag=103&ignoredTag=103&ignoredTag=104")
+                        .header("Authorization", "Bearer " + userToken))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andDo(print())
+                .andExpect(jsonPath("$.items.[0].id").value(2))
+                .andExpect(jsonPath("$.items.[0].listTagDto.[0].id").value(102))
+                .andExpect(jsonPath("$.items.[0].listTagDto.[1].id").value(105))
+                .andExpect(jsonPath("$.totalResultCount").value(1))
+                .andExpect(jsonPath("$.items.size()").value(1))
+                .andExpect(jsonPath("$.itemsOnPage").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(1));
+
+
+        // Проверяет запрос без необязательного параметра itemsOnPage
+        mockMvc.perform(get("/api/user/question/noAnswer?page=1")
+                        .header("Authorization", "Bearer " + userToken))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andDo(print())
+                .andExpect(jsonPath("$.items.[0].id").value(2))
+                .andExpect(jsonPath("$.items.[1].id").value(3))
+                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.items.size()").value(3))
+                .andExpect(jsonPath("$.itemsOnPage").value(3))
+                .andExpect(jsonPath("$.totalPageCount").value(1));
+
+        // Проверяет разделение на страницы
+        mockMvc.perform(get("/api/user/question/noAnswer?page=2&items=2")
+                        .header("Authorization", "Bearer " + userToken))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andDo(print())
+                .andExpect(jsonPath("$.items.[0].id").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.items.size()").value(1))
+                .andExpect(jsonPath("$.itemsOnPage").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(2));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/more_questions_has_tags.yml",
+            "dataset/QuestionResourceController/answers_for_all_questions.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml"
+    }
+    )
+    // Получение json по вопросам без ответов, когда нет таких ответов
+    public void getQuestionsWithoutAnswersWhenThereIsNoSuchQuestions() throws Exception {
+
+        String userToken = getToken("test15@mail.ru","test15");
+        mockMvc.perform(get("/api/user/question/noAnswer?page=1&items=2")
+                        .header("Authorization", "Bearer " + userToken))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andDo(print())
+                .andExpect(jsonPath("$.items").isEmpty())
+                .andExpect(jsonPath("$.totalResultCount").value(0));
     }
 }

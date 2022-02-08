@@ -12,6 +12,6 @@ public interface TagDtoDao {
     List<PopularTagDto> getPopularTags(Integer limit);
     List<TagDto> getTagDtoDaoById(Long id);
     List<TagDto> getTagsLike(String value);
-    Map<Long, List<TagDto>> getTagDtoDaoByQuestionIds(List<Long> questionIds);
+    Map<Long, List<TagDto>> getTagDtoByQuestionIds(List<Long> questionIds);
 }
 

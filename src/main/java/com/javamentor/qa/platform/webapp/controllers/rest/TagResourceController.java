@@ -70,7 +70,7 @@ public class TagResourceController {
             description = "Возвращает список из максимум 10 тегов, отсортированный по убыванию количества вопросов по ним."
     )
     @GetMapping("/related")
-    public ResponseEntity<List<PopularTagDto>> getTopPopularTags() {
+    public ResponseEntity<List<PopularTagDto>> getRelatedTop10Tags() {
         return new ResponseEntity<>(tagDtoService.getPopularTags(10),
                 HttpStatus.OK);
     }
