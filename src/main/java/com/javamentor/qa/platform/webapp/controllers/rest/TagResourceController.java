@@ -100,7 +100,7 @@ public class TagResourceController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Возвращает пагинированный список <PageDTO<TagDto>> (id, name, persistDateTime)",
+                    description = "Возвращает пагинированный список <PageDTO<TagDto>> (id, name, persist_date, countQuestion, questionCountOneDay, questionCountWeekDay)",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -115,12 +115,12 @@ public class TagResourceController {
         return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);
     }
 
-    @Operation(summary = "Получение пагинированного списка всех тегов",
+    @Operation(summary = "Получение пагинированного списка всех тегов по дате",
             description = "Получение пагинированного списка всех тегов отсортированных дате добавления")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Возвращает пагинированный список <PageDTO<TagDto>> (id, name, persist_date)",
+                    description = "Возвращает пагинированный список <PageDTO<TagDto>> (id, name, persist_date, countQuestion, questionCountOneDay, questionCountWeekDay)",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -141,7 +141,7 @@ public class TagResourceController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Возвращает пагинированный список <PageDTO<TagDto>> (id, name, persist_date, countQuestion)",
+                    description = "Возвращает пагинированный список <PageDTO<TagDto>> (id, name, persist_date, countQuestion, questionCountOneDay, questionCountWeekDay)",
                     content = {
                             @Content(
                                     mediaType = "application/json",

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -20,8 +21,16 @@ public class TagPageDtoDaoAllTagsByNameImpl implements PageDtoDao<TagViewDto> {
     public List<TagViewDto> getPaginationItems(PaginationData properties) {
         int itemsOnPage = properties.getItemsOnPage();
         int offset = (properties.getCurrentPage() - 1) * itemsOnPage;
+        LocalDateTime currentDate = LocalDateTime.now();
         return entityManager.createQuery("select new com.javamentor.qa.platform.models.dto.question.TagViewDto " +
-                        "(t.id, t.name, t.persistDateTime) from Tag t order by t.name", TagViewDto.class)
+                                            "(t.id, t.name, t.persistDateTime, t.description, " +
+                                            "(select count(distinct q.id) from t.questions q) as countQuestion, " +
+                                            "(select count(distinct q.id) from t.questions q where q.persistDateTime <= :current and :countOneDay < q.persistDateTime) as questionCountOneDay, " +
+                                            "(select count(distinct q.id) from t.questions q where q.persistDateTime <= :current and :countWeekDay < q.persistDateTime) as questionCountWeekDay)" +
+                                            "from Tag t order by t.name", TagViewDto.class)
+                .setParameter("current", currentDate)
+                .setParameter("countOneDay", currentDate.minusDays(1))
+                .setParameter("countWeekDay", currentDate.minusDays(7))
                 .setFirstResult(offset)
                 .setMaxResults(itemsOnPage)
                 .getResultList();

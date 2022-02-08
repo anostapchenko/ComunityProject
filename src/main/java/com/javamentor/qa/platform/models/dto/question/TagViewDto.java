@@ -19,10 +19,11 @@ public class TagViewDto {
     @Schema(description = "Имя тега")
     private String name;
 
-    private String description;
-
     @Schema(description = "Дата сохранения тега")
     private LocalDateTime persistDateTime;
+
+    @Schema(description = "Описание тега")
+    private String description;
 
     @Schema(description = "Количество вопросов по тегу")
     private Long countQuestion;
@@ -33,16 +34,9 @@ public class TagViewDto {
     @Schema(description = "Количество вопросов по тегу за неделю")
     private Long questionCountWeekDay;
 
-    public TagViewDto(Long id, String name, LocalDateTime persistDateTime) {
-        this.id = id;
-        this.name = name;
-        this.persistDateTime = persistDateTime;
-    }
-
-    public TagViewDto(Long id, String name, LocalDateTime persistDateTime, Long countQuestion) {
-        this.id = id;
-        this.name = name;
-        this.persistDateTime = persistDateTime;
-        this.countQuestion = countQuestion;
-    }
+//    public TagViewDto(Long id, String name, LocalDateTime persistDateTime) {
+//        this.id = id;
+//        this.name = name;
+//        this.persistDateTime = persistDateTime;
+//    }
 }
