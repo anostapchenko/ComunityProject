@@ -303,23 +303,14 @@ public class QuestionResourceController {
     public ResponseEntity<String> markQuestionLikeViewed(@PathVariable Long id, Authentication auth) {
 
         User user = (User) auth.getPrincipal();
-
-        if (user == null){
-            return new ResponseEntity<>("User is not authenticated", HttpStatus.FORBIDDEN);
-        }
-
         Optional<Question> question = questionService.getById(id);
 
         if (question.isPresent()) {
-
-            Cache cache = cacheManager.getCache("QuestionViewed");
-
             questionViewedService.markQuestionLikeViewed(user, question.get());
-        }else{
-            return new ResponseEntity<>("There is no question "+id.toString(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("OK", HttpStatus.OK);
         }
 
-        return new ResponseEntity<>("OK", HttpStatus.OK);
+        return new ResponseEntity<>("There is no question "+id.toString(), HttpStatus.BAD_REQUEST);
     }
 }
 
