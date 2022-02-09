@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -135,23 +136,38 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     @DataSet(value = {
             "dataset/QuestionResourceController/roles.yml",
-            "dataset/QuestionResourceController/users.yml",
+            "dataset/testQuestionIdCommentResource/users.yml",
             "dataset/QuestionResourceController/tags.yml",
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/questions_has_tag.yml",
-            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/answers_for_all_questions.yml",
             "dataset/QuestionResourceController/Fix/reputations.yml",
-            "dataset/QuestionResourceController/votes_on_questions.yml"
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/testQuestionIdCommentResource/comment.yml",
+            "dataset/testQuestionIdCommentResource/commentquestion.yml"
     },
             strategy = SeedStrategy.CLEAN_INSERT,
             cleanAfter = true, cleanBefore = true
     )
     // Получение json по существующему вопросу
     public void getCorrectQuestionDtoByIdTest() throws Exception {
-        mockMvc.perform(get("/api/user/question/1")
-                        .header("Authorization", "Bearer " + getToken("test15@mail.ru","test15")))
-                .andDo(print())
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("test15");
+        authenticationRequest.setUsername("test15@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(get("/api/user/question/1")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
@@ -167,9 +183,28 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(jsonPath("$.countAnswer").value(1))
                 .andExpect(jsonPath("$.persistDateTime").value("2021-12-13T18:09:52.716"))
                 .andExpect(jsonPath("$.lastUpdateDateTime").value("2021-12-13T18:09:52.716"))
-                .andExpect(jsonPath("$.listTagDto[0].description").value("testDescriptionTag"))
                 .andExpect(jsonPath("$.listTagDto[0].name").value("testNameTag"))
-                .andExpect(jsonPath("$.listTagDto[0].id").value(1));
+                .andExpect(jsonPath("$.listTagDto[0].id").value(1))
+                .andExpect(jsonPath("$.listQuestionCommentDto[0].id").value(1))
+                .andExpect(jsonPath("$.listQuestionCommentDto[0].lastRedactionDate")
+                        .value("2021-12-13T21:09:52.716"))
+                .andExpect(jsonPath("$.listQuestionCommentDto[0].persistDate")
+                        .value("2021-12-13T21:09:52.716"))
+                .andExpect(jsonPath("$.listQuestionCommentDto[0].text").value("Hello Test"))
+                .andExpect(jsonPath("$.listQuestionCommentDto[1].id").value(2))
+                .andExpect(jsonPath("$.listQuestionCommentDto[1].lastRedactionDate")
+                        .value("2021-12-13T21:09:52.716"))
+                .andExpect(jsonPath("$.listQuestionCommentDto[1].persistDate")
+                        .value("2021-12-13T21:09:52.716"))
+                .andExpect(jsonPath("$.listQuestionCommentDto[1].text").value("Hello Test2"))
+                .andExpect(jsonPath("$.isUserVote").value("DOWN_VOTE"));
+
+        mockMvc.perform(get("/api/user/question/2")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isUserVote").value(nullValue()));
     }
     @Test
     @DataSet(value = {
@@ -187,7 +222,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     )
     // получение ответа по не существующему в тестовой базе вопросу
     public void getWrongQuestionDtoByIdTest() throws Exception {
-        mockMvc.perform(get("/api/user/question/2")
+        mockMvc.perform(get("/api/user/question/5")
                         .header("Authorization", "Bearer " + getToken("test15@mail.ru","test15")))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
@@ -844,7 +879,6 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(jsonPath("$.items[0].persistDateTime").value("2021-12-13T18:09:55"))
                 .andExpect(jsonPath("$.items[0].lastUpdateDateTime").
                         value("2021-12-13T18:09:52"))
-                .andExpect(jsonPath("$.items[0].listTagDto[0].description").value("Some text here"))
                 .andExpect(jsonPath("$.items[0].listTagDto[0].name").value("TAG100"))
                 .andExpect(jsonPath("$.items[0].listTagDto[0].id").value("100"))
 
@@ -861,7 +895,6 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(jsonPath("$.items[1].persistDateTime").value("2021-12-13T18:09:54"))
                 .andExpect(jsonPath("$.items[1].lastUpdateDateTime").
                         value("2021-12-13T18:09:52"))
-                .andExpect(jsonPath("$.items[1].listTagDto[0].description").value("Some text here"))
                 .andExpect(jsonPath("$.items[1].listTagDto[0].name").value("TAG100"))
                 .andExpect(jsonPath("$.items[1].listTagDto[0].id").value("100"));
 

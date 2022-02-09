@@ -1,8 +1,8 @@
 package com.javamentor.qa.platform.dao.impl.pagination;
 
 import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
-import com.javamentor.qa.platform.dao.impl.pagination.transformer.QuestionDtoResultTransformer;
-import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.dao.impl.pagination.transformer.QuestionPageDtoResultTransformer;
+import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import org.springframework.stereotype.Repository;
 
@@ -12,16 +12,16 @@ import java.util.List;
 import java.util.Map;
 
 @Repository("QuestionPageDtoDaoByTagId")
-public class QuestionPageDtoDaoByTagId implements PageDtoDao<QuestionDto> {
+public class QuestionPageDtoDaoByTagId implements PageDtoDao<QuestionViewDto> {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public List<QuestionDto> getPaginationItems(PaginationData properties) {
+    public List<QuestionViewDto> getPaginationItems(PaginationData properties) {
         int itemsOnPage = properties.getItemsOnPage();
         int offset = (properties.getCurrentPage() - 1) * itemsOnPage;
-        return (List<QuestionDto>) entityManager.createQuery(
+        return (List<QuestionViewDto>) entityManager.createQuery(
                         "select " +
                                 "q.id, q.title, u.id, u.fullName, u.imageLink, " +
                                 " q.description, q.persistDateTime, q.lastUpdateDateTime, " +
@@ -37,7 +37,7 @@ public class QuestionPageDtoDaoByTagId implements PageDtoDao<QuestionDto> {
                                 "order by q.persistDateTime desc")
                 .setParameter("id", properties.getProps().get("id"))
                 .unwrap(org.hibernate.query.Query.class)
-                .setResultTransformer(new QuestionDtoResultTransformer())
+                .setResultTransformer(new QuestionPageDtoResultTransformer())
                 .setFirstResult(offset)
                 .setMaxResults(itemsOnPage)
                 .getResultList();

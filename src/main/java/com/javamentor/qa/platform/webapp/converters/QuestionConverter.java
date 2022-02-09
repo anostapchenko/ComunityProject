@@ -1,7 +1,7 @@
 package com.javamentor.qa.platform.webapp.converters;
 
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
-import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
@@ -17,7 +17,7 @@ public abstract class QuestionConverter {
     @Mapping(constant = "0", target = "countAnswer")
     @Mapping(constant = "0", target = "countValuable")
     @Mapping(constant = "0", target = "viewCount")
-    public abstract QuestionDto questionToQuestionDto(Question question);
+    public abstract QuestionViewDto questionToQuestionDto(Question question);
 
     @Mapping(source = "title", target = "title")
     @Mapping(source = "description", target = "description")

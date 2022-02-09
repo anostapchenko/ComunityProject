@@ -1,6 +1,7 @@
-package com.javamentor.qa.platform.dao.impl.pagination.transformer;
+package com.javamentor.qa.platform.dao.impl.dto.transformer;
 
 import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import org.hibernate.transform.ResultTransformer;
 
 import java.time.LocalDateTime;
@@ -20,7 +21,8 @@ public class QuestionDtoResultTransformer implements ResultTransformer {
         questionDto.setLastUpdateDateTime((LocalDateTime) tuple[7]);
         questionDto.setAuthorReputation((Long) tuple[8]);
         questionDto.setCountAnswer(((Number) tuple[9]).intValue());
-        questionDto.setCountValuable(((Number) tuple[10]).intValue());
+        questionDto.setCountValuable(tuple[10] == null ? 0 : ((Number) tuple[10]).intValue());
+        questionDto.setIsUserVote(tuple[11] == null ? null : (VoteType) tuple[11]);
         return questionDto;
     }
 

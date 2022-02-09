@@ -1,8 +1,8 @@
 package com.javamentor.qa.platform.dao.impl.pagination;
 
 import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
-import com.javamentor.qa.platform.dao.impl.pagination.transformer.QuestionDtoResultTransformer;
-import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.dao.impl.pagination.transformer.QuestionPageDtoResultTransformer;
+import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import org.springframework.stereotype.Repository;
 
@@ -12,16 +12,16 @@ import java.util.List;
 import java.util.Map;
 
 @Repository("QuestionPageDtoDaoSortedByDate")
-public class QuestionPageDtoDaoSortedByDate implements PageDtoDao<QuestionDto> {
+public class QuestionPageDtoDaoSortedByDate implements PageDtoDao<QuestionViewDto> {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public List<QuestionDto> getPaginationItems(PaginationData properties) {
+    public List<QuestionViewDto> getPaginationItems(PaginationData properties) {
         int itemsOnPage = properties.getItemsOnPage();
         int offset = (properties.getCurrentPage() - 1) * itemsOnPage;
-        return (List<QuestionDto>) entityManager.createQuery("select q.id, q.title, u.id," +
+        return (List<QuestionViewDto>) entityManager.createQuery("select q.id, q.title, u.id," +
                         " u.fullName, u.imageLink, q.description, q.persistDateTime," +
                         " q.lastUpdateDateTime, (select sum(r.count) from Reputation r where r.author.id =u.id), " +
                         "(select count (a.id) from Question q JOIN Answer a ON a.question.id = q.id)," +
@@ -37,7 +37,7 @@ public class QuestionPageDtoDaoSortedByDate implements PageDtoDao<QuestionDto> {
                 .setFirstResult(offset)
                 .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)
-                .setResultTransformer(new QuestionDtoResultTransformer())
+                .setResultTransformer(new QuestionPageDtoResultTransformer())
                 .getResultList();
     }
 
