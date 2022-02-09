@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 public class AnswerDtoServiceImpl extends DtoServiceImpl<AnswerDTO> implements AnswerDtoService {
 
-    AnswerDtoDao answerDtoDao;
+    private AnswerDtoDao answerDtoDao;
 
     @Autowired
     public AnswerDtoServiceImpl(Map<String, PageDtoDao<AnswerDTO>> daoMap, AnswerDtoDao answerDtoDao) {

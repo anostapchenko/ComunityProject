@@ -129,11 +129,6 @@ public class AnswerResourceController {
                                           Authentication authentication) {
 
         User user = (User) authentication.getPrincipal();
-
-        if (user == null){
-            return new ResponseEntity<>("User is not authenticated", HttpStatus.FORBIDDEN);
-        }
-
         Optional<Question> question = questionService.getById(questionId);
 
         if (question.isEmpty()){
