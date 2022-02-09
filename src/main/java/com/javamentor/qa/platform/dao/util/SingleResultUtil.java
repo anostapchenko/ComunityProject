@@ -8,7 +8,6 @@ public class SingleResultUtil {
         try {
             return Optional.of(var.getSingleResult());
         } catch (Exception e) {
-            System.err.println(e);
             return Optional.empty();
         }
     }
