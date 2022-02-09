@@ -160,15 +160,12 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andExpect(jsonPath("$.size()").value(3))
 
                 .andExpect(jsonPath("$[0].id").value(104))
-                .andExpect(jsonPath("$[0].description").value("about JPA"))
                 .andExpect(jsonPath("$[0].name").value("JPA"))
 
                 .andExpect(jsonPath("$[1].id").value(109))
-                .andExpect(jsonPath("$[1].description").value("about JUnit"))
                 .andExpect(jsonPath("$[1].name").value("JUnit"))
 
                 .andExpect(jsonPath("$[2].id").value(111))
-                .andExpect(jsonPath("$[2].description").value("about JAVA CORE"))
                 .andExpect(jsonPath("$[2].name").value("JAVA CORE"));
     }
 
@@ -186,15 +183,12 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andExpect(jsonPath("$.size()").value(3))
 
                 .andExpect(jsonPath("$[0].id").value(104))
-                .andExpect(jsonPath("$[0].description").value("about JPA"))
                 .andExpect(jsonPath("$[0].name").value("JPA"))
 
                 .andExpect(jsonPath("$[1].id").value(109))
-                .andExpect(jsonPath("$[1].description").value("about JUnit"))
                 .andExpect(jsonPath("$[1].name").value("JUnit"))
 
                 .andExpect(jsonPath("$[2].id").value(111))
-                .andExpect(jsonPath("$[2].description").value("about JAVA CORE"))
                 .andExpect(jsonPath("$[2].name").value("JAVA CORE"));
     }
 
@@ -238,7 +232,6 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andExpect(jsonPath("$.size()").value(4))
 
                 .andExpect(jsonPath("$[0].id").value(103))
-                .andExpect(jsonPath("$[0].description").value("about spring boot"))
                 .andExpect(jsonPath("$[0].name").value("spring boot"));
     }
 

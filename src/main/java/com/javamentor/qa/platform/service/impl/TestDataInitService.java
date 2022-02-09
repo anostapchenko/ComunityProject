@@ -14,6 +14,7 @@ import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
 import com.javamentor.qa.platform.models.entity.user.reputation.ReputationType;
 import com.javamentor.qa.platform.service.abstracts.model.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -89,8 +90,9 @@ public class TestDataInitService {
     public void createTags() {
         List<Tag> tags = new ArrayList<>();
         for (int i = 1; i <= NUM_OF_TAGS; i++) {
+            String generatedString = RandomStringUtils.randomAlphabetic(6);
             Tag tag = Tag.builder()
-                    .name("Tag " + i)
+                    .name(generatedString + i)
                     .description("Description of tag " + i)
                     .persistDateTime(LocalDateTime.now())
                     .build();
@@ -139,6 +141,7 @@ public class TestDataInitService {
             Question question = Question.builder()
                     .title("Question " + i)
                     .description("What you think about question " + i + "?")
+                    .persistDateTime(LocalDateTime.now().minusDays(i))
                     .user(getRandomUser())
                     .tags(getRandomTagList())
                     .build();
