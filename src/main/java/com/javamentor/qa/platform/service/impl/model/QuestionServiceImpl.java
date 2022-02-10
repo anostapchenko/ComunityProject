@@ -19,7 +19,7 @@ public class QuestionServiceImpl extends ReadWriteServiceImpl<Question, Long> im
     private final QuestionDao questionDao;
     private final TagDao tagDao;
 
-    public QuestionServiceImpl(QuestionDao questionDao, TagDao tagDao, CacheManager cacheManager) {
+    public QuestionServiceImpl(QuestionDao questionDao, TagDao tagDao) {
         super(questionDao);
         this.questionDao = questionDao;
         this.tagDao = tagDao;

@@ -17,7 +17,7 @@ public class QuestionViewedServiceImpl extends ReadWriteServiceImpl<QuestionView
     private final QuestionService questionService;
     private final QuestionViewedDao questionViewedDao;
 
-    public QuestionViewedServiceImpl(QuestionService questionService, QuestionViewedDao questionViewedDao, CacheManager cacheManager) {
+    public QuestionViewedServiceImpl(QuestionService questionService, QuestionViewedDao questionViewedDao) {
         super(questionViewedDao);
         this.questionService = questionService;
         this.questionViewedDao = questionViewedDao;
