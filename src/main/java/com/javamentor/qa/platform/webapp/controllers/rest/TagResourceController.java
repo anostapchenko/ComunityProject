@@ -1,11 +1,12 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.dao.impl.pagination.TagPageDtoDaoAllTagsByNameImpl;
-import com.javamentor.qa.platform.dao.impl.pagination.TagPageDtoDaoAllTagsByPersistDateTimeImpl;
-import com.javamentor.qa.platform.dao.impl.pagination.TagPageDtoDaoAllTagsByPopularImpl;
+import com.javamentor.qa.platform.dao.impl.pagination.tagdto.TagPageDtoDaoAllTagsByNameImpl;
+import com.javamentor.qa.platform.dao.impl.pagination.tagdto.TagPageDtoDaoAllTagsByPersistDateTimeImpl;
+import com.javamentor.qa.platform.dao.impl.pagination.tagdto.TagPageDtoDaoAllTagsByPopularImpl;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.question.PopularTagDto;
 import com.javamentor.qa.platform.models.dto.question.TagDto;
+import com.javamentor.qa.platform.models.dto.question.TagViewDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.TagDtoService;
@@ -99,7 +100,7 @@ public class TagResourceController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Возвращает пагинированный список <PageDTO<TagDto>> (id, name, persistDateTime)",
+                    description = "Возвращает пагинированный список <PageDTO<TagDto>> (id, name, persist_date, countQuestion, questionCountOneDay, questionCountWeekDay)",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -108,18 +109,18 @@ public class TagResourceController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещён")
     })
     @GetMapping("/name")
-    public ResponseEntity<PageDTO<TagDto>> getAllTagPaginationByName(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
+    public ResponseEntity<PageDTO<TagViewDto>> getAllTagPaginationByName(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
         PaginationData data = new PaginationData(page, items,
                 TagPageDtoDaoAllTagsByNameImpl.class.getSimpleName());
         return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);
     }
 
-    @Operation(summary = "Получение пагинированного списка всех тегов",
+    @Operation(summary = "Получение пагинированного списка всех тегов по дате",
             description = "Получение пагинированного списка всех тегов отсортированных дате добавления")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Возвращает пагинированный список <PageDTO<TagDto>> (id, name, persist_date)",
+                    description = "Возвращает пагинированный список <PageDTO<TagDto>> (id, name, persist_date, countQuestion, questionCountOneDay, questionCountWeekDay)",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -128,7 +129,7 @@ public class TagResourceController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещён")
     })
     @GetMapping("/new")
-    public ResponseEntity<PageDTO<TagDto>> getAllTagPaginationByPersistDateTime(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
+    public ResponseEntity<PageDTO<TagViewDto>> getAllTagPaginationByPersistDateTime(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
         PaginationData data = new PaginationData(page, items,
                 TagPageDtoDaoAllTagsByPersistDateTimeImpl.class.getSimpleName());
         return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);
@@ -140,7 +141,7 @@ public class TagResourceController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Возвращает пагинированный список <PageDTO<TagDto>> (id, name, persist_date, countQuestion)",
+                    description = "Возвращает пагинированный список <PageDTO<TagDto>> (id, name, persist_date, countQuestion, questionCountOneDay, questionCountWeekDay)",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -149,7 +150,7 @@ public class TagResourceController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещён")
     })
     @GetMapping("/popular")
-    public ResponseEntity<PageDTO<TagDto>> getAllTagPaginationByPopular(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
+    public ResponseEntity<PageDTO<TagViewDto>> getAllTagPaginationByPopular(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
         PaginationData data = new PaginationData(page, items,
                 TagPageDtoDaoAllTagsByPopularImpl.class.getSimpleName());
         return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);

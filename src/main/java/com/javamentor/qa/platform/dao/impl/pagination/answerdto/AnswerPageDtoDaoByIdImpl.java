@@ -1,4 +1,4 @@
-package com.javamentor.qa.platform.dao.impl.pagination;
+package com.javamentor.qa.platform.dao.impl.pagination.answerdto;
 
 import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.AnswerDTO;
@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-@Repository("AnswerPageDtoDaoByBodyImpl")
-public class AnswerPageDtoDaoByBodyImpl implements PageDtoDao<AnswerDTO> {
+@Repository("AnswerPageDtoDaoByIdImpl")
+public class AnswerPageDtoDaoByIdImpl implements PageDtoDao<AnswerDTO> {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -23,7 +23,7 @@ public class AnswerPageDtoDaoByBodyImpl implements PageDtoDao<AnswerDTO> {
         int itemsOnPage = properties.getItemsOnPage();
         int offset = (properties.getCurrentPage() - 1) * itemsOnPage;
         return (List<AnswerDTO>) entityManager
-                .createQuery("select a.id, a.persistDateTime, a.htmlBody from Answer a order by a.htmlBody")
+                .createQuery("select a.id, a.persistDateTime, a.htmlBody from Answer a order by a.id")
                 .setFirstResult(offset)
                 .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)
