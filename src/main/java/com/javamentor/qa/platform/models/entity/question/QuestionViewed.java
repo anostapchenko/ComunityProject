@@ -23,7 +23,6 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EntityListeners(QuestionViewedServiceImpl.class)
 public class QuestionViewed implements Serializable {
 
 

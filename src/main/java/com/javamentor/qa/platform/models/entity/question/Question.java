@@ -31,7 +31,6 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "question")
-@EntityListeners(QuestionServiceImpl.class)
 public class Question implements Serializable {
 
     private static final long serialVersionUID = -4612026867697897418L;

@@ -13,7 +13,9 @@ import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
+import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionViewedService;
+import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
@@ -36,6 +38,7 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -1070,7 +1073,12 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Autowired
     QuestionViewedDao questionViewedDao;
     @Autowired
-    QuestionViewedService QuestionViewedService;
+    QuestionViewedService questionViewedService;
+    @Autowired
+    QuestionService questionService;
+    @Autowired
+    UserService userService;
+
 
     @Test
     @DataSet(
@@ -1084,6 +1092,22 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             },
             ignoreCols = {"persist_date"})
     public void shouldMarkQuestionLikeViewed() throws Exception {
+
+        QuestionCreateDto questionCreateDto = new QuestionCreateDto();
+        questionCreateDto.setTitle("checkFieldsReturnedQuestionDto");
+        questionCreateDto.setDescription("checkFieldsReturnedQuestionDto");
+
+        TagDto tagDto = new TagDto();
+        tagDto.setName("Test");
+        TagDto tagDto2 = new TagDto();
+        tagDto2.setName("TAG100");
+        TagDto tagDto3 = new TagDto();
+        tagDto3.setName("TAG101");
+        List<TagDto> listTagDto = new ArrayList<>();
+        listTagDto.add(tagDto);
+        listTagDto.add(tagDto2);
+        listTagDto.add(tagDto3);
+        questionCreateDto.setTags(listTagDto);
 
         String token100 = "Bearer " + getToken("user100@mail.ru", "password");
         String token101 = "Bearer " + getToken("user101@mail.ru", "user101");
@@ -1116,17 +1140,26 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         assertNotNull(cacheManager.getCache("QuestionViewed").get("102user100@mail.ru"));
 
         //добавляю несуществующий вопрос
-        mockMvc.perform(get("/api/user/question/999/view")
+        mockMvc.perform(get("/api/user/question/1/view")
                         .contentType("application/json")
                         .header("Authorization", token100))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
 
-        assertNull(cacheManager.getCache("QuestionViewed").get("999user100@mail.ru"));
+        assertNull(cacheManager.getCache("QuestionViewed").get("1user100@mail.ru"));
 
-        questionViewedDao.getQuestionViewedByUserAndQuestion("user100@mail.ru", 999L);
+        questionViewedDao.getQuestionViewedByUserAndQuestion("user100@mail.ru", 1L);
 
-        assertNotNull(cacheManager.getCache("QuestionViewed").get("999user100@mail.ru"));
+        assertNotNull(cacheManager.getCache("QuestionViewed").get("1user100@mail.ru"));
+
+        mockMvc.perform(post("/api/user/question")
+                                .header(AUTHORIZATION, token100)
+                                .content(new ObjectMapper().writeValueAsString(questionCreateDto))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+
+        assertNull(cacheManager.getCache("QuestionViewed").get("1user100@mail.ru"));
 
         //добавляю уже существующий вопрос для user101
         mockMvc.perform(get("/api/user/question/102/view")

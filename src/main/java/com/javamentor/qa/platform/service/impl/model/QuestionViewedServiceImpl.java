@@ -7,14 +7,8 @@ import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionViewedService;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.PostPersist;
-import javax.persistence.PostRemove;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -22,13 +16,11 @@ public class QuestionViewedServiceImpl extends ReadWriteServiceImpl<QuestionView
 
     private final QuestionService questionService;
     private final QuestionViewedDao questionViewedDao;
-    private static CacheManager cacheManager;
 
     public QuestionViewedServiceImpl(QuestionService questionService, QuestionViewedDao questionViewedDao, CacheManager cacheManager) {
         super(questionViewedDao);
         this.questionService = questionService;
         this.questionViewedDao = questionViewedDao;
-        this.cacheManager = cacheManager;
     }
 
     @Override
@@ -40,11 +32,5 @@ public class QuestionViewedServiceImpl extends ReadWriteServiceImpl<QuestionView
                     .user(user)
                     .build());
         }
-    }
-
-    @PostPersist
-    @PostRemove
-    void cacheHandler(QuestionViewed e) {
-        cacheManager.getCache("QuestionViewed").evictIfPresent(e.getQuestion().getId()+e.getUser().getEmail());
     }
 }
