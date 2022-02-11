@@ -14,7 +14,15 @@ import java.time.LocalDateTime;
 public class AnswerDTO {
 
     private Long id;
-    private LocalDateTime persistDateTime;
+    private Long userId;
+    private Integer userReputation;
+    private Long questionId;
     private String htmlBody;
+    private LocalDateTime persistDateTime;
+    private Boolean isHelpful;
+    private LocalDateTime dateAccept;
+    private Long countValuable;
+    private String image;
+    private String nickName;
 
 }

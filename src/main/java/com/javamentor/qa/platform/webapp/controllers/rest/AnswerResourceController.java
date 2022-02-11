@@ -20,12 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @Tag(name = "AnswerResourceController", description = "Позволяет работать с ответами на вопросы")
@@ -139,6 +137,24 @@ public class AnswerResourceController {
         answerService.persist(answer);
 
         return new ResponseEntity<>(answerDtoService.getAnswerDtoById(answer.getId()), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Получение списка ответов на вопрос",
+            description = "Получение списка всех ответов на вопрос, questionId - id вопроса")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает список AnswerDto (id, userId, userReputation" +
+                            "authorReputation, authorName, authorImage, description, viewCount, countAnswer" +
+                            "countValuable, LocalDateTime, LocalDateTime, listTagDto",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json")
+                    }),
+    })
+    @GetMapping("api/user/question/{questionId}/answer")
+    public ResponseEntity<List<AnswerDTO>> getAnswers(@PathVariable Long questionId) {
+        return new ResponseEntity<>(answerDtoService.getAllAnswerDtoByQuestionId(questionId), HttpStatus.OK);
     }
 }
 

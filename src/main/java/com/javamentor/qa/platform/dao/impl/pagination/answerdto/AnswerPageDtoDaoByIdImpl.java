@@ -22,28 +22,16 @@ public class AnswerPageDtoDaoByIdImpl implements PageDtoDao<AnswerDTO> {
     public List<AnswerDTO> getPaginationItems(PaginationData properties) {
         int itemsOnPage = properties.getItemsOnPage();
         int offset = (properties.getCurrentPage() - 1) * itemsOnPage;
-        return (List<AnswerDTO>) entityManager
-                .createQuery("select a.id, a.persistDateTime, a.htmlBody from Answer a order by a.id")
+        return entityManager
+                .createQuery("SELECT new com.javamentor.qa.platform.models.dto.AnswerDTO(" +
+                        "a.id, a.user.id, (SELECT r.count FROM Reputation r where r.author.id = a.user.id)), " +
+                        "a.question.id, a.htmlBody, a.persistDateTime, a.isHelpful, a.dateAcceptTime, " +
+                        "(select sum(case when v.vote = 'UP_VOTE' then 1 else -1 end) from Answer a join VoteAnswer v " +
+                        "WHERE a.question.id = :id)," +
+                        " a.user.imageLink, a.user.nickname " +
+                        "FROM Answer a order by a.id", AnswerDTO.class)
                 .setFirstResult(offset)
                 .setMaxResults(itemsOnPage)
-                .unwrap(org.hibernate.query.Query.class)
-                .setResultTransformer(
-                        new ResultTransformer() {
-                            @Override
-                            public Object transformTuple(Object[] objects, String[] strings) {
-                                return new AnswerDTO(
-                                        ((Number) objects[0]).longValue(),
-                                        (LocalDateTime) objects[1],
-                                        (String) objects[2]
-                                );
-                            }
-
-                            @Override
-                            public List transformList(List list) {
-                                return list;
-                            }
-                        }
-                )
                 .getResultList();
     }
 
