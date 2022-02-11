@@ -205,6 +205,11 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(content().contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isUserVote").value(nullValue()));
+
+        mockMvc.perform(get("/api/user/question/3")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
     @Test
     @DataSet(value = {
