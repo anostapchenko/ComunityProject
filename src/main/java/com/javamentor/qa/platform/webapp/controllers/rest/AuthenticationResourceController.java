@@ -15,7 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,13 +66,16 @@ public class AuthenticationResourceController {
     @ApiResponse(responseCode = "403", description = "Пользователь не авторизован", content = {
             @Content(mediaType = "text/plain")
     })
-    public ResponseEntity<String> authorizationCheck(@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<String> authorizationCheck() {
 
-        if (userDetails == null){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null) {
             return new ResponseEntity<>("User is not authenticated", HttpStatus.TEMPORARY_REDIRECT);
         }
 
-        if (!userDetails.getAuthorities().contains(roleService.getByName("ROLE_ADMIN").get())){
+        //Что должен делать этот метод? По дефолту он запрещает доступ всем, кто не админ....
+        if (!authentication.getAuthorities().contains(roleService.getByName("ROLE_ADMIN").get())){
             return new ResponseEntity<>("FORBIDDEN", HttpStatus.FORBIDDEN);
         }
 
