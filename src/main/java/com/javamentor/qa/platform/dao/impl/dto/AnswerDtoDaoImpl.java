@@ -34,10 +34,9 @@ public class AnswerDtoDaoImpl implements AnswerDtoDao {
         return entityManager.createQuery("SELECT new com.javamentor.qa.platform.models.dto.AnswerDTO(" +
                         " a.id, a.user.id, (SELECT r.count FROM Reputation r where r.author.id = a.user.id), " +
                         " a.question.id, a.htmlBody, a.persistDateTime, a.isHelpful, a.dateAcceptTime, " +
-                        " (select sum(case when v.vote = 'UP_VOTE' then 1 else -1 end) from Answer a join VoteAnswer v " +
-                        "on a.id = v.answer.id where a.question.id = :id), " +
+                        " (select sum( case when v.vote = 'UP_VOTE' then 1 else -1 end) from Answer an join VoteAnswer v on an.id = v.answer.id where an.id = a.id), " +
                         " a.user.imageLink, a.user.nickname) " +
-                        " FROM Answer a " +
+                        " FROM Answer as a" +
                         " WHERE a.question.id = :id", AnswerDTO.class)
                 .setParameter("id", questionId)
                 .getResultList();
