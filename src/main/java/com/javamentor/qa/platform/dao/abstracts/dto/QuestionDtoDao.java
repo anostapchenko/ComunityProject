@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface QuestionDtoDao {
     List<QuestionCommentDto> getQuestionIdComment(Long id);
 
-    Optional<QuestionDto> getQuestionDtoDaoById(Long id);
+    Optional<QuestionDto> getQuestionDtoDaoById(Long id, Long userId);
 }

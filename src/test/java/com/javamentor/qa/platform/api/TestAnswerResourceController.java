@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
@@ -14,8 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest(classes = JmApplication.class)
@@ -281,5 +281,49 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string("0"));
+    }
+
+    @Test
+    @DataSet(
+            value = {
+                    "dataset/testAnswerResourceController/addAnswer/answers.yml"
+            },
+            cleanBefore = true, cleanAfter = true,
+            strategy = SeedStrategy.CLEAN_INSERT)
+    @ExpectedDataSet(value = {
+            "dataset/testAnswerResourceController/addAnswer/expected/answers.yml"
+    },
+            ignoreCols = {"date_accept_time", "persist_date", "update_date"}
+    )
+    public void shouldAddAnswerAndReturnAnswerDto() throws Exception {
+
+        String token100 = "Bearer " + getToken("user100@mail.ru", "password");
+        String token101 = "Bearer " + getToken("user101@mail.ru", "user101");
+
+        //добавляю новый ответ user 100 по вопросу 101
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/user/question/101/answer/add")
+                        .contentType("application/json")
+                        .content("answer # 1 about Question 1")
+                        .header("Authorization", token100))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.htmlBody").value("answer # 1 about Question 1"));
+
+        //добавляю новый ответ user 101 по вопросу 101
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/user/question/101/answer/add")
+                        .contentType("application/json")
+                        .content("answer # 2 about Question 1")
+                        .header("Authorization", token101))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.htmlBody").value("answer # 2 about Question 1"));
+
+        //добавляю новый ответ user 101 по несуществующему вопросу 999
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/user/question/999/answer/add")
+                        .contentType("application/json")
+                        .content("answer # 1 about Question 999")
+                        .header("Authorization", token101))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }

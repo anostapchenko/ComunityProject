@@ -8,7 +8,7 @@ import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
-import com.javamentor.qa.platform.models.dto.UserDto;
+import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.dto.question.QuestionCommentDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import com.javamentor.qa.platform.models.entity.question.CommentQuestion;
@@ -49,11 +49,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @Tag(name = "Question Resource Controller", description = "Управление сущностями, которые связаны с вопросами")
@@ -203,13 +200,13 @@ public class QuestionResourceController {
             content = {
                     @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = QuestionDto.class)
+                            schema = @Schema(implementation = QuestionViewDto.class)
                     )
             }
     )
-    public ResponseEntity<PageDTO<QuestionDto>> getPageQuestionsByTagId(@PathVariable Long id,
-                                                                        @RequestParam int page,
-                                                                        @RequestParam(defaultValue = "10") int items) {
+    public ResponseEntity<PageDTO<QuestionViewDto>> getPageQuestionsByTagId(@PathVariable Long id,
+                                                                            @RequestParam int page,
+                                                                            @RequestParam(defaultValue = "10") int items) {
         PaginationData data = new PaginationData(
                 page, items, QuestionPageDtoDaoByTagId.class.getSimpleName()
         );
@@ -222,14 +219,15 @@ public class QuestionResourceController {
             summary = "Получение вопросов",
             description = "Сортировка по дате добавления(сначала самые новые)"
     )
-    public ResponseEntity<PageDTO<QuestionDto>> getQuestionsSortedByDate(@RequestParam int page,
-                                                                         @RequestParam(defaultValue = "10") int items,
-                                                                         @RequestParam(required = false) List<Long> trackedTag,
-                                                                         @RequestParam(required = false) List<Long> ignoredTag) {
+    public ResponseEntity<PageDTO<QuestionViewDto>> getQuestionsSortedByDate(@RequestParam int page,
+                                                                             @RequestParam(defaultValue = "10") int items,
+                                                                             @RequestParam(required = false) List<Long> trackedTag,
+                                                                             @RequestParam(required = false) List<Long> ignoredTag) {
         PaginationData data = new PaginationData(page, items,
                 QuestionPageDtoDaoSortedByDate.class.getSimpleName());
         data.getProps().put("trackedTag", trackedTag);
         data.getProps().put("ignoredTag", ignoredTag);
+
         return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
     }
 
@@ -248,22 +246,18 @@ public class QuestionResourceController {
                                     mediaType = "application/json")
                     }),
     })
-    public ResponseEntity<PageDTO<QuestionDto>> getQuestionsWithNoAnswer(@RequestParam int page,
-                                                                         @RequestParam(required = false, defaultValue = "10") int items,
-                                                                         @RequestParam(required = false) List<Long> trackedTag,
-                                                                         @RequestParam(required = false) List<Long> ignoredTag) {
+    public ResponseEntity<PageDTO<QuestionViewDto>> getQuestionsWithNoAnswer(@RequestParam int page,
+                                                                             @RequestParam(required = false, defaultValue = "10") int items,
+                                                                             @RequestParam(required = false) List<Long> trackedTag,
+                                                                             @RequestParam(required = false) List<Long> ignoredTag) {
 
         PaginationData data = new PaginationData(page, items, QuestionPageDtoDaoByNoAnswersImpl.class.getSimpleName());
-        Map<String, Object> tagMap = new HashMap<>();
-        tagMap.put("trackedTags", trackedTag);
-        tagMap.put("ignoredTags", ignoredTag);
-        data.setProps(tagMap);
+        data.getProps().put("trackedTags", trackedTag);
+        data.getProps().put("ignoredTags", ignoredTag);
 
-        PageDTO<QuestionDto> pageDTO = questionDtoService.getPageDto(data);
-
-
-        return new ResponseEntity<>(pageDTO, HttpStatus.OK);
+        return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
     }
+
     @GetMapping("/api/user/question")
     @Operation(summary = "Получение пагинированного списка вопросов с возможностью учета trackedTag и ignoredTag",
             description = "Получение пагинированного списка вопросов пользователя, " +
@@ -274,16 +268,14 @@ public class QuestionResourceController {
             " LocalDateTime, LocalDateTime, listTagDto", content = {
             @Content(mediaType = "application/json")
     })
-    public ResponseEntity<PageDTO<QuestionDto>> allQuestionsWithTrackedTagsAndIgnoredTags(@RequestParam int page, @RequestParam(required = false, defaultValue = "10") int items,
-                                                                                          @RequestParam(required = false) List<Long> trackedTag,
-                                                                                          @RequestParam (required = false) List<Long> ignoredTag) {
+    public ResponseEntity<PageDTO<QuestionViewDto>> allQuestionsWithTrackedTagsAndIgnoredTags(@RequestParam int page, @RequestParam(required = false, defaultValue = "10") int items,
+                                                                                              @RequestParam(required = false) List<Long> trackedTag,
+                                                                                              @RequestParam (required = false) List<Long> ignoredTag) {
         PaginationData data = new PaginationData(page, items, QuestionPageDtoDaoAllQuestionsImpl.class.getSimpleName());
-        Map<String, Object> trackedIgnorMapa = new HashMap<>();
-        trackedIgnorMapa.put("trackedTags", trackedTag);
-        trackedIgnorMapa.put("ignoredTags", ignoredTag);
-        data.setProps(trackedIgnorMapa);
-        PageDTO<QuestionDto> pageDTO = questionDtoService.getPageDto(data);
-        return new ResponseEntity<>(pageDTO, HttpStatus.OK);
+        data.getProps().put("trackedTags", trackedTag);
+        data.getProps().put("ignoredTags", ignoredTag);
+
+        return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
     }
 
     @Autowired
