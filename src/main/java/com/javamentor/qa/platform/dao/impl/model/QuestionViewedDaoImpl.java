@@ -5,7 +5,9 @@ import com.javamentor.qa.platform.dao.util.SingleResultUtil;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.QuestionViewed;
 import com.javamentor.qa.platform.models.entity.user.User;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,5 +28,16 @@ public class QuestionViewedDaoImpl extends ReadWriteDaoImpl<QuestionViewed, Long
                 .setParameter("email", email)
                 .setParameter("questionId", questionId)
                 .getResultList();
+    }
+
+    @Caching(
+            evict = {@CacheEvict(
+                    value = "QuestionViewed",
+                    key = "#e.question.id+#e.user.email",
+                    condition="#e instanceof T(com.javamentor.qa.platform.models.entity.question.QuestionViewed)")}
+    )
+    @Override
+    public void persist(QuestionViewed e) {
+        entityManager.persist(e);
     }
 }

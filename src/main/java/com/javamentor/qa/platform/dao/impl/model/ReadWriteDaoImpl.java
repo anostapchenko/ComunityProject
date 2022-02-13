@@ -1,12 +1,13 @@
 package com.javamentor.qa.platform.dao.impl.model;
 
+import com.javamentor.qa.platform.models.entity.user.User;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Caching;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
+
 
 public abstract class ReadWriteDaoImpl<E, K> extends ReadOnlyDaoImpl<E, K> {
 
@@ -16,18 +17,6 @@ public abstract class ReadWriteDaoImpl<E, K> extends ReadOnlyDaoImpl<E, K> {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Caching(
-        evict = {@CacheEvict(
-                    value = "QuestionViewed",
-                    key = "#e.question.id+#e.user.email",
-                    condition="#e instanceof T(com.javamentor.qa.platform.models.entity.question.QuestionViewed)")
-                ,
-                @CacheEvict(
-                    value = "QuestionViewed",
-                    allEntries = true,
-                    condition="#e instanceof T(com.javamentor.qa.platform.models.entity.question.Question)")
-                }
-            )
     public void persist(E e) {
         entityManager.persist(e);
     }
@@ -36,18 +25,6 @@ public abstract class ReadWriteDaoImpl<E, K> extends ReadOnlyDaoImpl<E, K> {
         entityManager.merge(e);
     }
 
-    @Caching(
-            evict = {@CacheEvict(
-                        value = "QuestionViewed",
-                        key = "#e.question.id+#e.user.email",
-                        condition="#e instanceof T(com.javamentor.qa.platform.models.entity.question.QuestionViewed)")
-                    ,
-                    @CacheEvict(
-                        value = "QuestionViewed",
-                        allEntries = true,
-                        condition="#e instanceof T(com.javamentor.qa.platform.models.entity.question.Question)")
-            }
-    )
     public void delete(E e) {
         entityManager.remove(e);
     }
@@ -64,7 +41,8 @@ public abstract class ReadWriteDaoImpl<E, K> extends ReadOnlyDaoImpl<E, K> {
         int i = 0;
 
         for (E entity : entities) {
-            persist(entity);
+            entityManager.persist(entity);
+
             i++;
 
             // Flush a batch of inserts and release memory
@@ -86,7 +64,8 @@ public abstract class ReadWriteDaoImpl<E, K> extends ReadOnlyDaoImpl<E, K> {
         int i = 0;
 
         for (E entity : entities) {
-            persist(entity);
+            entityManager.persist(entity);
+
             i++;
 
             // Flush a batch of inserts and release memory

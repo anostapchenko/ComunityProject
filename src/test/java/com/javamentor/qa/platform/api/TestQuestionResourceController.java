@@ -2,6 +2,7 @@ package com.javamentor.qa.platform.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.javamentor.qa.platform.AbstractClassForDRRiderMockMVCTests;
 import com.javamentor.qa.platform.dao.abstracts.model.QuestionDao;
@@ -1125,22 +1126,6 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             ignoreCols = {"persist_date"})
     public void shouldMarkQuestionLikeViewed() throws Exception {
 
-        QuestionCreateDto questionCreateDto = new QuestionCreateDto();
-        questionCreateDto.setTitle("checkFieldsReturnedQuestionDto");
-        questionCreateDto.setDescription("checkFieldsReturnedQuestionDto");
-
-        TagDto tagDto = new TagDto();
-        tagDto.setName("Test");
-        TagDto tagDto2 = new TagDto();
-        tagDto2.setName("TAG100");
-        TagDto tagDto3 = new TagDto();
-        tagDto3.setName("TAG101");
-        List<TagDto> listTagDto = new ArrayList<>();
-        listTagDto.add(tagDto);
-        listTagDto.add(tagDto2);
-        listTagDto.add(tagDto3);
-        questionCreateDto.setTags(listTagDto);
-
         String token100 = "Bearer " + getToken("user100@mail.ru", "password");
         String token101 = "Bearer " + getToken("user101@mail.ru", "user101");
 
@@ -1183,15 +1168,6 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
         questionViewedDao.getQuestionViewedByUserAndQuestion("user100@mail.ru", 1L);
 
         assertNotNull(cacheManager.getCache("QuestionViewed").get("1user100@mail.ru"));
-
-        mockMvc.perform(post("/api/user/question")
-                                .header(AUTHORIZATION, token100)
-                                .content(new ObjectMapper().writeValueAsString(questionCreateDto))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isOk());
-
-        assertNull(cacheManager.getCache("QuestionViewed").get("1user100@mail.ru"));
 
         //добавляю уже существующий вопрос для user101
         mockMvc.perform(get("/api/user/question/102/view")
