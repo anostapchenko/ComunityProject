@@ -5,6 +5,7 @@ import com.javamentor.qa.platform.dao.util.SingleResultUtil;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,5 +43,13 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
                 .setParameter("password", password)
                 .setParameter("username", username)
                 .executeUpdate();
+    }
+
+    @Override
+    @Cacheable(value = "User", key = "#email")
+    public boolean isUserExistByEmail(String email) {
+        String hql = "select u from User u where u.email = :email";
+        TypedQuery<User> query = (TypedQuery<User>) entityManager.createQuery(hql).setParameter("email", email);
+        return SingleResultUtil.getSingleResultOrNull(query).isPresent();
     }
 }
