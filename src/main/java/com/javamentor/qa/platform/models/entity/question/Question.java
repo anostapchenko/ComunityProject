@@ -4,6 +4,8 @@ import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.models.entity.user.UserFavoriteQuestion;
+import com.javamentor.qa.platform.service.impl.model.QuestionServiceImpl;
+import com.javamentor.qa.platform.service.impl.model.QuestionViewedServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

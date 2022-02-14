@@ -27,7 +27,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             value = {
                     "dataset/testUserResourceController/roles.yml",
                     "dataset/testUserResourceController/users.yml",
-                    "dataset/testUserResourceController/reputation.yml",
+                    "dataset/testUserResourceController/reputacion.yml",
                     "dataset/testUserResourceController/answers.yml",
                     "dataset/testUserResourceController/questions.yml"
             },
