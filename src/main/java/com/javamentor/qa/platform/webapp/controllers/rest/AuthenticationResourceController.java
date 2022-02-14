@@ -71,15 +71,13 @@ public class AuthenticationResourceController {
     @ApiResponse(responseCode = "403", description = "Пользователь не авторизован", content = {
             @Content(mediaType = "text/plain")
     })
-    public ResponseEntity<String> authorizationCheck( Authentication authentication) {
+    public ResponseEntity<String> authorizationCheck(Authentication authentication) {
 
         if (authentication == null) {
             return new ResponseEntity<>("User is not authenticated", HttpStatus.TEMPORARY_REDIRECT);
         }
 
-        Role role = roleService.getByName("ROLE_USER").get();
-
-        if (!authentication.getAuthorities().contains(role)){
+        if (!authentication.getAuthorities().contains(roleService.getByName("ROLE_USER").get())){
             return new ResponseEntity<>("FORBIDDEN", HttpStatus.FORBIDDEN);
         }
 
