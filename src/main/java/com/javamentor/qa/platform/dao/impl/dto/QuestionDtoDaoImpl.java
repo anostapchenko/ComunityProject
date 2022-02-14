@@ -49,8 +49,7 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                         " LEFT JOIN q.user u " +
                         " LEFT JOIN VoteQuestion v " +
                         " ON v.question.id = q.id and v.user.id = :userId " +
-                        " where q.id = :id " +
-                        " ")
+                        " where q.id = :id and q.isDeleted=false")
                 .setParameter("id", id)
                 .setParameter("userId", userId)
                 .unwrap(org.hibernate.query.Query.class)

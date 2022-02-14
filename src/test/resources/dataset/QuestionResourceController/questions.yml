@@ -17,7 +17,7 @@ question:
 
   - id: 3
     description: "test3"
-    is_deleted: false
+    is_deleted: true
     last_redaction_date: 2021-12-13 15:09:52.715570
     persist_date: 2021-12-13 15:09:52.715570
     title: "test3"
