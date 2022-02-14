@@ -2,7 +2,6 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.AuthenticationResponse;
-import com.javamentor.qa.platform.models.entity.user.Role;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.security.JwtUtil;
 import com.javamentor.qa.platform.service.abstracts.model.RoleService;
@@ -16,9 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,9 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
 
 
 @RestController
@@ -71,13 +65,13 @@ public class AuthenticationResourceController {
     @ApiResponse(responseCode = "403", description = "Пользователь не авторизован", content = {
             @Content(mediaType = "text/plain")
     })
-    public ResponseEntity<String> authorizationCheck(Authentication authentication) {
+    public ResponseEntity<String> authorizationCheck(@AuthenticationPrincipal UserDetails userDetails){
 
-        if (authentication == null) {
+        if (userDetails == null) {
             return new ResponseEntity<>("User is not authenticated", HttpStatus.TEMPORARY_REDIRECT);
         }
 
-        if (!authentication.getAuthorities().contains(roleService.getByName("ROLE_USER").get())){
+        if (!userDetails.getAuthorities().contains(roleService.getByName("ROLE_USER").get())){
             return new ResponseEntity<>("FORBIDDEN", HttpStatus.FORBIDDEN);
         }
 
