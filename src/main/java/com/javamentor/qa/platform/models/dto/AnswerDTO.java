@@ -15,7 +15,7 @@ public class AnswerDTO {
 
     private Long id;
     private Long userId;
-    private Integer userReputation;
+    private Long userReputation;
     private Long questionId;
     private String htmlBody;
     private LocalDateTime persistDateTime;

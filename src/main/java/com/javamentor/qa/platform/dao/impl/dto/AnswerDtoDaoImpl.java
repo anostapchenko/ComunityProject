@@ -20,7 +20,7 @@ public class AnswerDtoDaoImpl implements AnswerDtoDao {
     public Optional<AnswerDTO> getAnswerDtoById(Long id) {
 
         return SingleResultUtil.getSingleResultOrNull(entityManager.createQuery("SELECT new com.javamentor.qa.platform.models.dto.AnswerDTO(" +
-                        " a.id, a.user.id, (SELECT r.count FROM Reputation r where r.answer.user.id = a.user.id), " +
+                        " a.id, a.user.id, (SELECT sum(r.count) FROM Reputation r where r.answer.user.id = a.user.id), " +
                         " a.question.id, a.htmlBody, a.persistDateTime, a.isHelpful, a.dateAcceptTime, " +
                         "(select sum(case when v.vote = 'UP_VOTE' then 1 else -1 end) from VoteAnswer v where v.answer.id = a.id)," +
                         " a.user.imageLink, a.user.nickname) " +
@@ -32,7 +32,7 @@ public class AnswerDtoDaoImpl implements AnswerDtoDao {
     @Override
     public List<AnswerDTO> getAllAnswerDtoByQuestionId(Long questionId) {
         return entityManager.createQuery("SELECT new com.javamentor.qa.platform.models.dto.AnswerDTO(" +
-                        " a.id, a.user.id, (SELECT r.count FROM Reputation r where r.answer.user.id = a.user.id), " +
+                        " a.id, a.user.id, (SELECT sum(r.count) FROM Reputation r where r.answer.user.id = a.user.id), " +
                         " a.question.id, a.htmlBody, a.persistDateTime, a.isHelpful, a.dateAcceptTime, " +
                         "(select sum(case when v.vote = 'UP_VOTE' then 1 else -1 end) from VoteAnswer v where v.answer.id = a.id)," +
                         " a.user.imageLink, a.user.nickname) " +
