@@ -139,14 +139,14 @@ public class AnswerResourceController {
         return new ResponseEntity<>(answerDtoService.getAnswerDtoById(answer.getId()), HttpStatus.OK);
     }
 
-    @Operation(summary = "Получение списка ответов на вопрос",
-            description = "Получение списка всех ответов на вопрос, questionId - id вопроса")
+    @Operation(summary = "Получение списка ответов на вопрос оп ID вопроса",
+            description = "Получение списка всех ответов на вопрос по questionId, questionId - id вопроса")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
                     description = "Возвращает список AnswerDto (id, userId, userReputation" +
-                            "authorReputation, authorName, authorImage, description, viewCount, countAnswer" +
-                            "countValuable, LocalDateTime, LocalDateTime, listTagDto",
+                            "questionId, htmlBody, persistDateTime, isHelpful, dateAccept," +
+                            " countValuable, image, nickName",
                     content = {
                             @Content(
                                     mediaType = "application/json")
