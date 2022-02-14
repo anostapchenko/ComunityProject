@@ -24,12 +24,12 @@ public class AnswerPageDtoDaoByIdImpl implements PageDtoDao<AnswerDTO> {
         int offset = (properties.getCurrentPage() - 1) * itemsOnPage;
         return entityManager
                 .createQuery("SELECT new com.javamentor.qa.platform.models.dto.AnswerDTO(" +
-                        "a.id, a.user.id, (SELECT r.count FROM Reputation r where r.author.id = a.user.id)), " +
-                        "a.question.id, a.htmlBody, a.persistDateTime, a.isHelpful, a.dateAcceptTime, " +
-                        "(select sum(case when v.vote = 'UP_VOTE' then 1 else -1 end) from Answer a join VoteAnswer v " +
-                        "WHERE a.question.id = :id)," +
-                        " a.user.imageLink, a.user.nickname " +
-                        "FROM Answer a order by a.id", AnswerDTO.class)
+                        " a.id, a.user.id, (SELECT r.count FROM Reputation r where r.answer.user.id = a.user.id), " +
+                        " a.question.id, a.htmlBody, a.persistDateTime, a.isHelpful, a.dateAcceptTime, " +
+                        "(select sum(case when v.vote = 'UP_VOTE' then 1 else -1 end) from VoteAnswer v where v.answer.id = a.id)," +
+                        " a.user.imageLink, a.user.nickname) " +
+                        " FROM Answer as a" +
+                        " WHERE a.question.id = :id", AnswerDTO.class)
                 .setFirstResult(offset)
                 .setMaxResults(itemsOnPage)
                 .getResultList();
