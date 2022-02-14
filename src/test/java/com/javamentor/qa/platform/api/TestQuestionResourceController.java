@@ -2,13 +2,20 @@ package com.javamentor.qa.platform.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.javamentor.qa.platform.AbstractClassForDRRiderMockMVCTests;
+import com.javamentor.qa.platform.dao.abstracts.model.QuestionDao;
+import com.javamentor.qa.platform.dao.abstracts.model.QuestionViewedDao;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
+import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
+import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
+import com.javamentor.qa.platform.service.abstracts.model.QuestionViewedService;
+import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
@@ -16,8 +23,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -28,10 +38,13 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -205,6 +218,11 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(content().contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isUserVote").value(nullValue()));
+
+        mockMvc.perform(get("/api/user/question/3")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
     @Test
     @DataSet(value = {
@@ -1086,5 +1104,84 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(jsonPath("$.items.[0].id").value(1))
                 .andExpect(jsonPath("$.items.[0].listTagDto.[0].id").value(101))
                 .andExpect(jsonPath("$.totalResultCount").value(1));
+    }
+
+    @Autowired
+    CacheManager cacheManager;
+    @Autowired
+    QuestionViewedDao questionViewedDao;
+    @Autowired
+    QuestionViewedService questionViewedService;
+    @Autowired
+    QuestionService questionService;
+    @Autowired
+    UserService userService;
+
+
+    @Test
+    @DataSet(
+            value = {
+                    "dataset/QuestionResourceController/question_viewed/question_viewed.yml"
+                    },
+            cleanBefore = true, cleanAfter = true,
+            strategy = SeedStrategy.CLEAN_INSERT)
+    @ExpectedDataSet(value = {
+            "dataset/QuestionResourceController/expected/question_viewed.yml"
+            },
+            ignoreCols = {"persist_date"})
+    public void shouldMarkQuestionLikeViewed() throws Exception {
+
+        String token100 = "Bearer " + getToken("user100@mail.ru", "password");
+        String token101 = "Bearer " + getToken("user101@mail.ru", "user101");
+
+        //добавляю новый вопрос
+        mockMvc.perform(get("/api/user/question/101/view")
+                        .contentType("application/json")
+                        .header("Authorization", token100))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        assertNull(cacheManager.getCache("QuestionViewed").get("101user100@mail.ru"));
+
+        //добавляю его же повторно
+        mockMvc.perform(get("/api/user/question/101/view")
+                        .contentType("application/json")
+                        .header("Authorization", token100))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        assertNotNull(cacheManager.getCache("QuestionViewed").get("101user100@mail.ru"));
+
+        //добавляю уже существующий вопрос для user100
+        mockMvc.perform(get("/api/user/question/102/view")
+                        .contentType("application/json")
+                        .header("Authorization", token100))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        assertNotNull(cacheManager.getCache("QuestionViewed").get("102user100@mail.ru"));
+
+        //добавляю несуществующий вопрос
+        mockMvc.perform(get("/api/user/question/1/view")
+                        .contentType("application/json")
+                        .header("Authorization", token100))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        assertNull(cacheManager.getCache("QuestionViewed").get("1user100@mail.ru"));
+
+        questionViewedDao.getQuestionViewedByUserAndQuestion("user100@mail.ru", 1L);
+
+        assertNotNull(cacheManager.getCache("QuestionViewed").get("1user100@mail.ru"));
+
+        //добавляю уже существующий вопрос для user101
+        mockMvc.perform(get("/api/user/question/102/view")
+                        .contentType("application/json")
+                        .header("Authorization", token101))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        assertNotNull(cacheManager.getCache("QuestionViewed").get("102user101@mail.ru"));
+
     }
 }

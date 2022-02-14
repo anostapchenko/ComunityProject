@@ -1,0 +1,151 @@
+role:
+  - id: 100
+    name: "ROLE_USER"
+
+user_entity:
+  - id: 100
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user100@mail.ru"
+    is_deleted : false
+    is_enabled: true
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 101
+    password: "$2a$10$TdNQOHURoq/ijg3HYlZb1OU8WOTEA5YwRofBlYMztGJxPu2aAneyu"
+    email: "user101@mail.ru"
+    is_deleted : false
+    is_enabled: true
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+
+question:
+  - id: 101
+    title: "q1"
+    description: "It's Question 1"
+    is_deleted: false
+    user_id: 100
+    last_redaction_date: 2021-12-09 19:41:18.252588
+  - id: 102
+    title: "q2"
+    description: "It's Question 2"
+    is_deleted: false
+    user_id: 100
+    last_redaction_date: 2021-12-09 19:41:18.252588
+  - id: 103
+    title: "q3"
+    description: "It's Question 3"
+    is_deleted: false
+    user_id: 100
+    last_redaction_date: 2021-12-09 19:41:18.252588
+  - id: 104
+    title: "q4"
+    description: "It's Question 4"
+    is_deleted: false
+    user_id: 100
+    last_redaction_date: 2021-12-09 19:41:18.252588
+  - id: 105
+    title: "q5"
+    description: "It's Question 5"
+    is_deleted: false
+    user_id: 100
+    last_redaction_date: 2021-12-09 19:41:18.252588
+  - id: 106
+    title: "q6"
+    description: "It's Question 6"
+    is_deleted: false
+    user_id: 100
+    last_redaction_date: 2021-12-09 19:41:18.252588
+  - id: 107
+    title: "q7"
+    description: "It's Question 7"
+    is_deleted: false
+    user_id: 100
+    last_redaction_date: 2021-12-09 19:41:18.252588
+  - id: 108
+    title: "q8"
+    description: "It's Question 8"
+    is_deleted: false
+    user_id: 100
+    last_redaction_date: 2021-12-09 19:41:18.252588
+
+tag:
+  - id: 101
+    description: "about spring"
+    name: "spring"
+    persist_date: 2021-12-01
+  - id: 102
+    description: "about spring security"
+    name: "spring security"
+  #    persist_date: 2021-12-20
+  - id: 103
+    description: "about spring boot"
+    name: "spring boot"
+    persist_date: 2021-12-20
+  - id : 104
+    name: "JPA"
+    description: "about JPA"
+    persist_date: 2021-12-05
+  - id: 105
+    description: "about hibernate"
+    name: "hibernate"
+    persist_date: 2021-12-12
+  - id: 106
+    description: "about spring MVC"
+    name: "spring MVC"
+    persist_date: 2021-12-17
+  - id: 107
+    description: "about REST"
+    name: "REST"
+    persist_date:
+  - id: 108
+    description: "about GIT"
+    name: "GIT"
+    persist_date: 2021-12-16
+  - id: 109
+    description: "about JUnit"
+    name: "JUnit"
+    persist_date: 2021-12-25
+  - id: 110
+    description: "about Maven"
+    name: "Maven"
+    persist_date: 0001-01-01
+  - id: 111
+    description: "about JAVA CORE"
+    name: "JAVA CORE"
+    persist_date: 2021-12-10
+
+question_has_tag:
+  - question_id: 101
+    tag_id: 101
+  - question_id: 101
+    tag_id: 109
+  - question_id: 102
+    tag_id: 102
+  - question_id: 103
+    tag_id: 102
+  - question_id: 104
+    tag_id: 103
+  - question_id: 105
+    tag_id: 103
+  - question_id: 106
+    tag_id: 103
+  - question_id: 107
+    tag_id: 104
+  - question_id: 108
+    tag_id: 104
+
+question_viewed:
+  - id : 2
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 102
+    user_id : 100
+  - id : 3
+    persist_date : 2021-12-13 15:09:52.715570
+    question_id : 102
+    user_id : 100
+  - id : 4
+    persist_date: 2021-12-13 15:09:52.715570
+    question_id: 102
+    user_id: 101

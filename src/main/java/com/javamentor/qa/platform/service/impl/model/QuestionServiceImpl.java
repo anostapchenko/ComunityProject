@@ -5,8 +5,8 @@ import com.javamentor.qa.platform.dao.abstracts.model.TagDao;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.Tag;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -57,5 +57,4 @@ public class QuestionServiceImpl extends ReadWriteServiceImpl<Question, Long> im
         question.setTags(listTagForQuestion);
         super.persist(question);
     }
-
 }
