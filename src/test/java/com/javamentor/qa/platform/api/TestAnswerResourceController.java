@@ -326,4 +326,48 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
+
+
+    @Test
+    @DataSet(value = {
+            "dataset/testAnswerResourceController/moreAnswers.yml",
+            "dataset/testAnswerResourceController/moreQuestions.yml",
+            "dataset/testAnswerResourceController/moreVoteAnswer.yml",
+            "dataset/testAnswerResourceController/moreUsers.yml",
+            "dataset/testAnswerResourceController/roles.yml",
+            "dataset/testAnswerResourceController/expected/reputation10-5.yml"
+    }
+    )
+
+    public void getAllAnswerDtoByQuestionId() throws Exception {
+
+        String token = "Bearer " + getToken("user100@mail.ru", "password");
+
+        //Тестируем корректный случай
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/100/answer")
+                        .header("Authorization", token)
+                        .contentType("application/json")
+                ).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].id").value(100))
+                .andExpect(jsonPath("$.[0].userId").value(100))
+                .andExpect(jsonPath("$.[0].userReputation").value(5))
+                .andExpect(jsonPath("$.[0].questionId").value(100))
+                .andExpect(jsonPath("$.[0].htmlBody").value("Body of helpful and well written answer1"))
+                .andExpect(jsonPath("$.[0].isHelpful").value("false"))
+                .andExpect(jsonPath("$.[0].countValuable").value(2))
+                .andExpect(jsonPath("$.[0].nickName").value("user0"))
+                .andExpect(jsonPath("$.[1].id").value(101))
+                .andExpect(jsonPath("$.[2].id").value(102))
+                .andExpect(jsonPath("$.[3].id").value(103))
+                .andExpect(jsonPath("$.size()").value(4));
+
+        //Тестируем случай с вопросом без ответов
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/104/answer")
+                        .header("Authorization", token)
+                        .contentType("application/json")
+                ).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(0));
+    }
 }
