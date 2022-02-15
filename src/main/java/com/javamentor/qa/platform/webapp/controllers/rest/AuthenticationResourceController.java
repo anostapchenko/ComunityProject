@@ -68,11 +68,11 @@ public class AuthenticationResourceController {
     })
     public ResponseEntity<String> authorizationCheck(@AuthenticationPrincipal UserDetails userDetails){
 
-        if (userDetails == null){
+        if (userDetails == null) {
             return new ResponseEntity<>("User is not authenticated", HttpStatus.TEMPORARY_REDIRECT);
         }
 
-        if (!userDetails.getAuthorities().contains(roleService.getByName("ROLE_ADMIN").get())){
+        if (!userDetails.getAuthorities().contains(roleService.getByName("ROLE_USER").get())){
             return new ResponseEntity<>("FORBIDDEN", HttpStatus.FORBIDDEN);
         }
 
