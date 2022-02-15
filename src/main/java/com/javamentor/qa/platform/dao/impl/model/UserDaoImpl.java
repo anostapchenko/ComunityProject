@@ -5,7 +5,9 @@ import com.javamentor.qa.platform.dao.util.SingleResultUtil;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +39,11 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
     }
 
     @Override
+    @CacheEvict(value = "User", key = "#user.email")
+    public void delete(User user) {super.delete(user);}
+
+    @Override
+    @CacheEvict(value = "User", key = "#username")
     public void changePassword(String password, String username) {
         entityManager
                 .createQuery("update User u set u.password = :password where u.email = :username")

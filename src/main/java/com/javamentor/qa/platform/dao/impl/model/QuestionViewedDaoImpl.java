@@ -30,14 +30,9 @@ public class QuestionViewedDaoImpl extends ReadWriteDaoImpl<QuestionViewed, Long
                 .getResultList();
     }
 
-    @Caching(
-            evict = {@CacheEvict(
-                    value = "QuestionViewed",
-                    key = "#e.question.id+#e.user.email",
-                    condition="#e instanceof T(com.javamentor.qa.platform.models.entity.question.QuestionViewed)")}
-    )
     @Override
-    public void persist(QuestionViewed e) {
-        entityManager.persist(e);
+    @CacheEvict(value = "QuestionViewed", key = "#questionViewed.question.id+#questionViewed.user.email")
+    public void persist(QuestionViewed questionViewed) {
+        super.persist(questionViewed);
     }
 }

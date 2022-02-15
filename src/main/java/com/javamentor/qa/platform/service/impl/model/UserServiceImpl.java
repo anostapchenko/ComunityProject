@@ -99,4 +99,11 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User, Long> implements
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
+    @Transactional
+    public void deleteByEmail(String email) {
+        Optional<User> user = userDao.getWithRoleByEmail(email);
+        if (user.isPresent()){
+            userDao.delete(user.get());
+        }
+    }
 }
