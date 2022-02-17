@@ -9,5 +9,6 @@ public interface UserService extends ReadWriteService<User, Long> {
 
     void changePassword(String password, User user);
 
-    void deleteByEmail(String email);
+    void deleteById(String email);
+
 }

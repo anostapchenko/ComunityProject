@@ -2,18 +2,13 @@ package com.javamentor.qa.platform.dao.impl.model;
 
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.dao.util.SingleResultUtil;
-import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.user.User;
-import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.Optional;
 
@@ -31,12 +26,16 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
     }
 
     @Override
-    public void deleteById(Long id) {
+    @CacheEvict(value = "User", key = "#email")
+    public void deleteById(String email) {
         entityManager
-                .createQuery("update User u set u.isDeleted=true where u.id=:id")
-                .setParameter("id", id)
+                .createQuery("update User u set u.isDeleted=true where u.email=:email")
+                .setParameter("email", email)
                 .executeUpdate();
     }
+
+    @Override
+    public void deleteById(Long id) {} // Не должен работать, оставляю пустым. Может бросать исключение?
 
     @Override
     @CacheEvict(value = "User", key = "#user.email")

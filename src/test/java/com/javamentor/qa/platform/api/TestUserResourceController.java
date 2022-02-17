@@ -40,7 +40,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             value = {
                     "dataset/testUserResourceController/roles.yml",
                     "dataset/testUserResourceController/users.yml",
-                    "dataset/testUserResourceController/reputacion.yml",
+                    "dataset/testUserResourceController/reputation.yml",
                     "dataset/testUserResourceController/answers.yml",
                     "dataset/testUserResourceController/questions.yml"
             },
@@ -515,11 +515,11 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
     }
 
     @Autowired
-    CacheManager cacheManager;
+    private CacheManager cacheManager;
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Test
     @DataSet(cleanBefore = true, cleanAfter = true,
@@ -554,13 +554,16 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
 
         assertNull(cacheManager.getCache("User").get("test102@mail.ru"));
 
-
         userDao.isUserExistByEmail("test102@mail.ru");
         assertNotNull(cacheManager.getCache("User").get("test102@mail.ru"));
 
-        //Удаляю
-        userService.deleteByEmail("test102@mail.ru");
+        //Удаляю по email
+        userService.deleteById("test102@mail.ru");
         assertNull(cacheManager.getCache("User").get("test102@mail.ru"));
+
+        //Удаляю по id с помощью Dao - ничего не должен удалять
+        userDao.deleteById(103L);
+        assertTrue(userService.getById(103L).isPresent());
     }
 }
 
