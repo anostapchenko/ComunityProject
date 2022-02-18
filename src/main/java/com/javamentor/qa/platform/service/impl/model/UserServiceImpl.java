@@ -105,12 +105,4 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User, Long> implements
         userDao.deleteById(email);
     }
 
-    @Override
-    @Transactional
-    public void deleteById(Long id) {
-        Optional<User> user = getById(id);
-        if (user.isPresent()){
-            userDao.deleteById(user.get().getEmail());
-        }
-    }
 }
