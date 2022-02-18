@@ -4,12 +4,25 @@ package com.javamentor.qa.platform.api;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.javamentor.qa.platform.AbstractClassForDRRiderMockMVCTests;
+import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
+import com.javamentor.qa.platform.models.entity.user.User;
+import com.javamentor.qa.platform.security.JwtUtil;
+import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -27,7 +40,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             value = {
                     "dataset/testUserResourceController/roles.yml",
                     "dataset/testUserResourceController/users.yml",
-                    "dataset/testUserResourceController/reputacion.yml",
+                    "dataset/testUserResourceController/reputation.yml",
                     "dataset/testUserResourceController/answers.yml",
                     "dataset/testUserResourceController/questions.yml"
             },
@@ -500,4 +513,72 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                 .andExpect(jsonPath("$.items").isNotEmpty())
                 .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(110, 107, 104, 106, 103, 109, 101, 108, 105)));
     }
+
+    @Autowired
+    private CacheManager cacheManager;
+    @Autowired
+    private UserDao userDao;
+    @Autowired
+    private UserService userService;
+
+    @Test
+    @DataSet(cleanBefore = true, cleanAfter = true,
+            value = {
+                    "dataset/testUserResourceController/shouldCacheIsUserExistByEmail/roles.yml",
+                    "dataset/testUserResourceController/shouldCacheIsUserExistByEmail/users.yml"
+                    },
+            strategy = SeedStrategy.CLEAN_INSERT)
+    public void shouldCacheIsUserExistByEmail() throws Exception {
+
+        String token101 = "Bearer " + getToken("test102@mail.ru", "user1");
+
+        //Проверяю кэширование существующего
+        assertNull(cacheManager.getCache("User").get("test102@mail.ru"));
+        userDao.isUserExistByEmail("test102@mail.ru");
+        assertNotNull(cacheManager.getCache("User").get("test102@mail.ru"));
+        assertTrue(userDao.isUserExistByEmail("test102@mail.ru"));
+
+        //Проверяю кэширование несуществующего
+        assertNull(cacheManager.getCache("User").get("test100@mail.ru"));
+        userDao.isUserExistByEmail("test100@mail.ru");
+        assertNotNull(cacheManager.getCache("User").get("test100@mail.ru"));
+        assertFalse(userDao.isUserExistByEmail("test100@mail.ru"));
+
+        //Меняю пароль
+        mockMvc.perform(MockMvcRequestBuilders
+                .patch("/api/user/change/password?password=newPassword321")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", token101))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        assertNull(cacheManager.getCache("User").get("test102@mail.ru"));
+
+        userDao.isUserExistByEmail("test102@mail.ru");
+        assertNotNull(cacheManager.getCache("User").get("test102@mail.ru"));
+
+        //Удаляю по email
+        userService.deleteById("test102@mail.ru");
+        assertNull(cacheManager.getCache("User").get("test102@mail.ru"));
+
+        //Удаляю по id с помощью Dao - ничего не должен удалять
+        userDao.deleteById(103L);
+        assertTrue(userService.getById(103L).isPresent());
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1107,16 +1107,15 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     }
 
     @Autowired
-    CacheManager cacheManager;
+    private CacheManager cacheManager;
     @Autowired
-    QuestionViewedDao questionViewedDao;
+    private QuestionViewedDao questionViewedDao;
     @Autowired
-    QuestionViewedService questionViewedService;
+    private QuestionViewedService questionViewedService;
     @Autowired
-    QuestionService questionService;
+    private QuestionService questionService;
     @Autowired
-    UserService userService;
-
+    private UserService userService;
 
     @Test
     @DataSet(
