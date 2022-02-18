@@ -71,6 +71,7 @@ public class AuthenticationResourceController {
             return new ResponseEntity<>("User is not authenticated", HttpStatus.TEMPORARY_REDIRECT);
         }
 
+        //Если залогинится не под ролью ROLE_USER, то доступ будет запрещен.
         if (!userDetails.getAuthorities().contains(roleService.getByName("ROLE_USER").get())){
             return new ResponseEntity<>("FORBIDDEN", HttpStatus.FORBIDDEN);
         }
