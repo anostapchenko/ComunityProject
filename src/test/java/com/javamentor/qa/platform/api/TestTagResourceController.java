@@ -10,9 +10,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.isA;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -355,5 +357,26 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andExpect(jsonPath("$.totalResultCount").value("4"))
                 .andExpect(jsonPath("$.items").isNotEmpty())
                 .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(103, 102, 104, 101)));
+    }
+
+    //Удаление IgnoredTag и TrackedTag
+    @Test
+    @DataSet(value= {
+            "dataset/testTagResourceController/tag_ignore.yml",
+            "dataset/testTagResourceController/trackedTag2.yml",
+            "dataset/testTagResourceController/users.yml",
+            "dataset/testTagResourceController/roles.yml",
+            "dataset/testTagResourceController/tag2.yml"
+    },strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true, cleanAfter = true)
+    public void shouldDeleteIgnoredTagAndTrackedTag() throws Exception{
+        mockMvc.perform(delete("/api/user/tag/ignored/delete?tag=101")
+                .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")));
+
+        assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM IgnoredTag" + " e WHERE e.id =: id").setParameter("id",(long) 101).getSingleResult() > 0).isEqualTo(false);
+
+        mockMvc.perform(delete("/api/user/tag/tracked/delete?tag=101")
+                .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")));
+
+        assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM TrackedTag" + " e WHERE e.id =: id").setParameter("id",(long) 101).getSingleResult() > 0).isEqualTo(false);
     }
 }

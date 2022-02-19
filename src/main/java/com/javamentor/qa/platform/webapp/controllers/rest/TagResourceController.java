@@ -10,6 +10,8 @@ import com.javamentor.qa.platform.models.dto.question.TagViewDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.TagDtoService;
+import com.javamentor.qa.platform.service.abstracts.model.IgnoredTagService;
+import com.javamentor.qa.platform.service.abstracts.model.TrackedTagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,10 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,6 +33,8 @@ import java.util.List;
 public class TagResourceController {
 
     private final TagDtoService tagDtoService;
+    private final TrackedTagService trackedTagService;
+    private final IgnoredTagService ignoredTagService;
 
     @Operation(
             summary = "Теги, которые пользователь выбрал для игнорирования",
@@ -154,5 +155,24 @@ public class TagResourceController {
         PaginationData data = new PaginationData(page, items,
                 TagPageDtoDaoAllTagsByPopularImpl.class.getSimpleName());
         return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Удаление IgnoredTag",
+            description = "данный метод ничего не возвращает"
+    )
+    @DeleteMapping("/ignored/delete")
+    public void deleteIgnoredTag(@RequestParam(value = "tag") Long id){
+
+        ignoredTagService.deleteById(id);
+    }
+
+    @Operation(
+            summary = "Удаление TrackedTag",
+            description = "данный метод ничего не возвращает"
+    )
+    @DeleteMapping("/tracked/delete")
+    public void deleteTrackedTag(@RequestParam(value = "tag") Long id){
+        trackedTagService.deleteById(id);
     }
 }
