@@ -1,9 +1,6 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoAllQuestionsImpl;
-import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoByNoAnswersImpl;
-import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoByTagId;
-import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoSortedByDate;
+import com.javamentor.qa.platform.dao.impl.pagination.*;
 import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
@@ -303,6 +300,23 @@ public class QuestionResourceController {
         }
 
         return new ResponseEntity<>("There is no question "+id.toString(), HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/api/user/AllQuestionSortedByPopular")
+    @Operation(summary = "Получение полного пагинированного списка популярных вопросов",
+            description = "Получение пагинированного списка вопросов пользователя, " +
+                    "в запросе указываем page - номер страницы, обязательный параметр, items (по умолчанию 10) - количество результатов на странице")
+    @ApiResponse(responseCode = "200", description = "Возвращает пагинированный список PageDTO<QuestionDTO> (id, title, authorId," +
+            " authorReputation, authorName, authorImage, description, viewCount, countAnswer, countValuable," +
+            " LocalDateTime, LocalDateTime, listTagDto", content = {
+            @Content(mediaType = "application/json")
+    })
+    public ResponseEntity<PageDTO<QuestionViewDto>> AllQuestionSortedByPopular(@RequestParam int page,
+                                                                               @RequestParam(required = false, defaultValue = "10") int items) {
+
+        PaginationData data = new PaginationData(page, items, QuestionPageDtoDaoAllSortedByPopular.class.getSimpleName());
+
+        return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
     }
 }
 
