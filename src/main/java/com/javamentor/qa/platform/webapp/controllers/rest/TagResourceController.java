@@ -11,6 +11,7 @@ import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.TagDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.IgnoredTagService;
+import com.javamentor.qa.platform.service.abstracts.model.TagService;
 import com.javamentor.qa.platform.service.abstracts.model.TrackedTagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,7 +23,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
@@ -35,6 +40,7 @@ public class TagResourceController {
     private final TagDtoService tagDtoService;
     private final TrackedTagService trackedTagService;
     private final IgnoredTagService ignoredTagService;
+    private final TagService tagService;
 
     @Operation(
             summary = "Теги, которые пользователь выбрал для игнорирования",
@@ -163,8 +169,9 @@ public class TagResourceController {
     )
     @DeleteMapping("/ignored/delete")
     public void deleteIgnoredTag(@RequestParam(value = "tag") Long id){
-
-        ignoredTagService.deleteById(id);
+        if(tagService.existsById(id)) {
+            ignoredTagService.deleteIgnoredTagByTagId(id);
+        }
     }
 
     @Operation(
@@ -173,6 +180,8 @@ public class TagResourceController {
     )
     @DeleteMapping("/tracked/delete")
     public void deleteTrackedTag(@RequestParam(value = "tag") Long id){
-        trackedTagService.deleteById(id);
+        if(tagService.existsById(id)){
+            trackedTagService.deleteTrackedTagByTagId(id);
+        }
     }
 }

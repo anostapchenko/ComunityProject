@@ -4,6 +4,7 @@ import com.javamentor.qa.platform.dao.abstracts.model.TrackedTagDao;
 import com.javamentor.qa.platform.models.entity.question.TrackedTag;
 import com.javamentor.qa.platform.service.abstracts.model.TrackedTagService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TrackedTagServiceImpl extends ReadWriteServiceImpl<TrackedTag, Long> implements TrackedTagService {
@@ -13,6 +14,12 @@ public class TrackedTagServiceImpl extends ReadWriteServiceImpl<TrackedTag, Long
     public TrackedTagServiceImpl(TrackedTagDao trackedTagDao) {
         super(trackedTagDao);
         this.trackedTagDao = trackedTagDao;
+    }
+
+    @Override
+    @Transactional
+    public void deleteTrackedTagByTagId (Long tagId){
+        trackedTagDao.deleteTrackedTagByTagId(tagId);
     }
 
 }

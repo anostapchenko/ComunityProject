@@ -4,4 +4,5 @@ import com.javamentor.qa.platform.models.entity.question.IgnoredTag;
 
 public interface IgnoredTagService extends ReadWriteService<IgnoredTag, Long> {
 
+    void deleteIgnoredTagByTagId (Long tagId);
 }

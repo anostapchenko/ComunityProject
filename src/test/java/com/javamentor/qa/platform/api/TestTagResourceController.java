@@ -369,14 +369,14 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
             "dataset/testTagResourceController/tag2.yml"
     },strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true, cleanAfter = true)
     public void shouldDeleteIgnoredTagAndTrackedTag() throws Exception{
-        mockMvc.perform(delete("/api/user/tag/ignored/delete?tag=101")
+        mockMvc.perform(delete("/api/user/tag/ignored/delete?tag=102")
                 .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")));
 
         assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM IgnoredTag" + " e WHERE e.id =: id").setParameter("id",(long) 101).getSingleResult() > 0).isEqualTo(false);
 
-        mockMvc.perform(delete("/api/user/tag/tracked/delete?tag=101")
+        mockMvc.perform(delete("/api/user/tag/tracked/delete?tag=102")
                 .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")));
 
-        assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM TrackedTag" + " e WHERE e.id =: id").setParameter("id",(long) 101).getSingleResult() > 0).isEqualTo(false);
+        assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM TrackedTag" + " e WHERE e.id =: id").setParameter("id",(long) 100).getSingleResult() > 0).isEqualTo(false);
     }
 }
