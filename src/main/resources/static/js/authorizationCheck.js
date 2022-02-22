@@ -2,7 +2,9 @@
 var request = new XMLHttpRequest();
 var token = document.cookie.match(/token=(.+?)(;|$)/)
 request.open('GET', '/api/auth/check', false);
-request.setRequestHeader('Authorization', 'Bearer ' + token[1])
+if (token !== null) {
+     request.setRequestHeader('Authorization', 'Bearer ' + token[1])
+}
 request.send(null);
 
 if (request.status === 403) {
