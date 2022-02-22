@@ -1,6 +1,5 @@
 package com.javamentor.qa.platform.webapp.controllers;
 
-import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.webapp.controllers.exceptions.WrongPasswordFormatException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
