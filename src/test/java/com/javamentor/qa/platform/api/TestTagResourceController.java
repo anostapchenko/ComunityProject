@@ -370,13 +370,31 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
     },strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true, cleanAfter = true)
     public void shouldDeleteIgnoredTagAndTrackedTag() throws Exception{
         mockMvc.perform(delete("/api/user/tag/ignored/delete?tag=102")
-                .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")));
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")))
+                .andDo(print())
+                .andExpect(status().isOk());
 
         assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM IgnoredTag" + " e WHERE e.id =: id").setParameter("id",(long) 101).getSingleResult() > 0).isEqualTo(false);
 
+        mockMvc.perform(delete("/api/user/tag/ignored/delete?tag=102")
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")))
+                        .andDo(print())
+                        .andExpect(status().isBadRequest());
+
         mockMvc.perform(delete("/api/user/tag/tracked/delete?tag=102")
-                .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")));
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")))
+                .andDo(print())
+                .andExpect(status().isOk());
 
         assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM TrackedTag" + " e WHERE e.id =: id").setParameter("id",(long) 100).getSingleResult() > 0).isEqualTo(false);
+
+        mockMvc.perform(delete("/api/user/tag/tracked/delete?tag=102")
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }

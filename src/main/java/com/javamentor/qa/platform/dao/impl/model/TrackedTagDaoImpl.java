@@ -14,8 +14,15 @@ public class TrackedTagDaoImpl extends ReadWriteDaoImpl<TrackedTag, Long> implem
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Override
     public void deleteTrackedTagByTagId (Long tagId){
-        String hql = "delete from TrackedTag tt where tt.trackedTag.id = :id";
-        entityManager.createQuery(hql).setParameter("id", tagId).executeUpdate();
+        String hql = "delete from TrackedTag tt where tt.trackedTag.id = :tagId";
+        entityManager.createQuery(hql).setParameter("tagId", tagId).executeUpdate();
+    }
+
+    @Override
+    public boolean existsByTagId(Long tagId){
+        long count = (long) entityManager.createQuery("SELECT COUNT(tt) FROM TrackedTag tt WHERE tt.trackedTag.id =: tagId").setParameter("tagId", tagId).getSingleResult();
+        return count > 0;
     }
 }

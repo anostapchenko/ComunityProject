@@ -22,4 +22,9 @@ public class IgnoredTagServiceImpl extends ReadWriteServiceImpl<IgnoredTag, Long
         ignoredTagDao.deleteIgnoredTagByTagId(tagId);
     }
 
+    @Override
+    @Transactional
+    public boolean existsByTagId(Long tagId){
+        return ignoredTagDao.existsByTagId(tagId);
+    }
 }

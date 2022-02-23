@@ -22,4 +22,10 @@ public class TrackedTagServiceImpl extends ReadWriteServiceImpl<TrackedTag, Long
         trackedTagDao.deleteTrackedTagByTagId(tagId);
     }
 
+    @Override
+    @Transactional
+    public boolean existsByTagId(Long tagId) {
+        return trackedTagDao.existsByTagId(tagId);
+    }
+
 }

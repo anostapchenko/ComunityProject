@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.javamentor.qa.platform.dao.impl.pagination.tagdto.TagPageDtoDaoAllTagsByNameImpl;
 import com.javamentor.qa.platform.dao.impl.pagination.tagdto.TagPageDtoDaoAllTagsByPersistDateTimeImpl;
 import com.javamentor.qa.platform.dao.impl.pagination.tagdto.TagPageDtoDaoAllTagsByPopularImpl;
+import com.javamentor.qa.platform.models.dto.AnswerDTO;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.question.PopularTagDto;
 import com.javamentor.qa.platform.models.dto.question.TagDto;
@@ -165,23 +166,39 @@ public class TagResourceController {
 
     @Operation(
             summary = "Удаление IgnoredTag",
-            description = "данный метод ничего не возвращает"
+            description = "Удаление IgnoredTag"
     )
+    @ApiResponse(responseCode = "200", description = "IgnoredTag удален", content = {
+            @Content(mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "400", description = "IgnoredTag c таким id не существует", content = {
+            @Content(mediaType = "application/json")
+    })
     @DeleteMapping("/ignored/delete")
-    public void deleteIgnoredTag(@RequestParam(value = "tag") Long id){
-        if(tagService.existsById(id)) {
+    public ResponseEntity<?> deleteIgnoredTag(@RequestParam(value = "tag") Long id){
+        if(ignoredTagService.existsByTagId(id)) {
             ignoredTagService.deleteIgnoredTagByTagId(id);
+            return new ResponseEntity<>("IgnoredTag with id = " + id + " was successfully deleted",HttpStatus.OK);
         }
+        return new ResponseEntity<>("IgnoredTag with id = " + id + " doesn't exist", HttpStatus.BAD_REQUEST);
     }
 
     @Operation(
             summary = "Удаление TrackedTag",
-            description = "данный метод ничего не возвращает"
+            description = "Удаление TrackedTag"
     )
+    @ApiResponse(responseCode = "200", description = "TrackedTag удален", content = {
+            @Content(mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "400", description = "TrackedTag c таким id не существует", content = {
+            @Content(mediaType = "application/json")
+    })
     @DeleteMapping("/tracked/delete")
-    public void deleteTrackedTag(@RequestParam(value = "tag") Long id){
-        if(tagService.existsById(id)){
+    public ResponseEntity<?> deleteTrackedTag(@RequestParam(value = "tag") Long id){
+        if(trackedTagService.existsByTagId(id)){
             trackedTagService.deleteTrackedTagByTagId(id);
+            return new ResponseEntity<>("TrackedTag with id = " + id + " was successfully deleted",HttpStatus.OK);
         }
+        return new ResponseEntity<>("TrackedTag with id = " + id + " doesn't exist", HttpStatus.BAD_REQUEST);
     }
 }
