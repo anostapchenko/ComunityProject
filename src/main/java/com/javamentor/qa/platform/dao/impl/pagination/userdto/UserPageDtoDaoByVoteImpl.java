@@ -4,9 +4,7 @@ import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import com.javamentor.qa.platform.models.entity.user.reputation.ReputationType;
-import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.hibernate.transform.ResultTransformer;
-import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

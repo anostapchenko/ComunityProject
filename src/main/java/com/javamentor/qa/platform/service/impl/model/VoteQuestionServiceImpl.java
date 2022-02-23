@@ -1,20 +1,14 @@
 package com.javamentor.qa.platform.service.impl.model;
 
-import com.javamentor.qa.platform.dao.abstracts.model.QuestionDao;
 import com.javamentor.qa.platform.dao.abstracts.model.ReputationDao;
-import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.dao.abstracts.model.VoteQuestionDao;
-import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
-import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
 import com.javamentor.qa.platform.models.entity.user.reputation.ReputationType;
 import com.javamentor.qa.platform.service.abstracts.model.VoteQuestionService;
-import org.springframework.jca.cci.CciOperationNotSupportedException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
