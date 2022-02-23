@@ -10,10 +10,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.isA;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -47,8 +49,7 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
     }
 
     public String getTokens(String email) throws Exception {
-        String tokenJS = mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/auth/token")
+        String tokenJS = mockMvc.perform(post("/api/auth/token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\" : \"" + email + "\"," +
                         " \"password\" : \"password\"}")
@@ -355,5 +356,42 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andExpect(jsonPath("$.totalResultCount").value("4"))
                 .andExpect(jsonPath("$.items").isNotEmpty())
                 .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(103, 102, 104, 101)));
+    }
+
+    // Добавление IgnoredTag и TrackedTag
+    @Test
+    @DataSet(value = {
+            "dataset/testTagResourceController/users.yml",
+            "dataset/testTagResourceController/roles.yml",
+            "dataset/testTagResourceController/tag2.yml"
+    }, strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true, cleanAfter = true)
+    public void shouldAddIgnoredTagAndTrackedTag() throws Exception {
+        for (int i = 0; i < 2; i++) {
+            mockMvc.perform(post("/api/user/tag/ignored/add?tag=102")
+                    .header("Authorization", "Bearer " +
+                            getToken("user102@mail.ru", "test15")));
+            assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM IgnoredTag e")
+                    .getSingleResult() == 1).isEqualTo(true);
+        }
+
+        for (int i = 0; i < 2; i++) {
+            mockMvc.perform(post("/api/user/tag/tracked/add?tag=103")
+                    .header("Authorization", "Bearer " +
+                            getToken("user102@mail.ru", "test15")));
+            assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM TrackedTag e")
+                    .getSingleResult() == 1).isEqualTo(true);
+        }
+
+        mockMvc.perform(post("/api/user/tag/ignored/add?tag=103")
+                .header("Authorization", "Bearer " +
+                        getToken("user102@mail.ru", "test15")));
+        assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM IgnoredTag e")
+                .getSingleResult() == 1).isEqualTo(true);
+
+        mockMvc.perform(post("/api/user/tag/tracked/add?tag=102")
+                .header("Authorization", "Bearer " +
+                        getToken("user102@mail.ru", "test15")));
+        assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM TrackedTag e")
+                .getSingleResult() == 1).isEqualTo(true);
     }
 }

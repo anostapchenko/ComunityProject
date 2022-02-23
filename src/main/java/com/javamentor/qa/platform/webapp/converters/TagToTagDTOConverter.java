@@ -6,10 +6,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public abstract class TagToTagDTOConverter {
 
-    public TagToTagDTOConverter INSTANCE = Mappers.getMapper( TagToTagDTOConverter.class );
+//    public TagToTagDTOConverter INSTANCE = Mappers.getMapper( TagToTagDTOConverter.class );
 
     @Mapping(source = "tag.id", target = "id")
     @Mapping(source = "tag.name", target = "name")

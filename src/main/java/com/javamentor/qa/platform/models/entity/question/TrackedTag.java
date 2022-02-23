@@ -23,6 +23,12 @@ import java.time.LocalDateTime;
 @Table(name = "tag_tracked")
 public class TrackedTag implements Serializable {
 
+    public TrackedTag(Tag trackedTag, User user, LocalDateTime persistDateTime) {
+        this.trackedTag = trackedTag;
+        this.user = user;
+        this.persistDateTime = persistDateTime;
+    }
+
     private static final long serialVersionUID = 6056471660108076229L;
     @Id
     @GeneratedValue(generator = "TrackedTag_seq")
