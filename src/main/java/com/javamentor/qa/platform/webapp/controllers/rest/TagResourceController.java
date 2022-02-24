@@ -27,7 +27,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -64,12 +69,14 @@ public class TagResourceController {
     public void addIgnoredTag (Authentication auth,
                                @RequestParam(value = "tag") Long id) {
         User user = (User) auth.getPrincipal();
-        com.javamentor.qa.platform.models.entity.question.Tag tag = tagService.getById(id).orElseThrow();
+        com.javamentor.qa.platform.models.entity.question.Tag tag =
+                tagService.getById(id)
+                        .orElseThrow(() -> new ConstrainException("Can't find tag with id:" + id));
         TagDto tagDto = tagToTagDTOConverter.tagToTagDTONotQuestAndDescription(tag);
-        List<TagDto> IgnoredTagDtoList = tagDtoService.getIgnoredTagsByUserId(user.getId());
-        List<TagDto> TrackedTagDtoList = tagDtoService.getTrackedTagsByUserId(user.getId());
-        if (!IgnoredTagDtoList.contains(tagDto) && !TrackedTagDtoList.contains(tagDto)) {
-            ignoredTagService.persist(new IgnoredTag(tag, user, LocalDateTime.now()));
+        List<TagDto> ignoredTagDtoList = tagDtoService.getIgnoredTagsByUserId(user.getId());
+        List<TagDto> trackedTagDtoList = tagDtoService.getTrackedTagsByUserId(user.getId());
+        if (!ignoredTagDtoList.contains(tagDto) && !trackedTagDtoList.contains(tagDto)) {
+            ignoredTagService.persist(new IgnoredTag(tag, user));
         } else {
             throw new ConstrainException("Ignored tag already exists or is contained in the tracked tags");
         }
@@ -109,7 +116,7 @@ public class TagResourceController {
         List<TagDto> IgnoredTagDtoList = tagDtoService.getIgnoredTagsByUserId(user.getId());
         List<TagDto> TrackedTagDtoList = tagDtoService.getTrackedTagsByUserId(user.getId());
         if (!IgnoredTagDtoList.contains(tagDto) && !TrackedTagDtoList.contains(tagDto)) {
-            trackedTagService.persist(new TrackedTag(tag, user, LocalDateTime.now()));
+            trackedTagService.persist(new TrackedTag(tag, user));
         } else {
             throw new ConstrainException("Tracked tag already exists or is contained in the ignored tags");
         }

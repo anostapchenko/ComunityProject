@@ -9,8 +9,6 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "spring")
 public abstract class TagToTagDTOConverter {
 
-//    public TagToTagDTOConverter INSTANCE = Mappers.getMapper( TagToTagDTOConverter.class );
-
     @Mapping(source = "tag.id", target = "id")
     @Mapping(source = "tag.name", target = "name")
     @Mapping(source = "tag.persistDateTime", target = "persistDateTime")
