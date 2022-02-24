@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,7 +71,7 @@ public class AuthenticationResourceController {
             return new ResponseEntity<>("User is not authenticated", HttpStatus.TEMPORARY_REDIRECT);
         }
 
-        if (!userDetails.getAuthorities().contains(roleService.getByName("ROLE_USER").get())){
+        if (!userDetails.getAuthorities().stream().anyMatch(x -> x.getAuthority().equals("ROLE_USER"))){
             return new ResponseEntity<>("FORBIDDEN", HttpStatus.FORBIDDEN);
         }
 
