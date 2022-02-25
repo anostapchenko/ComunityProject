@@ -23,7 +23,6 @@ public class IgnoredTagServiceImpl extends ReadWriteServiceImpl<IgnoredTag, Long
     }
 
     @Override
-    @Transactional
     public boolean existsByTagId(Long tagId){
         return ignoredTagDao.existsByTagId(tagId);
     }

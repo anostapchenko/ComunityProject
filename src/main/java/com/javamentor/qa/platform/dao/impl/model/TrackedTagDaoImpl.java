@@ -22,7 +22,7 @@ public class TrackedTagDaoImpl extends ReadWriteDaoImpl<TrackedTag, Long> implem
 
     @Override
     public boolean existsByTagId(Long tagId){
-        long count = (long) entityManager.createQuery("SELECT COUNT(tt) FROM TrackedTag tt WHERE tt.trackedTag.id =: tagId").setParameter("tagId", tagId).getSingleResult();
-        return count > 0;
+        return (boolean) entityManager.createQuery("SELECT COUNT(tt) > 0 FROM TrackedTag tt WHERE tt.trackedTag.id =: tagId").setParameter("tagId", tagId).getSingleResult();
+
     }
 }

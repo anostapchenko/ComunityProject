@@ -21,7 +21,7 @@ public class IgnoredTagDaoImpl extends ReadWriteDaoImpl<IgnoredTag, Long> implem
 
     @Override
     public boolean existsByTagId(Long tagId){
-        long count = (long) entityManager.createQuery("SELECT COUNT(it) FROM IgnoredTag it WHERE it.ignoredTag.id =: tagId").setParameter("tagId", tagId).getSingleResult();
-        return count > 0;
+        return (boolean) entityManager.createQuery("SELECT COUNT(it) > 0 FROM IgnoredTag it WHERE it.ignoredTag.id =: tagId").setParameter("tagId", tagId).getSingleResult();
+
     }
 }

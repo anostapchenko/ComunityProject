@@ -23,7 +23,6 @@ public class TrackedTagServiceImpl extends ReadWriteServiceImpl<TrackedTag, Long
     }
 
     @Override
-    @Transactional
     public boolean existsByTagId(Long tagId) {
         return trackedTagDao.existsByTagId(tagId);
     }
