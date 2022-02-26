@@ -38,7 +38,7 @@ public class QuestionPageDtoDaoAllSortedByPopular  implements PageDtoDao<Questio
                     "            from votes_on_questions " +
                     "            group by question_id), " +
                     "    a as (select question_id as question_id, sum(1) as countAnswer from answer where not is_deleted and not is_deleted_by_moderator group by question_id) " +
-                    "select " +
+                    "select distinct" +
                     "    q.id, " +
                     "    q.title, " +
                     "    q.user_id as authorId, " +
@@ -58,12 +58,17 @@ public class QuestionPageDtoDaoAllSortedByPopular  implements PageDtoDao<Questio
                     "left join vq on q.id = vq.question_id " +
                     "left join a on q.id = a.question_id " +
                     "left join user_entity as u on q.user_id = u.id " +
+                    "left join question_has_tag as tag on q.id = tag.question_id " +
                     "where not q.is_deleted " +
+                    "      and case when :trackedTag is null then true else tag.tag_id in (:trackedTag) end " +
+                    "      and case when :ignoredTag is null then true else tag.tag_id not in (:ignoredTag) end " +
                     "order by " +
                     "    COALESCE(a.countAnswer, 0) desc, " +
                     "    COALESCE(vq.countValuable, 0) desc, " +
                     "    COALESCE(qv.viewCount, 0) desc, " +
                     "    q.last_redaction_date")
+        .setParameter("trackedTag", properties.getProps().get("trackedTag") == null ? new ArrayList<Long>() : properties.getProps().get("trackedTag"))
+        .setParameter("ignoredTag", properties.getProps().get("ignoredTag") == null ? new ArrayList<Long>() : properties.getProps().get("ignoredTag"))
         .setFirstResult(offset)
         .setMaxResults(itemsOnPage)
         .unwrap(Query.class)

@@ -92,6 +92,22 @@ question:
     last_redaction_date: 2021-12-09 19:41:18.252588
     persist_date: 2021-12-13 15:07:52.715570
 
+question_has_tag:
+  - question_id: 101
+    tag_id: 101
+  - question_id: 102
+    tag_id: 102
+  - question_id: 103
+    tag_id: 102
+  - question_id: 103
+    tag_id: 101
+  - question_id: 104
+    tag_id: 103
+  - question_id: 104
+    tag_id: 101
+  - question_id: 107
+    tag_id: 101
+
 question_viewed:
   - id : 1
     persist_date : 2021-12-13 15:09:52.715570
@@ -147,3 +163,33 @@ answer:
     update_date : 2021-12-13 15:09:52.715570
     question_id : 108
     user_id : 100
+
+tag:
+  - id: 100
+    name: "TAG100"
+  - id: 107
+    description: "Some text here"
+    name: "Some name here"
+    persist_date: 2021-12-06 00:00:00
+  - id: 102
+    description: "Some another text here"
+    name: "Some another name here"
+    persist_date: 2021-12-06 00:00:00
+  - id: 103
+    description: "Some text here"
+    name: "Some name here"
+    persist_date: 2021-12-06 00:00:00
+  - id: 104
+    description: "Some another text here"
+    name: "Some another name here"
+    persist_date: 2021-12-06 00:00:00
+  - id: 105
+    description: "Some text here"
+    name: "Some name here"
+    persist_date: 2021-12-06 00:00:00
+  - id: 106
+    description: "Some another text here"
+    name: "Some another name here"
+    persist_date: 2021-12-06 00:00:00
+  - id: 101
+    name: "TAG101"

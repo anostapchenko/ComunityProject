@@ -1190,7 +1190,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
 
         String token100 = "Bearer " + getToken("user100@mail.ru", "password");
 
-        mockMvc.perform(get("/api/user/AllQuestionSortedByPopular?page=1")
+        mockMvc.perform(get("/api/user/popular?page=1")
                         .contentType("application/json")
                         .header("Authorization", token100))
                 .andDo(print())
@@ -1198,6 +1198,35 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(jsonPath("$.items.[1].id").value(102))
                 .andExpect(jsonPath("$.items.[2].id").value(108))
                 .andExpect(jsonPath("$.items.[3].id").value(103))
+                .andExpect(jsonPath("$.items.[4].id").value(104))
+                .andExpect(jsonPath("$.items.[5].id").value(105))
+                .andExpect(jsonPath("$.items.[6].id").value(106))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/user/popular?page=1&items=10&trackedTag=101,102&ignoredTag=103")
+                        .contentType("application/json")
+                        .header("Authorization", token100))
+                .andDo(print())
+                .andExpect(jsonPath("$.items.[0].id").value(101))
+                .andExpect(jsonPath("$.items.[1].id").value(102))
+                .andExpect(jsonPath("$.items.[2].id").value(103))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/user/popular?page=1&items=10&trackedTag=101,102")
+                        .contentType("application/json")
+                        .header("Authorization", token100))
+                .andDo(print())
+                .andExpect(jsonPath("$.items.[0].id").value(101))
+                .andExpect(jsonPath("$.items.[1].id").value(102))
+                .andExpect(jsonPath("$.items.[2].id").value(103))
+                .andExpect(jsonPath("$.items.[3].id").value(104))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/user/popular?page=1&items=10&trackedTag=103&ignoredTag=101,102")
+                        .contentType("application/json")
+                        .header("Authorization", token100))
+                .andDo(print())
+                .andExpect(jsonPath("$.items.[0].id").value(104))
                 .andExpect(status().isOk());
     }
 }
