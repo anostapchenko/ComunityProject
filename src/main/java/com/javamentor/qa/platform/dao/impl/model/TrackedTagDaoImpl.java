@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.lang.reflect.ParameterizedType;
 
 @Repository
 public class TrackedTagDaoImpl extends ReadWriteDaoImpl<TrackedTag, Long> implements TrackedTagDao {
@@ -15,14 +14,22 @@ public class TrackedTagDaoImpl extends ReadWriteDaoImpl<TrackedTag, Long> implem
     private EntityManager entityManager;
 
     @Override
-    public void deleteTrackedTagByTagId (Long tagId){
-        String hql = "delete from TrackedTag tt where tt.trackedTag.id = :tagId";
-        entityManager.createQuery(hql).setParameter("tagId", tagId).executeUpdate();
+    public void deleteTrackedTagByTagIdAndUserId(Long tagId, Long userId){
+        String hql = "delete from TrackedTag tt where tt.trackedTag.id = :tagId and tt.user.id = :userId";
+        entityManager.createQuery(hql)
+                .setParameter("tagId", tagId)
+                .setParameter("userId", userId)
+                .executeUpdate();
     }
 
     @Override
-    public boolean existsByTagId(Long tagId){
-        return (boolean) entityManager.createQuery("SELECT COUNT(tt) > 0 FROM TrackedTag tt WHERE tt.trackedTag.id =: tagId").setParameter("tagId", tagId).getSingleResult();
+    public boolean existsByTagIdAndUserId(Long tagId, Long userId){
+        return (boolean) entityManager.createQuery(
+                "SELECT COUNT(tt) > 0 FROM TrackedTag tt " +
+                        "WHERE tt.trackedTag.id =: tagId and tt.user.id = :userId")
+                .setParameter("tagId", tagId)
+                .setParameter("userId", userId)
+                .getSingleResult();
 
     }
 }

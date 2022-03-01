@@ -5,8 +5,8 @@ import com.javamentor.qa.platform.models.entity.question.IgnoredTag;
 
 public interface IgnoredTagDao extends ReadWriteDao<IgnoredTag, Long> {
 
-    void deleteIgnoredTagByTagId (Long tagId);
+    void deleteIgnoredTagByTagIdAndUserId(Long tagId, Long userId);
 
-    boolean existsByTagId(Long tagId);
+    boolean existsByTagIdAndUserId(Long tagId, Long userId);
 
 }

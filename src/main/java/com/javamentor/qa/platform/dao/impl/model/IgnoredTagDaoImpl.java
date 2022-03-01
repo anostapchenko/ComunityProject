@@ -14,14 +14,22 @@ public class IgnoredTagDaoImpl extends ReadWriteDaoImpl<IgnoredTag, Long> implem
     private EntityManager entityManager;
 
     @Override
-    public void deleteIgnoredTagByTagId (Long tagId){
-        String hql = "delete from IgnoredTag it where it.ignoredTag.id = :id";
-        entityManager.createQuery(hql).setParameter("id", tagId).executeUpdate();
+    public void deleteIgnoredTagByTagIdAndUserId (Long tagId, Long userId){
+        String hql = "delete from IgnoredTag it where it.ignoredTag.id = :tagId and it.user.id = :userId";
+        entityManager.createQuery(hql)
+                .setParameter("tagId", tagId)
+                .setParameter("userId", userId)
+                .executeUpdate();
     }
 
     @Override
-    public boolean existsByTagId(Long tagId){
-        return (boolean) entityManager.createQuery("SELECT COUNT(it) > 0 FROM IgnoredTag it WHERE it.ignoredTag.id =: tagId").setParameter("tagId", tagId).getSingleResult();
+    public boolean existsByTagIdAndUserId(Long tagId, Long userId){
+        return (boolean) entityManager.createQuery(
+                "SELECT COUNT(it) > 0 FROM IgnoredTag it " +
+                        "WHERE it.ignoredTag.id =: tagId and it.user.id = :userId")
+                .setParameter("tagId", tagId)
+                .setParameter("userId", userId)
+                .getSingleResult();
 
     }
 }

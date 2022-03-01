@@ -375,7 +375,13 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM IgnoredTag" + " e WHERE e.id =: id").setParameter("id",(long) 101).getSingleResult() > 0).isEqualTo(false);
+        assertThat((long) entityManager.createQuery(
+                "SELECT COUNT(e) FROM IgnoredTag" +
+                        " e WHERE e.id =: id and e.user.id =: userId")
+                    .setParameter("id",(long) 101)
+                    .setParameter("userId",(long) 102)
+                    .getSingleResult() > 0)
+                .isEqualTo(false);
 
         mockMvc.perform(delete("/api/user/tag/ignored/delete?tag=102")
                         .contentType("application/json")
@@ -385,15 +391,21 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
 
         mockMvc.perform(delete("/api/user/tag/tracked/delete?tag=102")
                 .contentType("application/json")
-                .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")))
+                .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM TrackedTag" + " e WHERE e.id =: id").setParameter("id",(long) 100).getSingleResult() > 0).isEqualTo(false);
+        assertThat((long) entityManager.createQuery(
+                "SELECT COUNT(e) FROM TrackedTag" +
+                        " e WHERE e.id =: id and e.user.id =: userId")
+                    .setParameter("id",(long) 100)
+                    .setParameter("userId",(long) 100)
+                    .getSingleResult() > 0)
+                .isEqualTo(false);
 
         mockMvc.perform(delete("/api/user/tag/tracked/delete?tag=102")
                 .contentType("application/json")
-                .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")))
+                .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }

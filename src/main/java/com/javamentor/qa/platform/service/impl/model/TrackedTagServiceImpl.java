@@ -18,13 +18,14 @@ public class TrackedTagServiceImpl extends ReadWriteServiceImpl<TrackedTag, Long
 
     @Override
     @Transactional
-    public void deleteTrackedTagByTagId (Long tagId){
-        trackedTagDao.deleteTrackedTagByTagId(tagId);
+    public void deleteTrackedTagByTagIdAndUserId(Long tagId, Long userId){
+        trackedTagDao.deleteTrackedTagByTagIdAndUserId(tagId, userId);
     }
 
     @Override
-    public boolean existsByTagId(Long tagId) {
-        return trackedTagDao.existsByTagId(tagId);
+    public boolean existsByTagIdAndUserId(Long tagId, Long userId) {
+
+        return trackedTagDao.existsByTagIdAndUserId(tagId, userId);
     }
 
 }

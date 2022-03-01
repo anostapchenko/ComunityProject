@@ -18,12 +18,14 @@ public class IgnoredTagServiceImpl extends ReadWriteServiceImpl<IgnoredTag, Long
 
     @Override
     @Transactional
-    public void deleteIgnoredTagByTagId (Long tagId){
-        ignoredTagDao.deleteIgnoredTagByTagId(tagId);
+    public void deleteIgnoredTagByTagIdAndUserId (Long tagId, Long userId){
+
+        ignoredTagDao.deleteIgnoredTagByTagIdAndUserId(tagId,userId);
     }
 
     @Override
-    public boolean existsByTagId(Long tagId){
-        return ignoredTagDao.existsByTagId(tagId);
+    public boolean existsByTagIdAndUserId(Long tagId, Long userId){
+
+        return ignoredTagDao.existsByTagIdAndUserId(tagId, userId);
     }
 }

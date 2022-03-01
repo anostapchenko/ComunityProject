@@ -4,7 +4,7 @@ import com.javamentor.qa.platform.models.entity.question.TrackedTag;
 
 public interface TrackedTagDao extends ReadWriteDao<TrackedTag, Long> {
 
-    void deleteTrackedTagByTagId (Long tagId);
+    void deleteTrackedTagByTagIdAndUserId(Long tagId, Long userId);
 
-    boolean existsByTagId(Long tagId);
+    boolean existsByTagIdAndUserId(Long tagId, Long userId);
 }
