@@ -64,40 +64,41 @@ public class TagResourceController {
 
     @Operation(
             summary = "Добавление тега, который пользователь выбрал для игнорирования",
-            description = "Добавляет тэг для игнорирования в таблицу tag_ignore. " +
-                    "Метод ничего не возвращает."
+            description = "Добавляет тэг для игнорирования в таблицу tag_ignore"
     )
+    @ApiResponse(responseCode = "200", description = "Возвращает TagDto, " +
+            "который был добавлен IgnoredTag пользователя", content = {
+            @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = TagDto.class))
+    })
+    @ApiResponse(responseCode = "400", description = "IgnoredTag c таким id не существует или уже есть " +
+            "в TrackedTag или IgnoredTag данного пользователя", content = {
+            @Content(mediaType = "application/json")
+    })
+
     @PostMapping("/ignored/add")
-    public ResponseEntity<?> addIgnoredTag (Authentication auth,
-                               @RequestParam(value = "tag") Long id) {
+    public ResponseEntity<?> addIgnoredTag(Authentication auth,
+                                           @RequestParam(value = "tag") Long id) {
         User user = (User) auth.getPrincipal();
         Tag tag = tagService.getById(id)
-                        .orElseThrow(() -> new ConstrainException("Can't find tag with id: " + id));
-
-//        boolean flag = entityManager.createQuery(
-//                        "SELECT CASE " +
-//                                "WHEN EXISTS (SELECT i.ignoredTag FROM i " +
-//                                "WHERE i.user.id = :userId AND i.ignoredTag.id = :tagId) " +
-//                                "OR " +
-//                                "EXISTS (SELECT tr.trackedTag FROM tr " +
-//                                "WHERE tr.user.id = :userId AND tr.trackedTag.id = :tagId) " +
-//                                "THEN true " +
-//                                "ELSE false " +
-//                                "END " +
-//                                "FROM IgnoredTag i, " +
-//                                "TrackedTag  tr",
-//                        Boolean.class)
-//                .setParameter("userId", user.getId())
-//                .setParameter("tagId", id)
-//                .getSingleResult();
-
+                .orElseThrow(() -> new ConstrainException("Can't find tag with id: " + id));
         TagDto tagDto = tagConverter.tagToTagDto(tag);
-        List<TagDto> ignoredTagDtoList = tagDtoService.getIgnoredTagsByUserId(user.getId());
-        List<TagDto> trackedTagDtoList = tagDtoService.getTrackedTagsByUserId(user.getId());
-
-        if (!ignoredTagDtoList.contains(tagDto) && !trackedTagDtoList.contains(tagDto)) {
-
-//        if (!flag) {
+        boolean existsInTables = entityManager.createQuery(
+                        "SELECT CASE " +
+                                "WHEN EXISTS (SELECT i.ignoredTag FROM IgnoredTag i " +
+                                "WHERE i.user.id = :userId AND i.ignoredTag.id = :tagId) " +
+                                "OR " +
+                                "EXISTS (SELECT tr.trackedTag FROM TrackedTag tr " +
+                                "WHERE tr.user.id = :userId AND tr.trackedTag.id = :tagId) " +
+                                "THEN true " +
+                                "ELSE false " +
+                                "END " +
+                                "FROM Tag t Where t.id = :tagId",
+                        Boolean.class)
+                .setParameter("userId", user.getId())
+                .setParameter("tagId", id)
+                .getSingleResult();
+        if (!existsInTables) {
             ignoredTagService.persist(new IgnoredTag(tag, user));
             return new ResponseEntity<>(tagDto, HttpStatus.OK);
         }
@@ -127,19 +128,40 @@ public class TagResourceController {
 
     @Operation(
             summary = "Добавление тега, который пользователь выбрал для отслеживания",
-            description = "Добавляет тэг для отслеживания в таблицу tag_tracked. " +
-                    "Метод ничего не возвращает."
+            description = "Добавляет тэг для отслеживания в таблицу tag_tracked"
     )
+    @ApiResponse(responseCode = "200", description = "Возвращает TagDto, " +
+            "который был добавлен TrackedTag пользователя", content = {
+            @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = TagDto.class))
+    })
+    @ApiResponse(responseCode = "400", description = "TrackedTag c таким id не существует или уже есть " +
+            "в TrackedTag или IgnoredTag данного пользователя", content = {
+            @Content(mediaType = "application/json")
+    })
     @PostMapping("/tracked/add")
-    public ResponseEntity<?> addTrackedTag (Authentication auth,
-                               @RequestParam(value = "tag") Long id) {
+    public ResponseEntity<?> addTrackedTag(Authentication auth,
+                                           @RequestParam(value = "tag") Long id) {
         User user = (User) auth.getPrincipal();
         Tag tag = tagService.getById(id)
                 .orElseThrow(() -> new ConstrainException("Can't find tag with id:" + id));
         TagDto tagDto = tagConverter.tagToTagDto(tag);
-        List<TagDto> ignoredTagDtoList = tagDtoService.getIgnoredTagsByUserId(user.getId());
-        List<TagDto> trackedTagDtoList = tagDtoService.getTrackedTagsByUserId(user.getId());
-        if (!ignoredTagDtoList.contains(tagDto) && !trackedTagDtoList.contains(tagDto)) {
+        boolean existsInTables = entityManager.createQuery(
+                        "SELECT CASE " +
+                                "WHEN EXISTS (SELECT i.ignoredTag FROM IgnoredTag i " +
+                                "WHERE i.user.id = :userId AND i.ignoredTag.id = :tagId) " +
+                                "OR " +
+                                "EXISTS (SELECT tr.trackedTag FROM TrackedTag tr " +
+                                "WHERE tr.user.id = :userId AND tr.trackedTag.id = :tagId) " +
+                                "THEN true " +
+                                "ELSE false " +
+                                "END " +
+                                "FROM Tag t Where t.id = :tagId",
+                        Boolean.class)
+                .setParameter("userId", user.getId())
+                .setParameter("tagId", id)
+                .getSingleResult();
+        if (!existsInTables) {
             trackedTagService.persist(new TrackedTag(tag, user));
             return new ResponseEntity<>(tagDto, HttpStatus.OK);
         }
