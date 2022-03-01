@@ -1,7 +1,7 @@
 package com.javamentor.qa.platform.dao.abstracts.dto;
 
 import com.javamentor.qa.platform.models.dto.question.PopularTagDto;
-import com.javamentor.qa.platform.models.dto.question.TagDto;
+import com.javamentor.qa.platform.models.dto.TagDto;
 import java.util.List;
 import java.util.Map;
 

@@ -6,23 +6,23 @@ import com.javamentor.qa.platform.dao.impl.pagination.tagdto.TagPageDtoDaoAllTag
 import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.question.PopularTagDto;
-import com.javamentor.qa.platform.models.dto.question.TagDto;
+import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.dto.question.TagViewDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
 import com.javamentor.qa.platform.models.entity.question.IgnoredTag;
+import com.javamentor.qa.platform.models.entity.question.Tag;
 import com.javamentor.qa.platform.models.entity.question.TrackedTag;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.TagDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.IgnoredTagService;
 import com.javamentor.qa.platform.service.abstracts.model.TagService;
 import com.javamentor.qa.platform.service.abstracts.model.TrackedTagService;
-import com.javamentor.qa.platform.webapp.converters.TagToTagDTOConverter;
+import com.javamentor.qa.platform.webapp.converters.TagConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,20 +34,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user/tag")
-@Tag(name = "Tag Resource Controller", description = "Управление сущностями, которые связаны с тегами")
 public class TagResourceController {
 
     private final TagDtoService tagDtoService;
     private final IgnoredTagService ignoredTagService;
     private final TrackedTagService trackedTagService;
     private final TagService tagService;
-    private final TagToTagDTOConverter tagToTagDTOConverter;
+    private final TagConverter tagConverter;
+    private final EntityManager entityManager;
 
 
     @Operation(
@@ -66,20 +68,41 @@ public class TagResourceController {
                     "Метод ничего не возвращает."
     )
     @PostMapping("/ignored/add")
-    public void addIgnoredTag (Authentication auth,
+    public ResponseEntity<?> addIgnoredTag (Authentication auth,
                                @RequestParam(value = "tag") Long id) {
         User user = (User) auth.getPrincipal();
-        com.javamentor.qa.platform.models.entity.question.Tag tag =
-                tagService.getById(id)
-                        .orElseThrow(() -> new ConstrainException("Can't find tag with id:" + id));
-        TagDto tagDto = tagToTagDTOConverter.tagToTagDTONotQuestAndDescription(tag);
+        Tag tag = tagService.getById(id)
+                        .orElseThrow(() -> new ConstrainException("Can't find tag with id: " + id));
+
+//        boolean flag = entityManager.createQuery(
+//                        "SELECT CASE " +
+//                                "WHEN EXISTS (SELECT i.ignoredTag FROM i " +
+//                                "WHERE i.user.id = :userId AND i.ignoredTag.id = :tagId) " +
+//                                "OR " +
+//                                "EXISTS (SELECT tr.trackedTag FROM tr " +
+//                                "WHERE tr.user.id = :userId AND tr.trackedTag.id = :tagId) " +
+//                                "THEN true " +
+//                                "ELSE false " +
+//                                "END " +
+//                                "FROM IgnoredTag i, " +
+//                                "TrackedTag  tr",
+//                        Boolean.class)
+//                .setParameter("userId", user.getId())
+//                .setParameter("tagId", id)
+//                .getSingleResult();
+
+        TagDto tagDto = tagConverter.tagToTagDto(tag);
         List<TagDto> ignoredTagDtoList = tagDtoService.getIgnoredTagsByUserId(user.getId());
         List<TagDto> trackedTagDtoList = tagDtoService.getTrackedTagsByUserId(user.getId());
+
         if (!ignoredTagDtoList.contains(tagDto) && !trackedTagDtoList.contains(tagDto)) {
+
+//        if (!flag) {
             ignoredTagService.persist(new IgnoredTag(tag, user));
-        } else {
-            throw new ConstrainException("Ignored tag already exists or is contained in the tracked tags");
+            return new ResponseEntity<>(tagDto, HttpStatus.OK);
         }
+        return new ResponseEntity<>("Ignored tag already exists or is contained in the tracked tags",
+                HttpStatus.BAD_REQUEST);
     }
 
     @Operation(summary = "Получение списка пользовательских тегов",
@@ -108,18 +131,20 @@ public class TagResourceController {
                     "Метод ничего не возвращает."
     )
     @PostMapping("/tracked/add")
-    public void addTrackedTag (Authentication auth,
+    public ResponseEntity<?> addTrackedTag (Authentication auth,
                                @RequestParam(value = "tag") Long id) {
         User user = (User) auth.getPrincipal();
-        com.javamentor.qa.platform.models.entity.question.Tag tag = tagService.getById(id).orElseThrow();
-        TagDto tagDto = tagToTagDTOConverter.tagToTagDTONotQuestAndDescription(tag);
-        List<TagDto> IgnoredTagDtoList = tagDtoService.getIgnoredTagsByUserId(user.getId());
-        List<TagDto> TrackedTagDtoList = tagDtoService.getTrackedTagsByUserId(user.getId());
-        if (!IgnoredTagDtoList.contains(tagDto) && !TrackedTagDtoList.contains(tagDto)) {
+        Tag tag = tagService.getById(id)
+                .orElseThrow(() -> new ConstrainException("Can't find tag with id:" + id));
+        TagDto tagDto = tagConverter.tagToTagDto(tag);
+        List<TagDto> ignoredTagDtoList = tagDtoService.getIgnoredTagsByUserId(user.getId());
+        List<TagDto> trackedTagDtoList = tagDtoService.getTrackedTagsByUserId(user.getId());
+        if (!ignoredTagDtoList.contains(tagDto) && !trackedTagDtoList.contains(tagDto)) {
             trackedTagService.persist(new TrackedTag(tag, user));
-        } else {
-            throw new ConstrainException("Tracked tag already exists or is contained in the ignored tags");
+            return new ResponseEntity<>(tagDto, HttpStatus.OK);
         }
+        return new ResponseEntity<>("Tracked tag already exists or is contained in the ignored tags",
+                HttpStatus.BAD_REQUEST);
     }
 
     @Operation(

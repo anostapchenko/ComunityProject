@@ -3,7 +3,7 @@ package com.javamentor.qa.platform.service.impl.dto;
 import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.question.PopularTagDto;
-import com.javamentor.qa.platform.models.dto.question.TagDto;
+import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.dto.question.TagViewDto;
 import com.javamentor.qa.platform.service.abstracts.dto.TagDtoService;
 import org.springframework.stereotype.Service;
