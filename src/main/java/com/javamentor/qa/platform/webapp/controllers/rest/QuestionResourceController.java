@@ -1,6 +1,9 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
-
-import com.javamentor.qa.platform.dao.impl.pagination.*;
+import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoAllSortedByPopular;
+import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoAllQuestionsImpl;
+import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoByNoAnswersImpl;
+import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoByTagId;
+import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoSortedByDate;
 import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
