@@ -27,11 +27,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
 
 
 import javax.persistence.EntityManager;
@@ -258,5 +260,53 @@ public class TagResourceController {
         PaginationData data = new PaginationData(page, items,
                 TagPageDtoDaoAllTagsByPopularImpl.class.getSimpleName());
         return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Удаление IgnoredTag",
+            description = "Удаление IgnoredTag"
+    )
+    @ApiResponse(responseCode = "200", description = "IgnoredTag удален", content = {
+            @Content(mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "400", description = "IgnoredTag c таким id не существует или User с таким IgnoredTag не существует", content = {
+            @Content(mediaType = "application/json")
+    })
+    @DeleteMapping("/ignored/delete")
+    public ResponseEntity<?> deleteIgnoredTag(@RequestParam(value = "tag") Long tagId){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)auth.getPrincipal();
+        Long userId = user.getId();
+
+        if(ignoredTagService.existsByTagIdAndUserId(tagId, userId)) {
+            ignoredTagService.deleteIgnoredTagByTagIdAndUserId(tagId, userId);
+            return new ResponseEntity<>("IgnoredTag was successfully deleted",HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("IgnoredTag doesn't exist or User with IgnoredTag doesn't exist", HttpStatus.BAD_REQUEST);
+    }
+
+    @Operation(
+            summary = "Удаление TrackedTag",
+            description = "Удаление TrackedTag"
+    )
+    @ApiResponse(responseCode = "200", description = "TrackedTag удален", content = {
+            @Content(mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "400", description = "TrackedTag c таким id не существует или User с таким TrackedTag не существует", content = {
+            @Content(mediaType = "application/json")
+    })
+    @DeleteMapping("/tracked/delete")
+    public ResponseEntity<?> deleteTrackedTag(@RequestParam(value = "tag") Long tagId){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)auth.getPrincipal();
+        Long userId = user.getId();
+
+        if(trackedTagService.existsByTagIdAndUserId(tagId,userId)){
+            trackedTagService.deleteTrackedTagByTagIdAndUserId(tagId, userId);
+            return new ResponseEntity<>("TrackedTag was successfully deleted",HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("TrackedTag doesn't exist or User with TrackedTag doesn't exist", HttpStatus.BAD_REQUEST);
     }
 }
