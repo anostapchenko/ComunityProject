@@ -1,5 +1,5 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
-
+import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoAllSortedByPopular;
 import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoAllQuestionsImpl;
 import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoByNoAnswersImpl;
 import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoByTagId;
@@ -273,9 +273,6 @@ public class QuestionResourceController {
         return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
     }
 
-    @Autowired
-    CacheManager cacheManager;
-
     @Operation(
             summary = "Помечает вопрос как прочитанный",
             description = "Помечает вопрос как прочитанный"
@@ -298,6 +295,27 @@ public class QuestionResourceController {
         }
 
         return new ResponseEntity<>("There is no question "+id.toString(), HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/api/user/popular")
+    @Operation(summary = "Получение полного пагинированного списка популярных вопросов",
+            description = "Получение пагинированного списка вопросов пользователя, " +
+                    "в запросе указываем page - номер страницы, обязательный параметр, items (по умолчанию 10) - количество результатов на странице")
+    @ApiResponse(responseCode = "200", description = "Возвращает пагинированный список PageDTO<QuestionDTO> (id, title, authorId," +
+            " authorReputation, authorName, authorImage, description, viewCount, countAnswer, countValuable," +
+            " LocalDateTime, LocalDateTime, listTagDto", content = {
+            @Content(mediaType = "application/json")
+    })
+    public ResponseEntity<PageDTO<QuestionViewDto>> AllQuestionSortedByPopular(@RequestParam int page,
+                                                                               @RequestParam(required = false, defaultValue = "10") int items,
+                                                                               @RequestParam(required = false) List<Long> trackedTag,
+                                                                               @RequestParam(required = false) List<Long> ignoredTag){
+
+        PaginationData data = new PaginationData(page, items, QuestionPageDtoDaoAllSortedByPopular.class.getSimpleName());
+        data.getProps().put("trackedTag", trackedTag);
+        data.getProps().put("ignoredTag", ignoredTag);
+
+        return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
     }
 }
 
