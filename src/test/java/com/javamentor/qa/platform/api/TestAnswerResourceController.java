@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -369,4 +370,56 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(0));
     }
+
+    @Test
+    @DataSet(value = {
+            "dataset/testAnswerResourceController/moreAnswers.yml",
+            "dataset/testAnswerResourceController/moreQuestions.yml",
+            "dataset/testAnswerResourceController/moreUsers.yml",
+            "dataset/testAnswerResourceController/roles.yml"
+    }, strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true, cleanAfter = true)
+
+    public void shouldDeleteAnswer() throws Exception {
+
+        String token = "Bearer " + getToken("user100@mail.ru", "password");
+
+        // Неправильный questionId
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/question/101/answer/100/delete")
+                        .header("Authorization", token)
+                        .contentType("application/json")
+                ).andDo(print())
+                .andExpect(status().isBadRequest());
+        // Неправильный answerId
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/question/101/answer/101/delete")
+                        .header("Authorization", token)
+                        .contentType("application/json")
+                ).andDo(print())
+                .andExpect(status().isBadRequest());
+        // Неправильный userId
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/question/100/answer/102/delete")
+                        .header("Authorization", token)
+                        .contentType("application/json")
+                ).andDo(print())
+                .andExpect(status().isBadRequest());
+        assertThat((boolean) entityManager.createQuery(
+                        "SELECT CASE WHEN a.isDeleted = TRUE THEN TRUE ELSE FALSE END " +
+                                "FROM Answer a WHERE a.id =: id")
+                .setParameter("id", (long) 100)
+                .getSingleResult())
+                .isEqualTo(false);
+
+        // Правильный запрос
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/question/100/answer/100/delete")
+                        .header("Authorization", token)
+                        .contentType("application/json")
+                ).andDo(print())
+                .andExpect(status().isOk());
+        assertThat((boolean) entityManager.createQuery(
+                        "SELECT CASE WHEN a.isDeleted = TRUE THEN TRUE ELSE FALSE END " +
+                                "FROM Answer a WHERE a.id =: id")
+                .setParameter("id", (long) 100)
+                .getSingleResult())
+                .isEqualTo(true);
+    }
+
 }

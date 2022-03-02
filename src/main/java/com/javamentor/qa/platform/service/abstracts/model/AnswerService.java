@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface AnswerService extends ReadWriteService<Answer, Long> {
 
     Optional<Answer> getAnswerWithAuthor(Long answerId);
+
+    boolean existsByAnswerIdAndUserIdAndQuestionId (Long answerId, Long userId, Long questionId);
 }

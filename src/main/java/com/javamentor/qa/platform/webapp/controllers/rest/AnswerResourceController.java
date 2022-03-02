@@ -158,10 +158,29 @@ public class AnswerResourceController {
         return new ResponseEntity<>(answerDtoService.getAllAnswerDtoByQuestionId(questionId), HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Удаление ответа",
+            description = "Удаление ответа"
+    )
+    @ApiResponse(responseCode = "200", description = "Answer удален", content = {
+            @Content(mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "400", description = "Answer с таким User id и Question id не существует",
+            content = {
+            @Content(mediaType = "application/json")
+    })
     @DeleteMapping(path = "/{id}/delete")
-    public ResponseEntity<?> deleteAnswwer(@PathVariable(name = "id") long answerId,
-                                      Authentication authentication) {
-
+    public ResponseEntity<?> deleteAnswer(@PathVariable(name = "id") long answerId,
+                                          @PathVariable(name = "questionId") Long questionId,
+                                          Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getId();
+        if (answerService.existsByAnswerIdAndUserIdAndQuestionId(answerId, userId, questionId)) {
+            answerService.deleteById(answerId);
+            return new ResponseEntity<>("Answer was successfully deleted", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Answer with this User id and this Question id doesn't exist",
+                HttpStatus.BAD_REQUEST);
     }
 }
 
