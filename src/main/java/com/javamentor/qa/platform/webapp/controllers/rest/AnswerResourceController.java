@@ -20,7 +20,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 
 import javax.validation.Valid;
 import java.util.List;
@@ -170,16 +177,12 @@ public class AnswerResourceController {
             @Content(mediaType = "application/json")
     })
     @DeleteMapping(path = "/{id}/delete")
-    public ResponseEntity<?> deleteAnswer(@PathVariable(name = "id") long answerId,
-                                          @PathVariable(name = "questionId") Long questionId,
-                                          Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        Long userId = user.getId();
-        if (answerService.existsByAnswerIdAndUserIdAndQuestionId(answerId, userId, questionId)) {
+    public ResponseEntity<?> deleteAnswer(@PathVariable(name = "id") long answerId) {
+        if (answerService.existsById(answerId)) {
             answerService.deleteById(answerId);
             return new ResponseEntity<>("Answer was successfully deleted", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Answer with this User id and this Question id doesn't exist",
+        return new ResponseEntity<>("Answer with this id doesn't exist",
                 HttpStatus.BAD_REQUEST);
     }
 }

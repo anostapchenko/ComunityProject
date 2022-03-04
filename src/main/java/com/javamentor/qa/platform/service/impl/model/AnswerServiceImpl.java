@@ -23,11 +23,6 @@ public class AnswerServiceImpl extends ReadWriteServiceImpl<Answer, Long> implem
     }
 
     @Override
-    public boolean existsByAnswerIdAndUserIdAndQuestionId (Long answerId, Long userId, Long questionId) {
-        return answerDao.existsByAnswerIdAndUserIdAndQuestionId(answerId, userId, questionId);
-    }
-
-    @Override
     public void deleteById(Long id) {
         answerDao.deleteById(id);
     }

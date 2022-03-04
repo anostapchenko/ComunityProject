@@ -383,32 +383,6 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
 
         String token = "Bearer " + getToken("user100@mail.ru", "password");
 
-        // Неправильный questionId
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/question/101/answer/100/delete")
-                        .header("Authorization", token)
-                        .contentType("application/json")
-                ).andDo(print())
-                .andExpect(status().isBadRequest());
-        // Неправильный answerId
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/question/101/answer/101/delete")
-                        .header("Authorization", token)
-                        .contentType("application/json")
-                ).andDo(print())
-                .andExpect(status().isBadRequest());
-        // Неправильный userId
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/question/100/answer/102/delete")
-                        .header("Authorization", token)
-                        .contentType("application/json")
-                ).andDo(print())
-                .andExpect(status().isBadRequest());
-        assertThat((boolean) entityManager.createQuery(
-                        "SELECT CASE WHEN a.isDeleted = TRUE THEN TRUE ELSE FALSE END " +
-                                "FROM Answer a WHERE a.id =: id")
-                .setParameter("id", (long) 100)
-                .getSingleResult())
-                .isEqualTo(false);
-
-        // Правильный запрос
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/question/100/answer/100/delete")
                         .header("Authorization", token)
                         .contentType("application/json")
