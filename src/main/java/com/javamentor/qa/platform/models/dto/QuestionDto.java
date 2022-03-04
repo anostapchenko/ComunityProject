@@ -1,7 +1,7 @@
 package com.javamentor.qa.platform.models.dto;
 
 import com.javamentor.qa.platform.models.dto.question.QuestionCommentDto;
-import com.javamentor.qa.platform.models.dto.question.TagDto;
+import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import lombok.Getter;
 import lombok.Setter;

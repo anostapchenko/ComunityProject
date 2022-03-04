@@ -10,10 +10,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.isA;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -42,13 +45,12 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 andExpect(jsonPath("$.*", hasSize(1)))
                 .andExpect(jsonPath("$[0].id").value("102"))
                 .andExpect(jsonPath("$[0].name").value("name1"))
-                .andExpect(jsonPath("$[0].persistDateTime").exists())
+                .andExpect(jsonPath("$[0].description").exists())
         ;
     }
 
     public String getTokens(String email) throws Exception {
-        String tokenJS = mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/auth/token")
+        String tokenJS = mockMvc.perform(post("/api/auth/token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\" : \"" + email + "\"," +
                         " \"password\" : \"password\"}")
@@ -91,10 +93,10 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(102))
                 .andExpect(jsonPath("$[0].name").value("name1"))
-                .andExpect(jsonPath("$[0].persistDateTime").exists())
+                .andExpect(jsonPath("$[0].description").exists())
                 .andExpect(jsonPath("$[1].id").value(103))
                 .andExpect(jsonPath("$[1].name").value("name2"))
-                .andExpect(jsonPath("$[1].persistDateTime").exists());
+                .andExpect(jsonPath("$[1].description").exists());
     }
 
     @Test
@@ -114,10 +116,10 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(102))
                 .andExpect(jsonPath("$[0].name").value("name1"))
-                .andExpect(jsonPath("$[0].persistDateTime").exists())
+                .andExpect(jsonPath("$[0].description").exists())
                 .andExpect(jsonPath("$[1].id").value(103))
                 .andExpect(jsonPath("$[1].name").value("name2"))
-                .andExpect(jsonPath("$[1].persistDateTime").exists());
+                .andExpect(jsonPath("$[1].description").exists());
     }
 
     @Test
@@ -355,5 +357,127 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andExpect(jsonPath("$.totalResultCount").value("4"))
                 .andExpect(jsonPath("$.items").isNotEmpty())
                 .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(103, 102, 104, 101)));
+    }
+
+    //Удаление IgnoredTag и TrackedTag
+    @Test
+    @DataSet(value= {
+            "dataset/testTagResourceController/tag_ignore.yml",
+            "dataset/testTagResourceController/trackedTag2.yml",
+            "dataset/testTagResourceController/users.yml",
+            "dataset/testTagResourceController/roles.yml",
+            "dataset/testTagResourceController/tag2.yml"
+    },strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true, cleanAfter = true)
+    public void shouldDeleteIgnoredTagAndTrackedTag() throws Exception{
+        mockMvc.perform(delete("/api/user/tag/ignored/delete?tag=102")
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        assertThat((long) entityManager.createQuery(
+                "SELECT COUNT(e) FROM IgnoredTag" +
+                        " e WHERE e.id =: id and e.user.id =: userId")
+                    .setParameter("id",(long) 101)
+                    .setParameter("userId",(long) 102)
+                    .getSingleResult() > 0)
+                .isEqualTo(false);
+
+        mockMvc.perform(delete("/api/user/tag/ignored/delete?tag=102")
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")))
+                        .andDo(print())
+                        .andExpect(status().isBadRequest());
+
+        mockMvc.perform(delete("/api/user/tag/tracked/delete?tag=102")
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        assertThat((long) entityManager.createQuery(
+                "SELECT COUNT(e) FROM TrackedTag" +
+                        " e WHERE e.id =: id and e.user.id =: userId")
+                    .setParameter("id",(long) 100)
+                    .setParameter("userId",(long) 100)
+                    .getSingleResult() > 0)
+                .isEqualTo(false);
+
+        mockMvc.perform(delete("/api/user/tag/tracked/delete?tag=102")
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + getTokens("user100@mail.ru")))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    // Добавление IgnoredTag и TrackedTag
+    @Test
+    @DataSet(value = {
+            "dataset/testTagResourceController/users.yml",
+            "dataset/testTagResourceController/roles.yml",
+            "dataset/testTagResourceController/tag2.yml"
+    }, strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true, cleanAfter = true)
+    public void shouldAddIgnoredTagAndTrackedTag() throws Exception {
+
+        // Добавляем IgnoredTag два раза, второй раз добавить не должен.
+        mockMvc.perform(post("/api/user/tag/ignored/add?tag=102")
+                        .header("Authorization", "Bearer " +
+                                getToken("user102@mail.ru", "test15")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$").hasJsonPath())
+                .andExpect(jsonPath("$.id").value("102"))
+                .andExpect(jsonPath("$.name").value("name1"))
+                .andExpect(jsonPath("$.description").value("test1"));
+        assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM IgnoredTag e")
+                .getSingleResult() == 1).isEqualTo(true);
+        mockMvc.perform(post("/api/user/tag/ignored/add?tag=102")
+                        .header("Authorization", "Bearer " +
+                                getToken("user102@mail.ru", "test15")))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+        assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM IgnoredTag e")
+                .getSingleResult() == 1).isEqualTo(true);
+
+        // Добавляем TrackedTag два раза, второй раз добавить не должен.
+        mockMvc.perform(post("/api/user/tag/tracked/add?tag=103")
+                        .header("Authorization", "Bearer " +
+                                getToken("user102@mail.ru", "test15")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$").hasJsonPath())
+                .andExpect(jsonPath("$.id").value("103"))
+                .andExpect(jsonPath("$.name").value("name2"))
+                .andExpect(jsonPath("$.description").value("test2"));
+        assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM TrackedTag e")
+                .getSingleResult() == 1).isEqualTo(true);
+        mockMvc.perform(post("/api/user/tag/tracked/add?tag=103")
+                        .header("Authorization", "Bearer " +
+                                getToken("user102@mail.ru", "test15")))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+        assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM TrackedTag e")
+                .getSingleResult() == 1).isEqualTo(true);
+
+        // Пробуем добавить IgnoredTag, когда он уже есть в TrackedTag и наоборот. Добавить не должен.
+        mockMvc.perform(post("/api/user/tag/ignored/add?tag=103")
+                .header("Authorization", "Bearer " +
+                        getToken("user102@mail.ru", "test15")))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+        assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM IgnoredTag e")
+                .getSingleResult() == 1).isEqualTo(true);
+
+        mockMvc.perform(post("/api/user/tag/tracked/add?tag=102")
+                .header("Authorization", "Bearer " +
+                        getToken("user102@mail.ru", "test15")))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+        assertThat((long) entityManager.createQuery("SELECT COUNT(e) FROM TrackedTag e")
+                .getSingleResult() == 1).isEqualTo(true);
     }
 }

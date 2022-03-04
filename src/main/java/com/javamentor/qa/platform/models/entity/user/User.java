@@ -44,7 +44,7 @@ public class User implements UserDetails {
     @NonNull
     private String password;
 
-    @Column
+    @Column(name = "full_name")
     private String fullName;
 
     @Column(name = "persist_date", updatable = false)

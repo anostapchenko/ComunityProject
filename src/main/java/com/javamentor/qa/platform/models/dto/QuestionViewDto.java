@@ -1,6 +1,6 @@
 package com.javamentor.qa.platform.models.dto;
 
-import com.javamentor.qa.platform.models.dto.question.TagDto;
+import com.javamentor.qa.platform.models.dto.TagDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Builder;

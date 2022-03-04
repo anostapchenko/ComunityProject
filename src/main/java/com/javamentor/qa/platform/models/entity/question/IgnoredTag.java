@@ -23,6 +23,10 @@ import java.time.LocalDateTime;
 @Table(name = "tag_ignore")
 public class IgnoredTag  implements Serializable {
 
+    public IgnoredTag(Tag ignoredTag, User user) {
+        this.ignoredTag = ignoredTag;
+        this.user = user;
+    }
 
     private static final long serialVersionUID = 7657497719741178473L;
     @Id

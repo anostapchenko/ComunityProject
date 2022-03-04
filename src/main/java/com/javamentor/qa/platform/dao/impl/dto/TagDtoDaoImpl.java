@@ -2,7 +2,7 @@ package com.javamentor.qa.platform.dao.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
 import com.javamentor.qa.platform.models.dto.question.PopularTagDto;
-import com.javamentor.qa.platform.models.dto.question.TagDto;
+import com.javamentor.qa.platform.models.dto.TagDto;
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -28,8 +27,8 @@ public class TagDtoDaoImpl implements TagDtoDao {
     public List<TagDto> getTagDtoDaoById(Long id) {
 
         TypedQuery<TagDto> q = entityManager.createQuery(
-                        "SELECT new com.javamentor.qa.platform.models.dto.question.TagDto(" +
-                                "t.id, t.name, t.persistDateTime)" +
+                        "SELECT new com.javamentor.qa.platform.models.dto.TagDto(" +
+                                "t.id, t.name, t.description)" +
                                 " FROM Question q JOIN q.tags t WHERE q.id =: id ", TagDto.class)
                 .setParameter("id", id);
         return q.getResultList();
@@ -38,7 +37,8 @@ public class TagDtoDaoImpl implements TagDtoDao {
     @Override
     public List<TagDto> getIgnoredTagsByUserId(Long userId) {
         return entityManager.createQuery(
-                        "select new com.javamentor.qa.platform.models.dto.question.TagDto(tag.id, tag.name, tag.persistDateTime) " +
+                        "select new com.javamentor.qa.platform.models.dto.TagDto(" +
+                                "tag.id, tag.name, tag.description) " +
                                 "from IgnoredTag ignTag inner join ignTag.user " +
                                 "left join ignTag.ignoredTag tag where ignTag.user.id = :userId",
                         TagDto.class)
@@ -48,7 +48,7 @@ public class TagDtoDaoImpl implements TagDtoDao {
 
     public List<TagDto> getTrackedTagsByUserId(Long userId) {
         return entityManager.createQuery(
-                        "SELECT t.id as id, t.name as name, t.persistDateTime as persistDateTime " +
+                        "SELECT t.id as id, t.name as name, t.description as description " +
                                 "FROM Tag t JOIN TrackedTag tr " +
                                 "ON tr.trackedTag.id = t.id " +
                                 "WHERE tr.user.id = :userId"
@@ -72,7 +72,7 @@ public class TagDtoDaoImpl implements TagDtoDao {
 
     private Query popularTagsQuery() {
         return entityManager.createQuery("SELECT " +
-                        "t.id as id, t.name as name, t.persistDateTime as persistDateTime, " +
+                        "t.id as id, t.name as name, t.description as description, " +
                         "(select count (q.id) from t.questions q) as countQuestion " +
                         "FROM Tag t order by t.questions.size desc"
                 )
@@ -86,7 +86,7 @@ public class TagDtoDaoImpl implements TagDtoDao {
         return entityManager.createQuery("SELECT " +
                         "t.id as id, " +
                         "t.name as name, " +
-                        "t.persistDateTime as persistDateTime " +
+                        "t.description as description " +
                         "FROM Tag t " +
                         "WHERE lower(t.name) like :value " +
                         "ORDER BY t.questions.size desc, t.name")
@@ -102,7 +102,7 @@ public class TagDtoDaoImpl implements TagDtoDao {
         Map<Long, List<TagDto>> resultMap = new HashMap<>();
         entityManager.createQuery(
                         "SELECT q.id, " +
-                                "t.id, t.name, t.persistDateTime" +
+                                "t.id, t.name, t.description" +
                                 " FROM Question q JOIN q.tags t WHERE q.id IN (:ids) "
                 )
                 .setParameter("ids", questionIds)
@@ -113,7 +113,7 @@ public class TagDtoDaoImpl implements TagDtoDao {
                         TagDto tagDto = new TagDto(
                                 (Long) tuple[1],
                                 (String) tuple[2],
-                                (LocalDateTime) tuple[3]);
+                                (String) tuple[3]);
                         Long id = (Long) tuple[0];
                         resultMap.putIfAbsent(id, new ArrayList<>());
                         resultMap.get(id).add(tagDto);
