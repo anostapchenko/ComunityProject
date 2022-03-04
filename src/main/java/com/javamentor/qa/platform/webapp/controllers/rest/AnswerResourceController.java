@@ -25,6 +25,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 
 import javax.validation.Valid;
 import java.util.List;
@@ -32,6 +35,7 @@ import java.util.Optional;
 
 @Tag(name = "AnswerResourceController", description = "Позволяет работать с ответами на вопросы")
 @RestController
+@RequestMapping("api/user/question/{questionId}/answer")
 public class AnswerResourceController {
 
     private VoteAnswerService voteAnswerService;
@@ -66,7 +70,7 @@ public class AnswerResourceController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещён"),
             @ApiResponse(responseCode = "404", description = "Not Found, если нет id нужного ответа")
     })
-    @PostMapping(path = "api/user/question/{questionId}/answer/{id}/upVote")
+    @PostMapping(path = "/{id}/upVote")
     public ResponseEntity<?> upVote(@PathVariable(name = "id") long answerId,
                                        Authentication authentication) {
         User currentUser = (User) authentication.getPrincipal();
@@ -90,7 +94,7 @@ public class AnswerResourceController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещён"),
             @ApiResponse(responseCode = "404", description = "Not Found, если нет id нужного ответа")
     })
-    @PostMapping(path = "api/user/question/{questionId}/answer/{id}/downVote")
+    @PostMapping(path = "/{id}/downVote")
     public ResponseEntity<?> downVote(
             @PathVariable(name = "id") long answerId,
             Authentication authentication) {
@@ -125,7 +129,7 @@ public class AnswerResourceController {
     @ApiResponse(responseCode = "400", description = "Ответ не добавлен", content = {
             @Content(mediaType = "application/json")
     })
-    @PostMapping("api/user/question/{questionId}/answer/add")
+    @PostMapping("/add")
     public ResponseEntity<?> createAnswer(@PathVariable Long questionId,
                                           @Valid @RequestBody String bodyAnswer,
                                           Authentication authentication) {
@@ -156,9 +160,30 @@ public class AnswerResourceController {
                                     mediaType = "application/json")
                     }),
     })
-    @GetMapping("api/user/question/{questionId}/answer")
+    @GetMapping
     public ResponseEntity<List<AnswerDTO>> getAnswers(@PathVariable Long questionId) {
         return new ResponseEntity<>(answerDtoService.getAllAnswerDtoByQuestionId(questionId), HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Удаление ответа",
+            description = "Удаление ответа"
+    )
+    @ApiResponse(responseCode = "200", description = "Answer удален", content = {
+            @Content(mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "400", description = "Answer с таким User id и Question id не существует",
+            content = {
+            @Content(mediaType = "application/json")
+    })
+    @DeleteMapping(path = "/{id}/delete")
+    public ResponseEntity<?> deleteAnswer(@PathVariable(name = "id") long answerId) {
+        if (answerService.existsById(answerId)) {
+            answerService.deleteById(answerId);
+            return new ResponseEntity<>("Answer was successfully deleted", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Answer with this id doesn't exist",
+                HttpStatus.BAD_REQUEST);
     }
 }
 

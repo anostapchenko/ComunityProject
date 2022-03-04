@@ -21,4 +21,9 @@ public class AnswerServiceImpl extends ReadWriteServiceImpl<Answer, Long> implem
     public Optional<Answer> getAnswerWithAuthor(Long answerId) {
         return answerDao.getAnswerWithAuthor(answerId);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        answerDao.deleteById(id);
+    }
 }
