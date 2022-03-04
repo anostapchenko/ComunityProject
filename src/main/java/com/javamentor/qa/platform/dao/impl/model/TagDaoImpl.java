@@ -23,7 +23,7 @@ public class TagDaoImpl extends ReadWriteDaoImpl<Tag, Long> implements TagDao {
     }
 
     @Override
-    public boolean existsInIgnoreTagOrTrackedTagByUserId(Long userId, Long tagId) {
+    public boolean isExistsInIgnoreTagOrTrackedTagByUserId(Long userId, Long tagId) {
         return entityManager.createQuery(
                         "SELECT CASE " +
                                 "WHEN EXISTS (SELECT i.ignoredTag FROM IgnoredTag i " +

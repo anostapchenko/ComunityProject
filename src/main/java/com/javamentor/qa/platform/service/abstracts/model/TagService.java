@@ -4,6 +4,6 @@ import com.javamentor.qa.platform.models.entity.question.Tag;
 
 public interface TagService extends ReadWriteService<Tag, Long> {
 
-    boolean existsInIgnoreTagOrTrackedTagByUserId (Long userId, Long tagId);
+    boolean isExistsInIgnoreTagOrTrackedTagByUserId (Long userId, Long tagId);
 
 }

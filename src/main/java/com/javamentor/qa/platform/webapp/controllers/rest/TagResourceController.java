@@ -83,7 +83,7 @@ public class TagResourceController {
             return new ResponseEntity<>("Can't find tag with id:" + id, HttpStatus.BAD_REQUEST);
         }
         TagDto tagDto = tagConverter.tagToTagDto(tag.get());
-        boolean existsInTables = tagService.existsInIgnoreTagOrTrackedTagByUserId(user.getId(), id);
+        boolean existsInTables = tagService.isExistsInIgnoreTagOrTrackedTagByUserId(user.getId(), id);
         if (!existsInTables) {
             ignoredTagService.persist(new IgnoredTag(tag.get(), user));
             return new ResponseEntity<>(tagDto, HttpStatus.OK);
@@ -134,7 +134,7 @@ public class TagResourceController {
             return new ResponseEntity<>("Can't find tag with id:" + id, HttpStatus.BAD_REQUEST);
         }
         TagDto tagDto = tagConverter.tagToTagDto(tag.get());
-        boolean existsInTables = tagService.existsInIgnoreTagOrTrackedTagByUserId(user.getId(), id);
+        boolean existsInTables = tagService.isExistsInIgnoreTagOrTrackedTagByUserId(user.getId(), id);
         if (!existsInTables) {
             trackedTagService.persist(new TrackedTag(tag.get(), user));
             return new ResponseEntity<>(tagDto, HttpStatus.OK);

@@ -16,7 +16,7 @@ public class TagServiceImpl extends ReadWriteServiceImpl<Tag, Long> implements T
     }
 
     @Override
-    public boolean existsInIgnoreTagOrTrackedTagByUserId(Long userId, Long tagId) {
-        return tagDao.existsInIgnoreTagOrTrackedTagByUserId(userId, tagId);
+    public boolean isExistsInIgnoreTagOrTrackedTagByUserId(Long userId, Long tagId) {
+        return tagDao.isExistsInIgnoreTagOrTrackedTagByUserId(userId, tagId);
     }
 }
