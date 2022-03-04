@@ -35,11 +35,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -51,7 +48,6 @@ public class TagResourceController {
     private final TrackedTagService trackedTagService;
     private final TagService tagService;
     private final TagConverter tagConverter;
-    private final EntityManager entityManager;
 
 
     @Operation(
@@ -82,26 +78,14 @@ public class TagResourceController {
     public ResponseEntity<?> addIgnoredTag(Authentication auth,
                                            @RequestParam(value = "tag") Long id) {
         User user = (User) auth.getPrincipal();
-        Tag tag = tagService.getById(id)
-                .orElseThrow(() -> new ConstrainException("Can't find tag with id: " + id));
-        TagDto tagDto = tagConverter.tagToTagDto(tag);
-        boolean existsInTables = entityManager.createQuery(
-                        "SELECT CASE " +
-                                "WHEN EXISTS (SELECT i.ignoredTag FROM IgnoredTag i " +
-                                "WHERE i.user.id = :userId AND i.ignoredTag.id = :tagId) " +
-                                "OR " +
-                                "EXISTS (SELECT tr.trackedTag FROM TrackedTag tr " +
-                                "WHERE tr.user.id = :userId AND tr.trackedTag.id = :tagId) " +
-                                "THEN true " +
-                                "ELSE false " +
-                                "END " +
-                                "FROM Tag t Where t.id = :tagId",
-                        Boolean.class)
-                .setParameter("userId", user.getId())
-                .setParameter("tagId", id)
-                .getSingleResult();
+        Optional<Tag> tag = tagService.getById(id);
+        if (tag.isEmpty()){
+            return new ResponseEntity<>("Can't find tag with id:" + id, HttpStatus.BAD_REQUEST);
+        }
+        TagDto tagDto = tagConverter.tagToTagDto(tag.get());
+        boolean existsInTables = tagService.existsInIgnoreTagOrTrackedTagByUserId(user.getId(), id);
         if (!existsInTables) {
-            ignoredTagService.persist(new IgnoredTag(tag, user));
+            ignoredTagService.persist(new IgnoredTag(tag.get(), user));
             return new ResponseEntity<>(tagDto, HttpStatus.OK);
         }
         return new ResponseEntity<>("Ignored tag already exists or is contained in the tracked tags",
@@ -145,26 +129,14 @@ public class TagResourceController {
     public ResponseEntity<?> addTrackedTag(Authentication auth,
                                            @RequestParam(value = "tag") Long id) {
         User user = (User) auth.getPrincipal();
-        Tag tag = tagService.getById(id)
-                .orElseThrow(() -> new ConstrainException("Can't find tag with id:" + id));
-        TagDto tagDto = tagConverter.tagToTagDto(tag);
-        boolean existsInTables = entityManager.createQuery(
-                        "SELECT CASE " +
-                                "WHEN EXISTS (SELECT i.ignoredTag FROM IgnoredTag i " +
-                                "WHERE i.user.id = :userId AND i.ignoredTag.id = :tagId) " +
-                                "OR " +
-                                "EXISTS (SELECT tr.trackedTag FROM TrackedTag tr " +
-                                "WHERE tr.user.id = :userId AND tr.trackedTag.id = :tagId) " +
-                                "THEN true " +
-                                "ELSE false " +
-                                "END " +
-                                "FROM Tag t Where t.id = :tagId",
-                        Boolean.class)
-                .setParameter("userId", user.getId())
-                .setParameter("tagId", id)
-                .getSingleResult();
+        Optional<Tag> tag = tagService.getById(id);
+        if (tag.isEmpty()){
+            return new ResponseEntity<>("Can't find tag with id:" + id, HttpStatus.BAD_REQUEST);
+        }
+        TagDto tagDto = tagConverter.tagToTagDto(tag.get());
+        boolean existsInTables = tagService.existsInIgnoreTagOrTrackedTagByUserId(user.getId(), id);
         if (!existsInTables) {
-            trackedTagService.persist(new TrackedTag(tag, user));
+            trackedTagService.persist(new TrackedTag(tag.get(), user));
             return new ResponseEntity<>(tagDto, HttpStatus.OK);
         }
         return new ResponseEntity<>("Tracked tag already exists or is contained in the ignored tags",
