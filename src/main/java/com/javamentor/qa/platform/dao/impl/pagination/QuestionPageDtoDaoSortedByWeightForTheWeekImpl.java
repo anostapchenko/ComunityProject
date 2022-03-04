@@ -27,16 +27,21 @@ public class QuestionPageDtoDaoSortedByWeightForTheWeekImpl implements PageDtoDa
         int offset = (properties.getCurrentPage() - 1) * itemsOnPage;
         return entityManager.createQuery(
                         "select " +
-                                " q.id, q.title, q.user.id, (select sum(r.count) from Reputation r where r.author.id =q.user.id)," +
-                                " q.user.fullName, q.user.imageLink, q.description,0 as viewCount," +
+                                " q.id, q.title, u.id, (select sum(r.count) from Reputation r where r.author.id =q.user.id)," +
+                                " u.fullName, u.imageLink, q.description,0 as viewCount," +
                                 " (select count (a.id) from Answer a where a.question.id = q.id)," +
                                 " (select count(vq.id) from VoteQuestion vq where vq.question.id=q.id)," +
-                                " q.persistDateTime, q.lastUpdateDateTime from Question q" +
-                                " where q.persistDateTime >= date_trunc('week', current_timestamp)" +
+                                " q.persistDateTime, q.lastUpdateDateTime" +
+                                " from Question q JOIN q.user u " +
+                                " WHERE ((:trackedTags) IS NULL OR q.id IN (select q.id from Question q join q.tags t where t.id in (:trackedTags))) AND" +
+                                " ((:ignoredTags) IS NULL OR q.id not IN (select q.id from Question q join q.tags t where t.id in (:ignoredTags)))" +
+                                " AND q.persistDateTime >= date_trunc('week', current_timestamp)" +
                                 " ORDER BY " +
                                 "(select count (a.id) from Answer a where a.question.id = q.id) + " +
                                 "(select count(vq.id) from VoteQuestion vq where vq.question.id=q.id) + 0 " +
                                 "desc")
+                .setParameter("trackedTags", properties.getProps().get("trackedTags"))
+                .setParameter("ignoredTags", properties.getProps().get("ignoredTags"))
                 .setFirstResult(offset)
                 .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)
@@ -70,9 +75,12 @@ public class QuestionPageDtoDaoSortedByWeightForTheWeekImpl implements PageDtoDa
     @Override
     public Long getTotalResultCount(Map<String, Object> properties) {
 
-        return entityManager.createQuery(
-                        "select count(q.id) from Question q",
-                        Long.class)
+        return (Long) entityManager.createQuery("select distinct count(distinct q.id) from Question q join q.tags t WHERE " +
+                        "((:trackedTags) IS NULL OR t.id IN (:trackedTags)) AND" +
+                        "((:ignoredTags) IS NULL OR q.id NOT IN (SELECT q.id FROM Question q JOIN q.tags t WHERE t.id IN (:ignoredTags))) AND" +
+                        " q.persistDateTime >= date_trunc('week', current_timestamp)")
+                .setParameter("trackedTags", properties.get("trackedTags"))
+                .setParameter("ignoredTags", properties.get("ignoredTags"))
                 .getSingleResult();
     }
 }

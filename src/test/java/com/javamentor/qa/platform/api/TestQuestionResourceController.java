@@ -1226,5 +1226,48 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(jsonPath("$.items[0].id").value(1))
                 .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(1))
                 .andExpect(jsonPath("$.items.length()").value(5));
+
+        //Проверка корректности возвращаемых json, количества items с параметром
+        mockMvc.perform(get("/api/user/question/paginationForWeek?page=1&items=2")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .content(new ObjectMapper().writeValueAsString(questionCreateDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items[0].id").value(1))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(1))
+                .andExpect(jsonPath("$.items.length()").value(2));
+
+        //Проверка корректности возвращаемых json
+        mockMvc.perform(get("/api/user/question/paginationForWeek?page=1&items=4&trackedTag=4")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .content(new ObjectMapper().writeValueAsString(questionCreateDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items.[0].id").value(4))
+                .andExpect(jsonPath("$.items.[0].listTagDto.[0].id").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(1));
+
+        //Проверка корректности возвращаемых json
+        mockMvc.perform(get("/api/user/question/paginationForWeek?page=1&items=4&ignoredTag=1")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .content(new ObjectMapper().writeValueAsString(questionCreateDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items.[0].id").value(4))
+                .andExpect(jsonPath("$.items.[0].listTagDto.[0].id").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(1));
+
+        mockMvc.perform(get("/api/user/question/paginationForWeek?page=1&items=4&ignoredTag=1&trackedTag=4")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .content(new ObjectMapper().writeValueAsString(questionCreateDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items.[0].id").value(4))
+                .andExpect(jsonPath("$.items.[0].listTagDto.[0].id").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(1));
     }
 }
