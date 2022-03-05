@@ -16,6 +16,9 @@ function clearError() {
 }
 
 function loadToken(request) {
+
+    document.cookie = 'rememberme=' + document.querySelector("#rememberme").checked;
+
     fetch('http://localhost:8091/api/auth/token', {
             method: 'POST',
             headers: {
@@ -26,7 +29,7 @@ function loadToken(request) {
     )
         .then(res => res.json())
         .then(res => {
-            document.cookie=`token=${res["token"]}`
+            document.cookie = `token=${res["token"]}`
         }
         )
         .then(() => window.location.assign("http://localhost:8091/main"))
