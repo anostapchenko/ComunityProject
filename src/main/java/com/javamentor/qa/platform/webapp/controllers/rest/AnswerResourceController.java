@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
@@ -38,10 +39,10 @@ import java.util.Optional;
 @RequestMapping("api/user/question/{questionId}/answer")
 public class AnswerResourceController {
 
-    private VoteAnswerService voteAnswerService;
-    private AnswerService answerService;
-    private QuestionService questionService;
-    private AnswerDtoService answerDtoService;
+    private final VoteAnswerService voteAnswerService;
+    private final AnswerService answerService;
+    private final QuestionService questionService;
+    private final AnswerDtoService answerDtoService;
 
     @Autowired
     public AnswerResourceController(VoteAnswerService voteAnswerService,
@@ -172,10 +173,10 @@ public class AnswerResourceController {
     @ApiResponse(responseCode = "200", description = "Answer удален", content = {
             @Content(mediaType = "application/json")
     })
-    @ApiResponse(responseCode = "400", description = "Answer с таким User id и Question id не существует",
+    @ApiResponse(responseCode = "400", description = "Answer с таким id не существует",
             content = {
-            @Content(mediaType = "application/json")
-    })
+                    @Content(mediaType = "application/json")
+            })
     @DeleteMapping(path = "/{id}/delete")
     public ResponseEntity<?> deleteAnswer(@PathVariable(name = "id") long answerId) {
         if (answerService.existsById(answerId)) {
@@ -184,6 +185,31 @@ public class AnswerResourceController {
         }
         return new ResponseEntity<>("Answer with this id doesn't exist",
                 HttpStatus.BAD_REQUEST);
+    }
+
+    @Operation(
+            summary = "Редактирование ответа",
+            description = "Редактирование ответа"
+    )
+    @ApiResponse(responseCode = "200", description = "Возвращает Answer, который был изменен", content = {
+            @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = AnswerDTO.class))
+    })
+    @ApiResponse(responseCode = "400", description = "Answer с таким id не существует",
+            content = {
+            @Content(mediaType = "application/json")
+    })
+    @PutMapping(path = "/{id}/update")
+    public ResponseEntity<?> updateAnswer(@PathVariable(name = "id") long answerId,
+                                          @Valid @RequestBody String htmlBody) {
+        Optional<Answer> answerOpt = answerService.getById(answerId);
+        if (answerOpt.isEmpty()) {
+            return new ResponseEntity<>("Can't find answer with id:" + answerId, HttpStatus.BAD_REQUEST);
+        }
+        Answer answer = answerOpt.get();
+        answer.setHtmlBody(htmlBody);
+        answerService.update(answer);
+        return new ResponseEntity<>(answerDtoService.getAnswerDtoById(answerId), HttpStatus.OK);
     }
 }
 
