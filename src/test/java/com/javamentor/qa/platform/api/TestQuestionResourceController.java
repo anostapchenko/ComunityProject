@@ -1229,4 +1229,96 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(jsonPath("$.items.[0].id").value(104))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @DataSet(cleanBefore = true,
+            value = {
+                    "dataset/testQuestionResourceController/question_different_date.yml",
+                    "dataset/testQuestionResourceController/tag.yml",
+                    "dataset/testQuestionResourceController/questions_has_tag1.yml",
+                    "dataset/QuestionResourceController/users.yml",
+                    "dataset/testQuestionResourceController/role.yml",
+                    "dataset/QuestionResourceController/votes_on_questions.yml"
+            },
+            strategy = SeedStrategy.CLEAN_INSERT
+    )
+    public void getQuestionSortedByWeightForTheWeek() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("test15");
+        authenticationRequest.setUsername("test15@mail.ru");
+
+        QuestionCreateDto questionCreateDto = new QuestionCreateDto();
+        questionCreateDto.setTitle("Title");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        // Без обязательного параметра page
+        mockMvc.perform(get("/api/user/question/paginationForWeek")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .content(new ObjectMapper().writeValueAsString(questionCreateDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest());
+
+        //Проверка корректности возвращаемых json, количества items без двух из-за ограничения по дате за неделю
+        mockMvc.perform(get("/api/user/question/paginationForWeek?page=1")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .content(new ObjectMapper().writeValueAsString(questionCreateDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items[0].id").value(1))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(1))
+                .andExpect(jsonPath("$.items.length()").value(5));
+
+        //Проверка корректности возвращаемых json, количества items с параметром
+        mockMvc.perform(get("/api/user/question/paginationForWeek?page=1&items=2")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .content(new ObjectMapper().writeValueAsString(questionCreateDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items[0].id").value(1))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(1))
+                .andExpect(jsonPath("$.items.length()").value(2));
+
+        //Проверка корректности возвращаемых json
+        mockMvc.perform(get("/api/user/question/paginationForWeek?page=1&items=4&trackedTag=4")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .content(new ObjectMapper().writeValueAsString(questionCreateDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items.[0].id").value(4))
+                .andExpect(jsonPath("$.items.[0].listTagDto.[0].id").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(1));
+
+        //Проверка корректности возвращаемых json
+        mockMvc.perform(get("/api/user/question/paginationForWeek?page=1&items=4&ignoredTag=1")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .content(new ObjectMapper().writeValueAsString(questionCreateDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items.[0].id").value(4))
+                .andExpect(jsonPath("$.items.[0].listTagDto.[0].id").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(1));
+
+        mockMvc.perform(get("/api/user/question/paginationForWeek?page=1&items=4&ignoredTag=1&trackedTag=4")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .content(new ObjectMapper().writeValueAsString(questionCreateDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items.[0].id").value(4))
+                .andExpect(jsonPath("$.items.[0].listTagDto.[0].id").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(1));
+    }
 }
