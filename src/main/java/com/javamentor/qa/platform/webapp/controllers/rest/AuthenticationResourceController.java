@@ -71,7 +71,8 @@ public class AuthenticationResourceController {
             return new ResponseEntity<>("User is not authenticated", HttpStatus.TEMPORARY_REDIRECT);
         }
 
-        if (!userDetails.getAuthorities().stream().anyMatch(x -> x.getAuthority().equals("ROLE_USER"))){
+        if (!(userDetails.getAuthorities().stream().anyMatch(x -> x.getAuthority().equals("ROLE_USER"))
+        || userDetails.getAuthorities().stream().anyMatch(x -> x.getAuthority().equals("ROLE_ADMIN")))){
             return new ResponseEntity<>("FORBIDDEN", HttpStatus.FORBIDDEN);
         }
 
