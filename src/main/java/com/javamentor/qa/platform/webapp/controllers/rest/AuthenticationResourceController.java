@@ -52,7 +52,7 @@ public class AuthenticationResourceController {
                 authenticationRequest.getUsername(), authenticationRequest.getPassword()));
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        final String token = jwtUtil.generateToken((User) userDetails, jwtUtil.rememberMe(request));
+        final String token = jwtUtil.generateToken((User) userDetails, authenticationRequest.getRememberMe());
 
         return ResponseEntity.ok(new AuthenticationResponse(token));
     }

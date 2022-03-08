@@ -1,22 +1,15 @@
 package com.javamentor.qa.platform.security;
 
 import com.javamentor.qa.platform.models.entity.user.User;
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Deserializer;
-import io.jsonwebtoken.lang.Assert;
-import io.jsonwebtoken.lang.DateFormats;
-import io.jsonwebtoken.lang.Strings;
-import io.jsonwebtoken.security.InvalidKeyException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureException;
-import io.jsonwebtoken.security.WeakKeyException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
-import java.security.Key;
-import java.util.*;
+import java.util.Base64;
+import java.util.Date;
+import java.util.HashMap;
 
 @Component
 public class JwtUtil {
@@ -77,14 +70,5 @@ public class JwtUtil {
                 .setExpiration(expirationDate)
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
                 .compact();
-    }
-
-    public boolean rememberMe(HttpServletRequest req){
-        if(req.getCookies() == null){
-            return false;
-        }
-        return Arrays.stream(req.getCookies()).anyMatch(x -> {
-            return x.getName().equals("rememberme") & x.getValue().equals("true");
-        });
     }
 }

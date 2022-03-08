@@ -11,4 +11,9 @@ public class AuthenticationRequest {
     private String username;
     @Schema(description = "Пароль", example = "user1")
     private String password;
+    @Schema(description = "Запомни меня", example = "true")
+    private Boolean rememberMe;
+    {
+        rememberMe = false;
+    }
 }
