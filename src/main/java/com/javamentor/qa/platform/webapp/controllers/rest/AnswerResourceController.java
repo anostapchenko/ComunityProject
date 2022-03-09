@@ -10,6 +10,7 @@ import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.VoteAnswerService;
 import com.javamentor.qa.platform.service.abstracts.dto.AnswerDtoService;
+import com.javamentor.qa.platform.webapp.converters.AnswerConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -43,16 +44,18 @@ public class AnswerResourceController {
     private final AnswerService answerService;
     private final QuestionService questionService;
     private final AnswerDtoService answerDtoService;
+    private final AnswerConverter answerConverter;
 
     @Autowired
     public AnswerResourceController(VoteAnswerService voteAnswerService,
                                     AnswerService answerService,
                                     QuestionService questionService,
-                                    AnswerDtoService answerDtoService) {
+                                    AnswerDtoService answerDtoService, AnswerConverter answerConverter) {
         this.voteAnswerService = voteAnswerService;
         this.answerService = answerService;
         this.questionService = questionService;
         this.answerDtoService = answerDtoService;
+        this.answerConverter = answerConverter;
     }
 
     @Operation(summary = "Голосовать \"за\" (Up Vote)", description =
@@ -202,14 +205,14 @@ public class AnswerResourceController {
     @PutMapping(path = "/{id}/update")
     public ResponseEntity<?> updateAnswer(@PathVariable(name = "id") long answerId,
                                           @Valid @RequestBody String htmlBody) {
-        Optional<Answer> answerOpt = answerService.getById(answerId);
-        if (answerOpt.isEmpty()) {
+        Optional<AnswerDTO> answerDtoOpt = answerDtoService.getAnswerDtoById(answerId);
+        if (answerDtoOpt.isEmpty()) {
             return new ResponseEntity<>("Can't find answer with id:" + answerId, HttpStatus.BAD_REQUEST);
         }
-        Answer answer = answerOpt.get();
-        answer.setHtmlBody(htmlBody);
-        answerService.update(answer);
-        return new ResponseEntity<>(answerDtoService.getAnswerDtoById(answerId), HttpStatus.OK);
+        AnswerDTO answerDTO = answerDtoOpt.get();
+        answerDTO.setHtmlBody(htmlBody);
+        answerService.update(answerConverter.answerDTOToAnswer(answerDTO));
+        return new ResponseEntity<>(answerDTO, HttpStatus.OK);
     }
 }
 
