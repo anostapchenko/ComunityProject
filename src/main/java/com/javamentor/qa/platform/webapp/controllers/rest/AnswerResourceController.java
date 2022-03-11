@@ -203,33 +203,16 @@ public class AnswerResourceController {
             @Content(mediaType = "application/json")
     })
     @PutMapping(path = "/{id}/update")
-    public ResponseEntity<?> updateAnswer(@PathVariable(name = "id") long answerId,
+        public ResponseEntity<?> updateAnswer(@PathVariable(name = "id") long answerId,
                                           @Valid @RequestBody String htmlBody) {
-        Optional<Answer> answerOpt = answerService.getById(answerId);
-        if (answerOpt.isEmpty()) {
+        Optional<AnswerDTO> answerDtoOpt = answerDtoService.getAnswerDtoById(answerId);
+        if (answerDtoOpt.isEmpty()) {
             return new ResponseEntity<>("Can't find answer with id:" + answerId, HttpStatus.BAD_REQUEST);
         }
-        Answer answer = answerOpt.get();
-        answer.setHtmlBody(htmlBody);
-        answerService.update(answer);
-
-        return new ResponseEntity<>(answerDtoService.getAnswerDtoById(answerId), HttpStatus.OK);
+        AnswerDTO answerDTO = answerDtoOpt.get();
+        answerDTO.setHtmlBody(htmlBody);
+        answerService.update(answerConverter.answerDTOToAnswer(answerDTO));
+        return new ResponseEntity<>(answerDTO, HttpStatus.OK);
     }
-
-
-
-
-
-//    public ResponseEntity<?> updateAnswer(@PathVariable(name = "id") long answerId,
-//                                          @Valid @RequestBody String htmlBody) {
-//        Optional<AnswerDTO> answerDtoOpt = answerDtoService.getAnswerDtoById(answerId);
-//        if (answerDtoOpt.isEmpty()) {
-//            return new ResponseEntity<>("Can't find answer with id:" + answerId, HttpStatus.BAD_REQUEST);
-//        }
-//        AnswerDTO answerDTO = answerDtoOpt.get();
-//        answerDTO.setHtmlBody(htmlBody);
-//        answerService.update(answerConverter.answerDTOToAnswer(answerDTO));
-//        return new ResponseEntity<>(answerDTO, HttpStatus.OK);
-//    }
 }
 
