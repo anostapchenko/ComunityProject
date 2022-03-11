@@ -1,11 +1,11 @@
 package com.javamentor.qa.platform.security;
 
 import com.javamentor.qa.platform.models.entity.user.User;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
@@ -48,8 +48,11 @@ public class JwtUtil {
         return null;
     }
 
-    public String generateToken(User user) {
+    public String generateToken(User user, Boolean rememberMe) {
         Long expirationSeconds = Long.parseLong(expirationTime);
+        if(rememberMe){
+            expirationSeconds = expirationSeconds * 365 * 100;
+        }
         return generateToken(user, expirationSeconds);
     }
 
