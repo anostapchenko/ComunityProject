@@ -18,7 +18,7 @@ async function getRelatedTags(numItems){
     let relatedTags = document.querySelector(`#relatedTags`);
     relatedTags.innerHTML = '';
 
-    await fetch('http://localhost:8091/api/user/tag/related', {
+    await fetch('/api/user/tag/related', {
         method: 'GET',
         headers: {
             "Content-type": "application/json",
