@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -44,13 +46,13 @@ public class AuthenticationResourceController {
     @ApiResponse(responseCode = "400", description = "Неверные учетные данные", content = {
             @Content(mediaType = "application/json")
     })
-    public ResponseEntity<?> createToken(@RequestBody AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<?> createToken(@RequestBody AuthenticationRequest authenticationRequest, HttpServletRequest request) {
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 authenticationRequest.getUsername(), authenticationRequest.getPassword()));
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        final String token = jwtUtil.generateToken((User) userDetails);
+        final String token = jwtUtil.generateToken((User) userDetails, authenticationRequest.getRememberMe());
 
         return ResponseEntity.ok(new AuthenticationResponse(token));
     }

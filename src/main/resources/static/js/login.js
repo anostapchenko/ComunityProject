@@ -4,6 +4,7 @@ button.addEventListener('click', () => {
     const request = {}
     request['username'] = document.querySelector("#username").value
     request['password'] = document.querySelector("#password").value
+    request['rememberMe'] = document.querySelector("#rememberme").checked
     loadToken(request)
 }, false)
 
@@ -16,6 +17,7 @@ function clearError() {
 }
 
 function loadToken(request) {
+
     fetch('http://localhost:8091/api/auth/token', {
             method: 'POST',
             headers: {
@@ -26,7 +28,7 @@ function loadToken(request) {
     )
         .then(res => res.json())
         .then(res => {
-            document.cookie=`token=${res["token"]}`
+            document.cookie = `token=${res["token"]}`
         }
         )
         .then(() => window.location.assign("http://localhost:8091/main"))
