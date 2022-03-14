@@ -6,7 +6,7 @@ function activateSideBar () {
 
 //создаем новый объект пагинации и передаем аргументы в конструктор
 let pagination = new Pagination(
-    'http://localhost:8091/api/user/tag/popular',
+    '/api/user/tag/popular',
            2,
      'pagination_objects',
        'navigation',
