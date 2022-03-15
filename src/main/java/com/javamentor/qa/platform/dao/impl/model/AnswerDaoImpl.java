@@ -30,4 +30,16 @@ public class AnswerDaoImpl extends ReadWriteDaoImpl<Answer, Long> implements Ans
         String hql = "UPDATE Answer a SET a.isDeleted = true WHERE a.id = :id";
         entityManager.createQuery(hql).setParameter("id", id).executeUpdate();
     }
+
+    @Transactional
+    @Override
+    public void update(Answer answer) {
+        String htmlBody = answer.getHtmlBody();
+        Long id = answer.getId();
+        String hql = "UPDATE Answer a SET a.htmlBody = :htmlBody WHERE a.id = :id";
+        entityManager.createQuery(hql)
+                .setParameter("id", id)
+                .setParameter("htmlBody", htmlBody)
+                .executeUpdate();
+    }
 }
