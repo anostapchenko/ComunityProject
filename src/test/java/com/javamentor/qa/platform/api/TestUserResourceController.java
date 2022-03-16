@@ -1,22 +1,22 @@
 package com.javamentor.qa.platform.api;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.javamentor.qa.platform.AbstractClassForDRRiderMockMVCTests;
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
+import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -399,8 +399,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
     public void shouldReturnAllUsersSortByRepDelTrue() throws Exception {
         // указаны параметры page и items
 
-        String MyToken = mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/auth/token")
+        String MyToken = mockMvc.perform(post("/api/auth/token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\" : \"test15@mail.ru\"," +
                         " \"password\" : \"test15\"}")
@@ -444,8 +443,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.REFRESH)
     public void shouldReturnAllUsersSortByRep() throws Exception {
 
-        String MyToken = mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/auth/token")
+        String MyToken = mockMvc.perform(post("/api/auth/token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\" : \"test15@mail.ru\"," +
                         " \"password\" : \"test15\"}")
@@ -481,8 +479,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.REFRESH)
     public void shouldReturnAllUsersSortByRepNull() throws Exception {
 
-        String MyToken = mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/auth/token")
+        String MyToken = mockMvc.perform(post("/api/auth/token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\" : \"test15@mail.ru\"," +
                         " \"password\" : \"test15\"}")
@@ -556,6 +553,35 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
         //Удаляю по id с помощью Dao - ничего не должен удалять
         userDao.deleteById(103L);
         assertTrue(userService.getById(103L).isPresent());
+    }
+
+    @Test
+    @DataSet(cleanBefore = true, cleanAfter = true,
+            value = {
+                    "dataset/testUserResourceController/shouldCacheIsUserExistByEmail/roles.yml",
+                    "dataset/testUserResourceController/shouldCacheIsUserExistByEmail/users.yml"
+            },
+            strategy = SeedStrategy.CLEAN_INSERT)
+    public void shouldCacheUserAfterLogin() throws Exception {
+
+        //Проверяю кэширование до логина
+        assertNull(cacheManager.getCache("User").get("test102@mail.ru"));
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("user1");
+        authenticationRequest.setUsername("test102@mail.ru");
+
+        mockMvc.perform(post("/api/auth/token")
+                        .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        //Проверяю кэширование после логина
+        assertNotNull(cacheManager.getCache("User").get("test102@mail.ru"));
+
+        //Удаляю и проверяю кэширование
+        userService.deleteById("test102@mail.ru");
+        assertNull(cacheManager.getCache("User").get("test102@mail.ru"));
     }
 }
 
