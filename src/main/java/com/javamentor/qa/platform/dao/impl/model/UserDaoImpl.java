@@ -27,6 +27,12 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
     }
 
     @Override
+    @CacheEvict(value = "User", key = "#user.email")
+    public void update(User user) {
+        super.update(user);
+    }
+
+    @Override
     @CacheEvict(value = "User", key = "#email")
     public void deleteById(String email) {
         entityManager

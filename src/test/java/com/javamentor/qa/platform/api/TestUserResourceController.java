@@ -582,6 +582,10 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
         //Удаляю и проверяю кэширование
         userService.deleteById("test102@mail.ru");
         assertNull(cacheManager.getCache("User").get("test102@mail.ru"));
+
+        //Обновляю и проверяю кэширование
+        userService.update(userService.getByEmail("test102@mail.ru").get());
+        assertNull(cacheManager.getCache("User").get("test102@mail.ru"));
     }
 }
 
