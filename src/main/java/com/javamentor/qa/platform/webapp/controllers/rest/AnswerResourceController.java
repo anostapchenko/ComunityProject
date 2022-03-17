@@ -10,6 +10,7 @@ import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.VoteAnswerService;
 import com.javamentor.qa.platform.service.abstracts.dto.AnswerDtoService;
+import com.javamentor.qa.platform.webapp.converters.AnswerConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
@@ -38,20 +40,22 @@ import java.util.Optional;
 @RequestMapping("api/user/question/{questionId}/answer")
 public class AnswerResourceController {
 
-    private VoteAnswerService voteAnswerService;
-    private AnswerService answerService;
-    private QuestionService questionService;
-    private AnswerDtoService answerDtoService;
+    private final VoteAnswerService voteAnswerService;
+    private final AnswerService answerService;
+    private final QuestionService questionService;
+    private final AnswerDtoService answerDtoService;
+    private final AnswerConverter answerConverter;
 
     @Autowired
     public AnswerResourceController(VoteAnswerService voteAnswerService,
                                     AnswerService answerService,
                                     QuestionService questionService,
-                                    AnswerDtoService answerDtoService) {
+                                    AnswerDtoService answerDtoService, AnswerConverter answerConverter) {
         this.voteAnswerService = voteAnswerService;
         this.answerService = answerService;
         this.questionService = questionService;
         this.answerDtoService = answerDtoService;
+        this.answerConverter = answerConverter;
     }
 
     @Operation(summary = "Голосовать \"за\" (Up Vote)", description =
@@ -172,10 +176,10 @@ public class AnswerResourceController {
     @ApiResponse(responseCode = "200", description = "Answer удален", content = {
             @Content(mediaType = "application/json")
     })
-    @ApiResponse(responseCode = "400", description = "Answer с таким User id и Question id не существует",
+    @ApiResponse(responseCode = "400", description = "Answer с таким id не существует",
             content = {
-            @Content(mediaType = "application/json")
-    })
+                    @Content(mediaType = "application/json")
+            })
     @DeleteMapping(path = "/{id}/delete")
     public ResponseEntity<?> deleteAnswer(@PathVariable(name = "id") long answerId) {
         if (answerService.existsById(answerId)) {
@@ -184,6 +188,31 @@ public class AnswerResourceController {
         }
         return new ResponseEntity<>("Answer with this id doesn't exist",
                 HttpStatus.BAD_REQUEST);
+    }
+
+    @Operation(
+            summary = "Редактирование ответа",
+            description = "Редактирование ответа"
+    )
+    @ApiResponse(responseCode = "200", description = "Возвращает Answer, который был изменен", content = {
+            @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = AnswerDTO.class))
+    })
+    @ApiResponse(responseCode = "400", description = "Answer с таким id не существует",
+            content = {
+            @Content(mediaType = "application/json")
+    })
+    @PutMapping(path = "/{id}/update")
+        public ResponseEntity<?> updateAnswer(@PathVariable(name = "id") long answerId,
+                                          @Valid @RequestBody String htmlBody) {
+        Optional<AnswerDTO> answerDtoOpt = answerDtoService.getAnswerDtoById(answerId);
+        if (answerDtoOpt.isEmpty()) {
+            return new ResponseEntity<>("Can't find answer with id:" + answerId, HttpStatus.BAD_REQUEST);
+        }
+        AnswerDTO answerDTO = answerDtoOpt.get();
+        answerDTO.setHtmlBody(htmlBody);
+        answerService.update(answerConverter.answerDTOToAnswer(answerDTO));
+        return new ResponseEntity<>(answerDTO, HttpStatus.OK);
     }
 }
 
