@@ -70,7 +70,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     public void shouldGetQuestionIdComment() throws Exception {
         mockMvc.perform(get("/api/user/question/1/comment")
                         .contentType("application/json")
-                        .header("Authorization", "Bearer " + getToken("test1@mail.ru","test15")))
+                        .header("Authorization", "Bearer " + getToken("test1@mail.ru", "test15")))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -96,13 +96,13 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     //Голосуем ПРОТИВ вопроса (DOWN_VOTE) и получаем ответ с количеством голосов: 1 и репутацией -5
     @DataSet(cleanAfter = true, cleanBefore = true,
             value = "dataset/questionresourcecontroller/data.yml",
-            strategy = SeedStrategy.REFRESH )
+            strategy = SeedStrategy.REFRESH)
     public void shouldReturnSetupDownVoteDownReputation() throws Exception {
-        this.mockMvc.perform(post("/api/user/question/2/downVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isOk())
+        this.mockMvc.perform(post("/api/user/question/2/downVote").header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15"))).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("1")));
         Query queryValidateUserVote = entityManager.createQuery("select v from Reputation v join fetch v.question join fetch v.sender where (v.sender.id in :userId) and (v.question.id in : id )  ", Reputation.class);
-        queryValidateUserVote.setParameter("userId",15L);
-        queryValidateUserVote.setParameter("id",2L);
+        queryValidateUserVote.setParameter("userId", 15L);
+        queryValidateUserVote.setParameter("id", 2L);
         Reputation reputation = (Reputation) queryValidateUserVote.getSingleResult();
         assertThat(reputation.getCount()).isEqualTo(-5);
     }
@@ -110,37 +110,40 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @Test
     @DataSet(cleanAfter = true, cleanBefore = true,
             value = "dataset/questionresourcecontroller/data.yml",
-            strategy = SeedStrategy.REFRESH )
+            strategy = SeedStrategy.REFRESH)
     //Голосуем ЗА вопрос (UP_VOTE) и получаем ответ с количеством голосов: 1 и репутация увеличена на +10.
     public void shouldReturnSetupUpVoteUpReputation() throws Exception {
-        this.mockMvc.perform(post("/api/user/question/1/upVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isOk())
+        this.mockMvc.perform(post("/api/user/question/1/upVote").header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15"))).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("1")));
         Query queryValidateUserVote = entityManager.createQuery("select v from Reputation v join fetch v.question join fetch v.sender where (v.sender.id in :userId) and (v.question.id in : id )  ", Reputation.class);
-        queryValidateUserVote.setParameter("userId",15L);
-        queryValidateUserVote.setParameter("id",1L);
+        queryValidateUserVote.setParameter("userId", 15L);
+        queryValidateUserVote.setParameter("id", 1L);
         Reputation reputation = (Reputation) queryValidateUserVote.getSingleResult();
         assertThat(reputation.getCount()).isEqualTo(10);
     }
+
     @Test
     //Повторно голосуем ПРОТИВ вопроса (DOWN_VOTE) и получаем ответ: "User was voting"
     // повторный голос не учитывается.
     @DataSet(cleanAfter = true, cleanBefore = true,
             value = "dataset/questionresourcecontroller/data2.yml",
-            strategy = SeedStrategy.REFRESH )
+            strategy = SeedStrategy.REFRESH)
     public void shouldValidateUserVoteDownVote() throws Exception {
-        this.mockMvc.perform(post("/api/user/question/2/downVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isBadRequest())
+        this.mockMvc.perform(post("/api/user/question/2/downVote").header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15"))).andDo(print()).andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("User was voting")));
     }
+
     @Test
     //Повторно голосуем ЗА вопроса (UP_VOTE) и получаем ответ: "User was voting"
     // повторный голос не учитывается.
     @DataSet(cleanAfter = true, cleanBefore = true,
             value = "dataset/questionresourcecontroller/data2.yml",
-            strategy = SeedStrategy.REFRESH )
+            strategy = SeedStrategy.REFRESH)
     public void shouldValidateUserVoteUpVote() throws Exception {
-        this.mockMvc.perform(post("/api/user/question/1/upVote").header("Authorization", "Bearer " + getToken("test15@mail.ru","test15"))).andDo(print()).andExpect(status().isBadRequest())
+        this.mockMvc.perform(post("/api/user/question/1/upVote").header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15"))).andDo(print()).andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("User was voting")));
     }
+
     @Test
     @DataSet(value = {
             "dataset/QuestionResourceController/roles.yml",
@@ -219,6 +222,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
+
     @Test
     @DataSet(value = {
             "dataset/QuestionResourceController/roles.yml",
@@ -236,7 +240,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     // получение ответа по не существующему в тестовой базе вопросу
     public void getWrongQuestionDtoByIdTest() throws Exception {
         mockMvc.perform(get("/api/user/question/5")
-                        .header("Authorization", "Bearer " + getToken("test15@mail.ru","test15")))
+                        .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -254,7 +258,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     // получение количество вопросов
     public void getQuestionCount() throws Exception {
         mockMvc.perform(get("/api/user/question/count")
-                        .header("Authorization", "Bearer " + getToken("test15@mail.ru","test15")))
+                        .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -870,7 +874,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
 
         mockMvc.perform(get("/api/user/question/tag/100?page=1&items=2")
                         .contentType("application/json")
-                .header(AUTHORIZATION, USER_TOKEN))
+                        .header(AUTHORIZATION, USER_TOKEN))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -938,7 +942,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     public void getCorrectListOfQuestionsWithoutAnswers() throws Exception {
         // Проверяет, пришли ли только вопросы без ответов: приходят вопросы 2 и 3, так как на первый вопрос есть ответ,
         // а параметр itemsOnPage = 2
-        String userToken = getToken("test15@mail.ru","test15");
+        String userToken = getToken("test15@mail.ru", "test15");
         mockMvc.perform(get("/api/user/question/noAnswer?page=1&items=2")
                         .header("Authorization", "Bearer " + userToken))
                 .andExpect(status().isOk())
@@ -1007,7 +1011,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     // Получение json по вопросам без ответов, когда нет таких ответов
     public void getQuestionsWithoutAnswersWhenThereIsNoSuchQuestions() throws Exception {
 
-        String userToken = getToken("test15@mail.ru","test15");
+        String userToken = getToken("test15@mail.ru", "test15");
         mockMvc.perform(get("/api/user/question/noAnswer?page=1&items=2")
                         .header("Authorization", "Bearer " + userToken))
                 .andExpect(status().isOk())
@@ -1016,10 +1020,11 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(jsonPath("$.items").isEmpty())
                 .andExpect(jsonPath("$.totalResultCount").value(0));
     }
+
     // Получение json по cписку вопросов
     public void testAllQuestionsWithTrackedTagsAndIgnoredTags() throws Exception {
 
-        String USER_TOKEN = getToken("test15@mail.ru","test15");
+        String USER_TOKEN = getToken("test15@mail.ru", "test15");
         mockMvc.perform(get("/api/user/question?page=1&items=2")
                         .header("Authorization", "Bearer " + USER_TOKEN))
                 .andExpect(status().isOk())
@@ -1040,7 +1045,6 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(jsonPath("$.items.[2].id").value(3))
                 .andExpect(jsonPath("$.items.[3].id").value(4))
                 .andExpect(jsonPath("$.totalResultCount").value(4));
-
 
 
         mockMvc.perform(get("/api/user/question?page=1&items=4&trackedTag=101")
@@ -1116,12 +1120,12 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
     @DataSet(
             value = {
                     "dataset/QuestionResourceController/question_viewed/question_viewed.yml"
-                    },
+            },
             cleanBefore = true, cleanAfter = true,
             strategy = SeedStrategy.CLEAN_INSERT)
     @ExpectedDataSet(value = {
             "dataset/QuestionResourceController/expected/question_viewed.yml"
-            },
+    },
             ignoreCols = {"persist_date"})
     public void shouldMarkQuestionLikeViewed() throws Exception {
 
@@ -1320,5 +1324,83 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(jsonPath("$.items.[0].id").value(4))
                 .andExpect(jsonPath("$.items.[0].listTagDto.[0].id").value(4))
                 .andExpect(jsonPath("$.totalResultCount").value(1));
+    }
+
+    @Test
+    @DataSet(cleanBefore = true,cleanAfter = true,
+            value = {
+                    "dataset/QuestionResourceController/QuestionsSortedByAnswersForLastMonth/questionsDiffPersistDate.yml",
+                    "dataset/QuestionResourceController/users.yml",
+                    "dataset/QuestionResourceController/QuestionsSortedByAnswersForLastMonth/AnswerForSortedByQuantity.yml",
+                    "dataset/QuestionResourceController/QuestionsSortedByAnswersForLastMonth/VotesOnQuestionsForSortedByQuantity.yml",
+                    "dataset/testQuestionResourceController/role.yml",
+            },
+            strategy = SeedStrategy.CLEAN_INSERT
+    )
+    public void getQuestionSortedByAnswersQuantityForMonth() throws Exception {
+
+        String USER_TOKEN = "Bearer " + getToken("test15@mail.ru", "test15");
+
+        // Без обязательного параметра page
+        mockMvc.perform(get("/api/user/question/paginationForMonth")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest());
+        /* Проверка на :
+        1) корректность  количества items за месяц(totalResultCount=7);
+        2) корректность количества доступных страниц(totalPageCount=1);
+        2) наличие всех полей в произвольном item (соответствие QuestionViewDto)-правильность HQL запроса;
+        3) проверка сортировки items по количесту ответов, при равном количестве ответов
+        по голосам вопросов(проверка по начальной средней и конечной позициям)
+        */
+        mockMvc.perform(get("/api/user/question/paginationForMonth?page=1")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalResultCount").value(7))
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.items.length()").value(7))
+                .andExpect(jsonPath("$.items[0].id").value(5))
+                .andExpect(jsonPath("$.items[0].title").value("test5"))
+                .andExpect(jsonPath("$.items[0].authorId").value(15))
+                .andExpect(jsonPath("$.items[0].authorReputation").value(0))
+                .andExpect(jsonPath("$.items[0].authorName").value("test 15"))
+                .andExpect(jsonPath("$.items[0].authorImage").value("photo"))
+                .andExpect(jsonPath("$.items[0].description").value("test5"))
+                .andExpect(jsonPath("$.items[0].viewCount").value(0))
+                .andExpect(jsonPath("$.items[0].countAnswer").value(0))
+                .andExpect(jsonPath("$.items[0].countValuable").value(-1))
+                .andExpect(jsonPath("$.items[1].id").value(10))
+                .andExpect(jsonPath("$.items[2].id").value(3))
+                .andExpect(jsonPath("$.items[3].id").value(4))
+                .andExpect(jsonPath("$.items[4].id").value(2))
+                .andExpect(jsonPath("$.items[6].id").value(11));
+        /* Проверка на :
+        1) корректности запроса при запросе второй странице и количестве items на странице 5;
+        2) корректность количества записей(totalResultCount=7);
+        3) корректность количества страниц(totalPageCount=2);
+        4) количество items на запрошенной странице(items.length=2);
+        5) корректность статуса текущей страници(currentPageNumber=2);
+        6) проверка сортировки items по последней записи (items[1].id=11))
+        */
+        mockMvc.perform(get("/api/user/question/paginationForMonth?page=2&items=5")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalResultCount").value(7))
+                .andExpect(jsonPath("$.totalPageCount").value(2))
+                .andExpect(jsonPath("$.items.length()").value(2))
+                .andExpect(jsonPath("$.currentPageNumber").value(2))
+                .andExpect(jsonPath("$.items[1].id").value(11));
+        /*Проверка запроса при параметре items=0*/
+        mockMvc.perform(get("/api/user/question/paginationForMonth?page=3&items=0")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items.length()").value(0));
     }
 }
