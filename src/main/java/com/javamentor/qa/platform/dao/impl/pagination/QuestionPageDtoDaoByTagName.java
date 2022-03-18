@@ -30,9 +30,15 @@ public class QuestionPageDtoDaoByTagName implements PageDtoDao<QuestionViewDto> 
                         " (select count(vq.id) from VoteQuestion vq where vq.question.id=q.id)," +
                         " q.persistDateTime, q.lastUpdateDateTime" +
                         " from Question q JOIN q.user u" +
-                        " WHERE ((:tags) IS NULL OR q.id IN (select q.id from Question q join q.tags t where t.name in (:tags))) "
+                        " WHERE ((:trackedTags) IS NULL OR q.id IN (select q.id from Question q join q.tags t where t.id in (:trackedTags))) AND" +
+                        " ((:ignoredTags) IS NULL OR q.id not IN (select q.id from Question q join q.tags t where t.id in (:ignoredTags))) AND" +
+                        " ((:tags) IS NULL OR q.id IN (select q.id from Question q join q.tags t where t.name in (:tags) GROUP BY q.id HAVING COUNT(*) = (:tagsSize)))" +
+                        " ORDER BY q.persistDateTime desc"
                 )
+                .setParameter("trackedTags", properties.getProps().get("trackedTags"))
+                .setParameter("ignoredTags", properties.getProps().get("ignoredTags"))
                 .setParameter("tags", properties.getProps().get("tags"))
+                .setParameter("tagsSize",(long)((List<String>) properties.getProps().get("tags")).size())
                 .setFirstResult(offset)
                 .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)
@@ -65,9 +71,15 @@ public class QuestionPageDtoDaoByTagName implements PageDtoDao<QuestionViewDto> 
 
     @Override
     public Long getTotalResultCount(Map<String, Object> properties) {
+
+
         return (Long) entityManager.createQuery("select distinct count(distinct q.id) from Question q join q.tags t WHERE " +
+                        "((:trackedTags) IS NULL OR t.id IN (:trackedTags)) AND " +
+                        "((:ignoredTags) IS NULL OR q.id NOT IN (SELECT q.id FROM Question q JOIN q.tags t WHERE t.id IN (:ignoredTags))) AND " +
                         "((:tags) IS NULL OR t.name IN (:tags))"
                 )
+                .setParameter("trackedTags", properties.get("trackedTags"))
+                .setParameter("ignoredTags", properties.get("ignoredTags"))
                 .setParameter("tags", properties.get("tags"))
                 .getSingleResult();
     }

@@ -31,7 +31,7 @@ public class TestGlobalSearchResourceController extends AbstractClassForDRRiderM
             value = {
                     "dataset/testQuestionResourceController/question_different_date.yml",
                     "dataset/testQuestionResourceController/tag.yml",
-                    "dataset/testQuestionResourceController/questions_has_tag1.yml",
+                    "dataset/testQuestionResourceController/questions_has_tag2.yml",
                     "dataset/QuestionResourceController/users.yml",
                     "dataset/testQuestionResourceController/role.yml",
                     "dataset/QuestionResourceController/votes_on_questions.yml"
@@ -39,6 +39,7 @@ public class TestGlobalSearchResourceController extends AbstractClassForDRRiderM
     )
     public void getQuestionGlobalSearchByTagsName() throws Exception {
 
+        //получение пагинированного списка по одному тэгу
         mockMvc.perform(get("/api/search/tagged/testNameTag2")
                         .contentType("application/json"))
                 .andDo(print())
@@ -46,5 +47,18 @@ public class TestGlobalSearchResourceController extends AbstractClassForDRRiderM
                 .andExpect(jsonPath("$.items[0].id").value(2))
                 .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(2))
                 .andExpect(jsonPath("$.items.length()").value(1));
+
+        //получение пагинированного списка по нескольким тэгам
+        mockMvc.perform(get("/api/search/tagged/testNameTag3+testNameTag4")
+                        .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items[0].id").value(4))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(3))
+                .andExpect(jsonPath("$.items[0].listTagDto[1].id").value(4))
+                .andExpect(jsonPath("$.items[1].id").value(7))
+                .andExpect(jsonPath("$.items[1].listTagDto[0].id").value(3))
+                .andExpect(jsonPath("$.items[1].listTagDto[1].id").value(4))
+                .andExpect(jsonPath("$.items.length()").value(2));
     }
 }

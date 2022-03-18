@@ -3,7 +3,7 @@ package com.javamentor.qa.platform.service.abstracts.dto;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 
-public interface GlobalSearchService {
+public interface GlobalSearchDtoService {
 
     PageDTO<QuestionViewDto> getListQuestionDtoByParam(String q);
 

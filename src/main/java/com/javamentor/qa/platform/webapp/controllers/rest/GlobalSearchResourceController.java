@@ -4,23 +4,31 @@ import com.javamentor.qa.platform.dao.impl.pagination.QuestionPageDtoDaoByTagNam
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
-import com.javamentor.qa.platform.service.abstracts.dto.GlobalSearchService;
+import com.javamentor.qa.platform.service.abstracts.dto.GlobalSearchDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.*;
 
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/search")
 @Tag(name = "Global Search Resource Controller", description = "Отдельный контроллер для глобального поиска по сайту")
 public class GlobalSearchResourceController {
 
-    private GlobalSearchService globalSearchService;
-    private QuestionDtoService questionDtoService;
+    private final GlobalSearchDtoService globalSearchService;
+    private final QuestionDtoService questionDtoService;
 
     @GetMapping("")
     public ResponseEntity<PageDTO<QuestionViewDto>> globalSearchByQuestion(@RequestParam String q){
@@ -28,11 +36,26 @@ public class GlobalSearchResourceController {
         return new ResponseEntity<>(globalSearchService.getListQuestionDtoByParam(q), HttpStatus.OK);
     }
 
-    @GetMapping("/tagged/{tag}")
-    public ResponseEntity<PageDTO<QuestionViewDto>> globalSearchByTag(@PathVariable("tag") String tag){
+    @GetMapping("tagged/{tag}")
+    @Operation(summary = "Получение пагинированного списка вопросов по имени тэга " +
+            "с возможностью учета trackedTag и ignoredTag",
+            description = "Получение пагинированного списка вопросов в глобальном поиске, " +
+                    "в запросе указываем tag - имена тэгов разделённых + если их несколько, обязательный параметр, items (по умолчанию 10) - количество результатов на странице," +
+                    "не обязательный на фронте, trackedTag - не обязательный параметр, ignoredTag - не обязательный параметр")
+    @ApiResponse(responseCode = "200", description = "Возвращает пагинированный список PageDTO<QuestionDTO> (id, title, authorId," +
+            " authorReputation, authorName, authorImage, description, viewCount, countAnswer, countValuable," +
+            " LocalDateTime, LocalDateTime, listTagDto", content = {
+            @Content(mediaType = "application/json")
+    })
+    public ResponseEntity<PageDTO<QuestionViewDto>> globalSearchByTag(@PathVariable String tag,
+                                                                      @RequestParam(required = false, defaultValue = "10") int items,
+                                                                      @RequestParam(required = false) List<Long> trackedTag,
+                                                                      @RequestParam (required = false) List<Long> ignoredTag) {
 
-        PaginationData data = new PaginationData(1,10, QuestionPageDtoDaoByTagName.class.getSimpleName());
-        data.getProps().put("tags",tag.split("/+"));
+        PaginationData data = new PaginationData(1,items, QuestionPageDtoDaoByTagName.class.getSimpleName());
+        data.getProps().put("tags",Arrays.asList(tag.split("\\+")));
+        data.getProps().put("trackedTags", trackedTag);
+        data.getProps().put("ignoredTags", ignoredTag);
 
         return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
     }
