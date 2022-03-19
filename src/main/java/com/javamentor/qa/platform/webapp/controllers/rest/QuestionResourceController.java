@@ -348,7 +348,8 @@ public class QuestionResourceController {
             "(?просмотрам)(приоритет соответсвует порядку)",
             description = "Получение пагинированного списка вопросов за месяц, " +
                     "в запросе указываем page - номер страницы, обязательный параметр, items (по умолчанию 10) - " +
-                    "количество результатов на странице")
+                    "количество результатов на странице, так же можно отфильтровать по ignoredTag и trackedTag" +
+                    "(указываются как параметр в HTTP запросе списком)")
     @ApiResponse(responseCode = "200", description = "Возвращает пагинированный список PageDTO<QuestionViewDTO> " +
             "(id, title, authorId," +
             " authorReputation, authorName, authorImage, description, viewCount, countAnswer, countValuable," +
@@ -356,8 +357,15 @@ public class QuestionResourceController {
             @Content(mediaType = "application/json")
     })
     public ResponseEntity<PageDTO<QuestionViewDto>> paginationForTheMonth(@RequestParam int page,
-                                                                          @RequestParam(required = false, defaultValue = "10") int items) {
+                                                                          @RequestParam(required = false, defaultValue = "10") int items,
+                                                                          @RequestParam(required = false) List<Long>trackedTag,
+                                                                          @RequestParam(required = false) List<Long> ignoredTag,
+                                                                          @RequestParam(required = false,defaultValue = "month") String time){
+        time=(time.equals("month")||time.equals("week")? time:"month");
         PaginationData data = new PaginationData(page, items, QuestionPageDtoDaoSortedByImpl.class.getSimpleName());
+        data.getProps().put("trackedTags", trackedTag);
+        data.getProps().put("ignoredTags", ignoredTag);
+        data.getProps().put("time", time);
         return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
     }
 }

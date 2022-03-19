@@ -1334,6 +1334,8 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                     "dataset/QuestionResourceController/QuestionsSortedByAnswersForLastMonth/AnswerForSortedByQuantity.yml",
                     "dataset/QuestionResourceController/QuestionsSortedByAnswersForLastMonth/VotesOnQuestionsForSortedByQuantity.yml",
                     "dataset/testQuestionResourceController/role.yml",
+                    "dataset/testQuestionResourceController/tag.yml",
+                    "dataset/QuestionResourceController/QuestionsSortedByAnswersForLastMonth/QuestionsHasTag.yml"
             },
             strategy = SeedStrategy.CLEAN_INSERT
     )
@@ -1402,5 +1404,35 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items.length()").value(0));
+        //Проверка корректности возвращаемых json при поиске записей по тэгу(4)
+        mockMvc.perform(get("/api/user/question/paginationForMonth?page=1&items=4&trackedTag=4")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalResultCount").value(2))
+                .andExpect(jsonPath("$.items[0].id").value(4))
+                .andExpect(jsonPath("$.items[1].id").value(11));
+        //Проверка корректности возвращаемых json при поиске записей по 2м тэгам
+        mockMvc.perform(get("/api/user/question/paginationForMonth?page=1&items=4&trackedTag=4,2")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.items[0].id").value(4))
+                .andExpect(jsonPath("$.items[1].id").value(2))
+                .andExpect(jsonPath("$.items[2].id").value(11));
+        //Проверка корректности возвращаемых json при поиске записей по 2м тэгам и отсутсвию 1го тэга
+        mockMvc.perform(get("/api/user/question/paginationForMonth?page=1&items=4&trackedTag=4,1&ignoredTag=2")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalResultCount").value(6))
+                .andExpect(jsonPath("$.items[0].id").value(5))
+                .andExpect(jsonPath("$.items[1].id").value(10))
+                .andExpect(jsonPath("$.items[2].id").value(3))
+                .andExpect(jsonPath("$.items[3].id").value(4));
     }
 }
