@@ -300,7 +300,33 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$").doesNotExist());
-
+        //Проверка фильтрации тэгов по параметру filter=spr(4 записи должен найти)
+        this.mockMvc.perform(get("/api/user/tag/new?page=1&filter=spr")
+                        .contentType("application/json")
+                        .header("Authorization", token))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.totalResultCount").value("4"))
+                .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(101, 106, 103,102)));
+        //Проверка фильтрации тэгов по параметру filter=sprg(ничего не должен найти)
+        this.mockMvc.perform(get("/api/user/tag/new?page=1&filter=sprg")
+                        .contentType("application/json")
+                        .header("Authorization", token))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.totalResultCount").value("0"))
+                .andExpect(jsonPath("$.items.length()").value(0));
+        //Проверка фильтрации тэгов при отсутсвии параметра filter(должне найти все тэги)
+        this.mockMvc.perform(get("/api/user/tag/new?page=1")
+                        .contentType("application/json")
+                        .header("Authorization", token))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.totalResultCount").value("11"))
+                .andExpect(jsonPath("$.items.length()").value(10));
     }
 
     @Test
@@ -313,10 +339,11 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
             },
             strategy = SeedStrategy.REFRESH)
     public void shouldReturnAllTagSortByName() throws Exception {
+        String token="Bearer "+ getToken("user102@mail.ru","test15");
         // указаны параметры page и items
         this.mockMvc.perform(get("/api/user/tag/name?page=1&items=5")
                 .contentType("application/json")
-                .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")))
+                .header("Authorization", token))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -329,13 +356,39 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andExpect(jsonPath("$.items").isNotEmpty())
                 .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(102, 105, 106)));
 
-
         // нет обязательного параметра - page
         mockMvc.perform(get("/api/user/tag/name?items=3")
-                .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")))
+                .header("Authorization", token))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$").doesNotExist());
+        //Проверка фильтрации тэгов по параметру filter=t(2 записи должен найти)
+        this.mockMvc.perform(get("/api/user/tag/name?page=1&filter=t")
+                        .contentType("application/json")
+                        .header("Authorization", token))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.totalResultCount").value("2"))
+                .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(107, 104)));
+        //Проверка фильтрации тэгов по параметру filter=sprg(ничего не должен найти)
+        this.mockMvc.perform(get("/api/user/tag/name?page=1&filter=sprg")
+                        .contentType("application/json")
+                        .header("Authorization", token))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.totalResultCount").value("0"))
+                .andExpect(jsonPath("$.items.length()").value(0));
+        //Проверка фильтрации тэгов при отсутсвии параметра filter(должне найти все тэги)
+        this.mockMvc.perform(get("/api/user/tag/name?page=1")
+                        .contentType("application/json")
+                        .header("Authorization", token))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.totalResultCount").value("6"))
+                .andExpect(jsonPath("$.items.length()").value(6));
     }
 
     // Все Tag по аттрибуту популярности(QuestionCount чем выше, тем более популярный тэг)
@@ -343,6 +396,7 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
     @DataSet(value = "dataset/testTagResourceController/TagsByPopular.yml",
             strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true, cleanAfter = true)
     public void shouldReturnAllTagsSortByPopularQuest() throws Exception {
+        String token="Bearer "+getToken("user102@mail.ru","test15");
         mockMvc.perform(get("/api/user/tag/popular?page=1&items=4")
                 .contentType("application/json")
                 .header("Authorization", "Bearer " + getToken("user102@mail.ru","test15")))
@@ -357,6 +411,33 @@ public class TestTagResourceController extends AbstractClassForDRRiderMockMVCTes
                 .andExpect(jsonPath("$.totalResultCount").value("4"))
                 .andExpect(jsonPath("$.items").isNotEmpty())
                 .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(103, 102, 104, 101)));
+        //Проверка фильтрации тэгов по параметру filter=t(2 записи должен найти)
+        this.mockMvc.perform(get("/api/user/tag/popular?page=1&filter=g2")
+                        .contentType("application/json")
+                        .header("Authorization", token))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.totalResultCount").value("1"))
+                .andExpect(jsonPath("$.items[*].id").value(containsInRelativeOrder(102)));
+        //Проверка фильтрации тэгов по параметру filter=t5(ничего не должен найти)
+        this.mockMvc.perform(get("/api/user/tag/popular?page=1&filter=t5")
+                        .contentType("application/json")
+                        .header("Authorization", token))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.totalResultCount").value("0"))
+                .andExpect(jsonPath("$.items.length()").value(0));
+        //Проверка фильтрации тэгов при отсутсвии параметра filter(должне найти все тэги)
+        this.mockMvc.perform(get("/api/user/tag/popular?page=1")
+                        .contentType("application/json")
+                        .header("Authorization", token))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.totalResultCount").value("4"))
+                .andExpect(jsonPath("$.items.length()").value(4));
     }
 
     //Удаление IgnoredTag и TrackedTag

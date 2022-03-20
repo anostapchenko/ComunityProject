@@ -173,8 +173,9 @@ public class TagResourceController {
                 HttpStatus.OK);
     }
 
-    @Operation(summary = "Получение пагинированного списка всех тегов по имени",
-            description = "Получение пагинированного списка всех тегов отсортированных по имени")
+    @Operation(summary = "Получение пагинированного списка всех тегов по имени с возможностью фильтрации по части имени тега",
+            description = "Получение пагинированного списка всех тегов отсортированных по имени. " +
+                    "Наличие необязательного параметра filter дает возможность отфильтровать теги по имени.")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -187,14 +188,18 @@ public class TagResourceController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещён")
     })
     @GetMapping("/name")
-    public ResponseEntity<PageDTO<TagViewDto>> getAllTagPaginationByName(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
+    public ResponseEntity<PageDTO<TagViewDto>> getAllTagPaginationByName(@RequestParam Integer page,
+                                                                         @RequestParam(required = false, defaultValue = "10") Integer items,
+                                                                         @RequestParam(required = false) String filter) {
         PaginationData data = new PaginationData(page, items,
                 TagPageDtoDaoAllTagsByNameImpl.class.getSimpleName());
+        data.getProps().put("filter", (filter !=null ? ("%"+filter+"%") : "%%"));
         return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);
     }
 
-    @Operation(summary = "Получение пагинированного списка всех тегов по дате",
-            description = "Получение пагинированного списка всех тегов отсортированных дате добавления")
+    @Operation(summary = "Получение пагинированного списка всех тегов по дате с возможностью фильтрации по части имени тега",
+            description = "Получение пагинированного списка всех тегов отсортированных дате добавления." +
+                    "Наличие необязательного параметра filter дает возможность отфильтровать теги по имени.")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -207,14 +212,18 @@ public class TagResourceController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещён")
     })
     @GetMapping("/new")
-    public ResponseEntity<PageDTO<TagViewDto>> getAllTagPaginationByPersistDateTime(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
+    public ResponseEntity<PageDTO<TagViewDto>> getAllTagPaginationByPersistDateTime(@RequestParam Integer page,
+                                                                                    @RequestParam(required = false, defaultValue = "10") Integer items,
+                                                                                    @RequestParam(required = false) String filter) {
         PaginationData data = new PaginationData(page, items,
                 TagPageDtoDaoAllTagsByPersistDateTimeImpl.class.getSimpleName());
+        data.getProps().put("filter", (filter !=null ? ("%"+filter+"%") : "%%"));
         return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);
     }
 
-    @Operation(summary = "Получение пагинированного списка всех тегов по популярности",
+    @Operation(summary = "Получение пагинированного списка всех тегов по популярности с возможностью фильтрации по части имени тега",
             description = "Получение пагинированного списка всех тегов отсортированных по популярности." +
+                    "Наличие необязательного параметра filter дает возможность отфильтровать теги по имени." +
                     "Популярность тэгов определяется количеством вопросов за этим тэгом, чем больше за этим тэгом вопросов тем он популярнее.")
     @ApiResponses(value = {
             @ApiResponse(
@@ -228,9 +237,12 @@ public class TagResourceController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещён")
     })
     @GetMapping("/popular")
-    public ResponseEntity<PageDTO<TagViewDto>> getAllTagPaginationByPopular(@RequestParam Integer page, @RequestParam(required = false, defaultValue = "10") Integer items) {
+    public ResponseEntity<PageDTO<TagViewDto>> getAllTagPaginationByPopular(@RequestParam Integer page,
+                                                                            @RequestParam(required = false, defaultValue = "10") Integer items,
+                                                                            @RequestParam(required = false) String filter) {
         PaginationData data = new PaginationData(page, items,
                 TagPageDtoDaoAllTagsByPopularImpl.class.getSimpleName());
+        data.getProps().put("filter", (filter !=null ? ("%"+filter+"%") : "%%"));
         return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);
     }
 
