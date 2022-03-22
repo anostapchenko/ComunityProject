@@ -27,7 +27,7 @@ public class TagPageDtoDaoAllTagsByPopularImpl implements PageDtoDao<TagViewDto>
                                             "(select count(distinct q.id) from t.questions q) as countQuestion, " +
                                             "(select count(distinct q.id) from t.questions q where q.persistDateTime <= :current and :countOneDay < q.persistDateTime) as questionCountOneDay, " +
                                             "(select count(distinct q.id) from t.questions q where q.persistDateTime <= :current and :countWeekDay < q.persistDateTime) as questionCountWeekDay)" +
-                                            "from Tag t where t.name like :filter order by t.questions.size desc", TagViewDto.class)
+                                            "from Tag t where t.name like concat('%',:filter,'%')   order by t.questions.size desc", TagViewDto.class)
                 .setParameter("current", currentDate)
                 .setParameter("countOneDay", currentDate.minusDays(1))
                 .setParameter("countWeekDay", currentDate.minusDays(7))
@@ -39,7 +39,7 @@ public class TagPageDtoDaoAllTagsByPopularImpl implements PageDtoDao<TagViewDto>
 
     @Override
     public Long getTotalResultCount(Map<String, Object> properties) {
-        return (Long) entityManager.createQuery("select count(t.id) from Tag t where t.name like :filter")
+        return (Long) entityManager.createQuery("select count(t.id) from Tag t where t.name like concat('%',:filter,'%')")
                 .setParameter("filter",properties.get("filter"))
                 .getSingleResult();
     }

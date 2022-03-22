@@ -190,10 +190,9 @@ public class TagResourceController {
     @GetMapping("/name")
     public ResponseEntity<PageDTO<TagViewDto>> getAllTagPaginationByName(@RequestParam Integer page,
                                                                          @RequestParam(required = false, defaultValue = "10") Integer items,
-                                                                         @RequestParam(required = false) String filter) {
-        PaginationData data = new PaginationData(page, items,
-                TagPageDtoDaoAllTagsByNameImpl.class.getSimpleName());
-        data.getProps().put("filter", (filter !=null ? ("%"+filter+"%") : "%%"));
+                                                                         @RequestParam(required = false, defaultValue = "") String filter) {
+        PaginationData data = new PaginationData(page, items, TagPageDtoDaoAllTagsByNameImpl.class.getSimpleName());
+        data.getProps().put("filter",filter);
         return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);
     }
 
@@ -214,10 +213,10 @@ public class TagResourceController {
     @GetMapping("/new")
     public ResponseEntity<PageDTO<TagViewDto>> getAllTagPaginationByPersistDateTime(@RequestParam Integer page,
                                                                                     @RequestParam(required = false, defaultValue = "10") Integer items,
-                                                                                    @RequestParam(required = false) String filter) {
+                                                                                    @RequestParam(required = false, defaultValue = "") String filter) {
         PaginationData data = new PaginationData(page, items,
                 TagPageDtoDaoAllTagsByPersistDateTimeImpl.class.getSimpleName());
-        data.getProps().put("filter", (filter !=null ? ("%"+filter+"%") : "%%"));
+        data.getProps().put("filter", filter);
         return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);
     }
 
@@ -239,10 +238,10 @@ public class TagResourceController {
     @GetMapping("/popular")
     public ResponseEntity<PageDTO<TagViewDto>> getAllTagPaginationByPopular(@RequestParam Integer page,
                                                                             @RequestParam(required = false, defaultValue = "10") Integer items,
-                                                                            @RequestParam(required = false) String filter) {
+                                                                            @RequestParam(required = false, defaultValue = "") String filter) {
         PaginationData data = new PaginationData(page, items,
                 TagPageDtoDaoAllTagsByPopularImpl.class.getSimpleName());
-        data.getProps().put("filter", (filter !=null ? ("%"+filter+"%") : "%%"));
+        data.getProps().put("filter", filter);
         return new ResponseEntity<>(tagDtoService.getPageDto(data), HttpStatus.OK);
     }
 
