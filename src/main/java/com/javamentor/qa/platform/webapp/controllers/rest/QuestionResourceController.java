@@ -359,13 +359,10 @@ public class QuestionResourceController {
     public ResponseEntity<PageDTO<QuestionViewDto>> paginationForTheMonth(@RequestParam int page,
                                                                           @RequestParam(required = false, defaultValue = "10") int items,
                                                                           @RequestParam(required = false) List<Long>trackedTag,
-                                                                          @RequestParam(required = false) List<Long> ignoredTag,
-                                                                          @RequestParam(required = false,defaultValue = "month") String time){
-        time=(time.equals("month")||time.equals("week")? time:"month");
+                                                                          @RequestParam(required = false) List<Long>ignoredTag){
         PaginationData data = new PaginationData(page, items, QuestionPageDtoDaoSortedByImpl.class.getSimpleName());
         data.getProps().put("trackedTags", trackedTag);
         data.getProps().put("ignoredTags", ignoredTag);
-        data.getProps().put("time", time);
         return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
     }
 }

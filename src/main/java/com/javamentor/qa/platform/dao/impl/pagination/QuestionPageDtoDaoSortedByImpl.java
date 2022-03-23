@@ -28,9 +28,8 @@ public class QuestionPageDtoDaoSortedByImpl implements PageDtoDao<QuestionViewDt
                         "from Question q join User u on q.user.id=u.id " +
                         "where ((:trackedTags) IS NULL OR q.id IN (select q.id from Question q join q.tags t where t.id in (:trackedTags))) and" +
                         "((:ignoredTags) IS NULL OR q.id not IN (select q.id from Question q join q.tags t where t.id in (:ignoredTags)))" +
-                        "and q.persistDateTime > date_trunc(:time, current_timestamp) " +
+                        "and q.persistDateTime > date_trunc('month', current_timestamp) " +
                         "order by answerCounter, voteCounter ")
-                .setParameter("time",properties.getProps().get("time"))
                 .setParameter("trackedTags",properties.getProps().get("trackedTags"))
                 .setParameter("ignoredTags",properties.getProps().get("ignoredTags"))
                 .setFirstResult(offset)
@@ -49,8 +48,7 @@ public class QuestionPageDtoDaoSortedByImpl implements PageDtoDao<QuestionViewDt
                         "((:ignoredTags) is null " +
                         "or q.id not in " +
                         "(select q.id from Question q join q.tags t where t.id in (:ignoredTags))) and" +
-                        " q.persistDateTime > date_trunc(:time, current_timestamp)")
-                .setParameter("time",properties.get("time"))
+                        " q.persistDateTime > date_trunc('month', current_timestamp)")
                 .setParameter("trackedTags",properties.get("trackedTags"))
                 .setParameter("ignoredTags",properties.get("ignoredTags"))
                 .getSingleResult();
