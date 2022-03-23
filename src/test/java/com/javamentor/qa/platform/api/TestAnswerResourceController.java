@@ -396,4 +396,41 @@ public class TestAnswerResourceController extends AbstractClassForDRRiderMockMVC
                 .isEqualTo(true);
     }
 
+    @Test
+    @DataSet(value = {
+            "dataset/testAnswerResourceController/moreAnswers.yml",
+            "dataset/testAnswerResourceController/moreQuestions.yml",
+            "dataset/testAnswerResourceController/moreUsers.yml",
+            "dataset/testAnswerResourceController/roles.yml"
+    }, strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true, cleanAfter = true)
+
+    public void shouldUpdateAnswer() throws Exception {
+
+        String token = "Bearer " + getToken("user100@mail.ru", "password");
+
+        // Изменяем ответ
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/user/question/100/answer/100/update")
+                        .header("Authorization", token)
+                        .content("modified answer about Question 100")
+                        .contentType("application/json")
+                ).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.htmlBody").value("modified answer about Question 100"));
+        assertThat((boolean) entityManager.createQuery(
+                        "SELECT CASE WHEN a.htmlBody =: htmlBody THEN TRUE ELSE FALSE END " +
+                                "FROM Answer a WHERE a.id =: id")
+                .setParameter("id", (long) 100)
+                .setParameter("htmlBody", "modified answer about Question 100")
+                .getSingleResult())
+                .isEqualTo(true);
+
+        // Изменяем несуществующий ответ
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/user/question/100/answer/999/update")
+                        .header("Authorization", token)
+                        .content("modified answer 999")
+                        .contentType("application/json")
+                ).andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
 }
