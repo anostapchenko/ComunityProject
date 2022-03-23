@@ -1,4 +1,4 @@
-package com.javamentor.qa.platform.dao.impl.pagination;
+package com.javamentor.qa.platform.dao.impl.pagination.globalsearch;
 
 import com.javamentor.qa.platform.dao.abstracts.pagination.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
@@ -12,33 +12,33 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-@Repository("QuestionPageDtoDaoByTagName")
-public class QuestionPageDtoDaoByTagName implements PageDtoDao<QuestionViewDto> {
+@Repository("QuestionPageDtoDaoByViews")
+public class QuestionPageDtoDaoByViews implements PageDtoDao<QuestionViewDto> {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
     public List<QuestionViewDto> getPaginationItems(PaginationData properties) {
+        String q = ((String) properties.getProps().get("q")).replaceAll("views:","");
+        String[] jpql = q.split("[^\\d]+");
         int itemsOnPage = properties.getItemsOnPage();
         int offset = (properties.getCurrentPage() - 1) * itemsOnPage;
         return entityManager.createQuery(
-                "select " +
-                        " q.id, q.title, u.id, (select sum(r.count) from Reputation r where r.author.id =q.user.id)," +
-                        " u.fullName, u.imageLink, q.description,0 as viewCount," +
-                        " (select count (a.id) from Answer a where a.question.id = q.id)," +
-                        " (select count(vq.id) from VoteQuestion vq where vq.question.id=q.id)," +
-                        " q.persistDateTime, q.lastUpdateDateTime" +
-                        " from Question q JOIN q.user u" +
-                        " WHERE ((:trackedTags) IS NULL OR q.id IN (select q.id from Question q join q.tags t where t.id in (:trackedTags))) AND" +
-                        " ((:ignoredTags) IS NULL OR q.id not IN (select q.id from Question q join q.tags t where t.id in (:ignoredTags))) AND" +
-                        " ((:tags) IS NULL OR q.id IN (select q.id from Question q join q.tags t where t.name in (:tags) GROUP BY q.id HAVING COUNT(*) = (:tagsSize)))" +
-                        " ORDER BY q.persistDateTime desc"
+                        "select " +
+                                " q.id, q.title, u.id, (select sum(r.count) from Reputation r where r.author.id =q.user.id)," +
+                                " u.fullName, u.imageLink, q.description," +
+                                " (select count(qv.id) from QuestionViewed qv where qv.question.id = q.id)," +
+                                " (select count (a.id) from Answer a where a.question.id = q.id)," +
+                                " (select count(vq.id) from VoteQuestion vq where vq.question.id=q.id)," +
+                                " q.persistDateTime, q.lastUpdateDateTime" +
+                                " from Question q JOIN q.user u " +
+                                " WHERE (select count(qv.id) from QuestionViewed qv where qv.question.id = q.id) >= (:q0)" +
+                                " AND (select count(qv.id) from QuestionViewed qv where qv.question.id = q.id) <= (:q1)" +
+                                " ORDER BY q.persistDateTime desc"
                 )
-                .setParameter("trackedTags", properties.getProps().get("trackedTags"))
-                .setParameter("ignoredTags", properties.getProps().get("ignoredTags"))
-                .setParameter("tags", properties.getProps().get("tags"))
-                .setParameter("tagsSize",(long)((List<String>) properties.getProps().get("tags")).size())
+                .setParameter("q0",Long.parseLong(jpql[0]))
+                .setParameter("q1",Long.parseLong(jpql[1]))
                 .setFirstResult(offset)
                 .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)
@@ -72,15 +72,17 @@ public class QuestionPageDtoDaoByTagName implements PageDtoDao<QuestionViewDto> 
     @Override
     public Long getTotalResultCount(Map<String, Object> properties) {
 
+        String q = ((String) properties.get("q")).replaceAll("views:","");
+        String[] jpql = q.split("[^\\d]+");
 
-        return (Long) entityManager.createQuery("select distinct count(distinct q.id) from Question q join q.tags t WHERE " +
-                        "((:trackedTags) IS NULL OR t.id IN (:trackedTags)) AND " +
-                        "((:ignoredTags) IS NULL OR q.id NOT IN (SELECT q.id FROM Question q JOIN q.tags t WHERE t.id IN (:ignoredTags))) AND " +
-                        "((:tags) IS NULL OR t.name IN (:tags))"
+        return (Long) entityManager.createQuery(
+                        "select count(q.id)" +
+                                " from Question q" +
+                                " WHERE (select count(qv.id) from QuestionViewed qv where qv.question.id = q.id) >= (:q0)" +
+                                " AND (select count(qv.id) from QuestionViewed qv where qv.question.id = q.id) <= (:q1)"
                 )
-                .setParameter("trackedTags", properties.get("trackedTags"))
-                .setParameter("ignoredTags", properties.get("ignoredTags"))
-                .setParameter("tags", properties.get("tags"))
+                .setParameter("q0",Long.parseLong(jpql[0]))
+                .setParameter("q1",Long.parseLong(jpql[1]))
                 .getSingleResult();
     }
 }
