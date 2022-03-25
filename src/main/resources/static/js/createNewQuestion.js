@@ -35,7 +35,7 @@ button.onclick = function() {
         titles.insertAdjacentHTML("beforebegin", "<div><span style='color: red'><b>Придумайте заголовок</b></span></div>")
     } else {
         let description = document.getElementById('mainTextInput').value;
-        let tags = document.getElementById('tagsTextInput').value.split(/[\s|,|;]+/);
+        let tags = document.getElementById('tagsTextInput').value.trim().split(/[\s|,|;]+/);
         const tagsList = new Array;
         tags.forEach(tag => {
             let tagData = {
