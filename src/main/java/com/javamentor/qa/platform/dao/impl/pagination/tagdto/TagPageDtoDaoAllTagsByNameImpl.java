@@ -26,11 +26,12 @@ public class TagPageDtoDaoAllTagsByNameImpl implements PageDtoDao<TagViewDto> {
                                             "(t.id, t.name, t.persistDateTime, t.description, " +
                                             "(select count(distinct q.id) from t.questions q) as countQuestion, " +
                                             "(select count(distinct q.id) from t.questions q where q.persistDateTime <= :current and :countOneDay < q.persistDateTime) as questionCountOneDay, " +
-                                            "(select count(distinct q.id) from t.questions q where q.persistDateTime <= :current and :countWeekDay < q.persistDateTime) as questionCountWeekDay)" +
-                                            "from Tag t order by t.name", TagViewDto.class)
+                                            "(select count(distinct q.id) from t.questions q where q.persistDateTime <= :current and :countWeekDay < q.persistDateTime) as questionCountWeekDay) " +
+                                            "from Tag t where t.name like concat('%',:filter,'%') order by t.name", TagViewDto.class)
                 .setParameter("current", currentDate)
                 .setParameter("countOneDay", currentDate.minusDays(1))
                 .setParameter("countWeekDay", currentDate.minusDays(7))
+                .setParameter("filter",properties.getProps().get("filter"))
                 .setFirstResult(offset)
                 .setMaxResults(itemsOnPage)
                 .getResultList();
@@ -38,6 +39,9 @@ public class TagPageDtoDaoAllTagsByNameImpl implements PageDtoDao<TagViewDto> {
 
     @Override
     public Long getTotalResultCount(Map<String, Object> properties) {
-        return (Long) entityManager.createQuery("select count(t.id) from Tag t").getSingleResult();
+        return (Long) entityManager.createQuery("select count(t.id) from Tag t " +
+                "where t.name like concat('%',:filter,'%')")
+                .setParameter("filter",properties.get("filter"))
+                .getSingleResult();
     }
 }
