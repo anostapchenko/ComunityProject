@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>Задать публичный вопрос</title>
     <link href="/css/askQuestions.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 <body>
 <div class="container h-100">
@@ -13,8 +15,8 @@
     </div>
     <p></p>
     <div class="card" style="width: 58rem;">
-        <div class="card-body">
-            <form>
+        <div class="card-body" id="questionForm">
+           <form>
                 <div class="mb-3">
                     <label for="headTextInput" class="form-label">
                         <h5>Заголовок</h5>
@@ -22,32 +24,39 @@
                     <h6 class="card-subtitle mb-2 text-muted">Будьте конкретны и представьте, что вы задаёте вопрос другому человеку.</h6>
                     <input type="text" id="headTextInput" class="form-control" placeholder="В чём заключается ваш вопрос? Будьте конкретны.">
                 </div>
-            </form>
-            <form>
+
                 <div class="mb-3">
                     <label for="mainTextInput" class="form-label">
                         <h5>Текст вопроса</h5>
                     </label>
                     <h6 class="card-subtitle mb-2 text-muted">Включите всю информацию, которая может понадобиться кому-то, чтобы ответить на ваш вопрос.</h6>
-
+                    <button type="button" class="btn btn-dark" id="button-b">Жирный</button>
+                    <button type="button" class="btn btn-secondary" id="button-k">Курсив</button>
+                    <button type="button" class="btn btn-light" id="button-c">Код</button>
                     <textarea id="mainTextInput" class="form-control" rows="4"></textarea>
                 </div>
-            </form>
-            <form>
-                <div class="mb-3">
+
+                <div class="mb-3" id="tags">
                     <label for="tagsTextInput" class="form-label">
                         <h5>Метки</h5>
                     </label>
                     <h6 class="card-subtitle mb-2 text-muted">Добавьте до 5 меток, чтобы описать о чём ваш вопрос</h6>
                     <input type="text" id="tagsTextInput" class="form-control" placeholder="например, [ java колллекции база-данных ] ">
+                    <div id="livesearch" class="list-group"></div>
                 </div>
             </form>
         </div>
     </div>
     <p></p>
-    <button class="btn btn-info h-50">Задайте ваш вопрос</button>
+    <button class="btn btn-info" id="addButton">Задайте ваш вопрос</button>
+    <div id="str"></div>
 </div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script type="text/javascript" src="/js/initScriptAuthorized.js"></script>
 <script type="text/javascript" src="/js/askQuestion.js"></script>
+<script type="text/javascript" src="/js/createNewQuestion.js"></script>
+<script type="text/javascript" src="/js/live_search.js"></script>
 </body>
 </html>
