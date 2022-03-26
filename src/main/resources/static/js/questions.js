@@ -79,13 +79,13 @@ function makeTrackedCard(){
     btnMakeTrackedCard.parentElement.innerHTML =
         '<div class="mb-1" id="trackedList"></div>' +
         '<div>' +
-            '<div class="d-inline-block">' +
+            '<span class="d-inline-block">' +
                 '<input class="form-control" list="listTrackedTag" type="text" id="ipt_add_tag_tracked">' +
                 '<datalist id="listTrackedTag"></datalist>' +
-            '</div>' +
-            '<div class="d-inline-block">' +
-        '       <a id="btn_add_tracked_tag" href="#" class="btn btn-info">+</a>' +
-            '</div>' +
+            '</span>' +
+            '<span class="d-inline-block">' +
+        '       <a class="btn btn-info mb-1" id="btn_add_tracked_tag" href="#">+</a>' +
+            '</span>' +
         '</div>';
 
     listTrackedTag = document.querySelector("#listTrackedTag");
@@ -93,6 +93,12 @@ function makeTrackedCard(){
     iptAddTrackedTag.addEventListener('input', () => {
 
         tagInputEvent(iptAddTrackedTag.value, listTrackedTag, iptAddTrackedTag);
+    })
+
+    iptAddTrackedTag.addEventListener('keypress', () => {
+        if (event.charCode === 13){
+            addTagClickEvent(addTag, addTagInCard, divTrackedList, iptAddTrackedTag, "tracked");
+        }
     })
 
     divTrackedList = document.querySelector("#trackedList");
@@ -112,7 +118,7 @@ function makeIgnoredCard(){
                 '<datalist id="listIgnoredTag"></datalist>' +
             '</div>' +
             '<div class="d-inline-block">' +
-                '<a id="btn_add_ignored_tag" href="#" class="btn btn-info">+</a>' +
+                '<a class="btn btn-info mb-1" id="btn_add_ignored_tag" href="#">+</a>' +
             '</div>' +
         '</div>';
 
@@ -121,6 +127,12 @@ function makeIgnoredCard(){
     iptAddIgnoredTag.addEventListener('input', () => {
 
         tagInputEvent(iptAddIgnoredTag.value, listIgnoredTag, iptAddIgnoredTag);
+    })
+
+    iptAddIgnoredTag.addEventListener('keypress', () => {
+        if (event.charCode === 13){
+            addTagClickEvent(addTag, addTagInCard, divIgnoredList, iptAddIgnoredTag, "ignored");
+        }
     })
 
     divIgnoredList = document.querySelector("#ignoredList");
@@ -169,6 +181,10 @@ btnMakeTrackedCard.addEventListener('click', () => {
 btnMakeIgnoredCard.addEventListener('click', () => {
     makeIgnoredCard();
 })
+
+function tagInputKeyPressEvent(){
+
+}
 
 async function addTagClickEvent(addTags, addTagInCard, divList, iptAddTag, mode){
 
