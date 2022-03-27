@@ -31,34 +31,19 @@ public class GlobalSearchResourceController {
 
     @GetMapping("")
     @Operation(summary = "Получение пагинированного списка вопросов по различным условиям ",
-            description = "Получение пагинированного списка вопросов в глобальном поиске" +
-                          "items (по умолчанию 10) - количество результатов на странице," +
+            description = "Получение пагинированного списка вопросов в глобальном поиске " +
+                          "В запросе указываем page - номер страницы, " +
+                          "items (по умолчанию 10) - количество результатов на странице, " +
                           "не обязательный на фронте")
     @ApiResponse(responseCode = "200", description = "Возвращает пагинированный список PageDTO<QuestionViewDTO> (id, title, authorId," +
             " authorReputation, authorName, authorImage, description, viewCount, countAnswer, countValuable," +
             " LocalDateTime, LocalDateTime, listTagDto", content = {
             @Content(mediaType = "application/json")
     })
-    public ResponseEntity<PageDTO<QuestionViewDto>> globalSearchByQuestion(@RequestParam String q,
+    public ResponseEntity<PageDTO<QuestionViewDto>> globalSearchByQuestion(@RequestParam int page,
+                                                                           @RequestParam String q,
                                                                            @RequestParam(required = false, defaultValue = "10") int items) {
 
-        return new ResponseEntity<>(globalSearchService.getListQuestionDtoByParam(q,items), HttpStatus.OK);
-    }
-
-    @GetMapping("tagged/{tag}")
-    @Operation(summary = "Получение пагинированного списка вопросов по имени тэга ",
-            description = "Получение пагинированного списка вопросов в глобальном поиске, " +
-                    "в запросе указываем tag(обязательный параметр) - имена тэгов разделённых +, если их несколько," +
-                    "если тэг нужно игнорить то указываем минус перед названием, items (по умолчанию 10) - количество результатов на странице," +
-                    "не обязательный на фронте")
-    @ApiResponse(responseCode = "200", description = "Возвращает пагинированный список PageDTO<QuestionViewDTO> (id, title, authorId," +
-            " authorReputation, authorName, authorImage, description, viewCount, countAnswer, countValuable," +
-            " LocalDateTime, LocalDateTime, listTagDto", content = {
-            @Content(mediaType = "application/json")
-    })
-    public ResponseEntity<PageDTO<QuestionViewDto>> globalSearchByTag(@PathVariable String tag,
-                                                                      @RequestParam(required = false, defaultValue = "10") int items) {
-
-        return new ResponseEntity<>(globalSearchService.getListQuestionDtoByTagName(tag,items), HttpStatus.OK);
+        return new ResponseEntity<>(globalSearchService.getListQuestionDtoByParam(q,items,page), HttpStatus.OK);
     }
 }

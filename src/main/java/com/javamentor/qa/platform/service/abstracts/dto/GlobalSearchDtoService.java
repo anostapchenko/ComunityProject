@@ -6,10 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public interface GlobalSearchDtoService {
 
-    @Autowired
-    QuestionDtoService questionDtoService = null;
+    PageDTO<QuestionViewDto> getListQuestionDtoByParam(String q,int items,int page);
 
-    PageDTO<QuestionViewDto> getListQuestionDtoByParam(String q,int items);
-
-    PageDTO<QuestionViewDto> getListQuestionDtoByTagName(String tagName,int items);
 }

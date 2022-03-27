@@ -31,7 +31,7 @@ public class TestGlobalSearchResourceController extends AbstractClassForDRRiderM
     )
     public void getQuestionGlobalSearch() throws Exception {
         //поиск по телу вопроса body:
-        mockMvc.perform(get("/api/search?q=body:test7 body")
+        mockMvc.perform(get("/api/search?page=1&q=body:test7 body")
                         .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -40,7 +40,7 @@ public class TestGlobalSearchResourceController extends AbstractClassForDRRiderM
                 .andExpect(jsonPath("$.items.length()").value(1));
 
         //поиск по заголовку вопроса title:
-        mockMvc.perform(get("/api/search?q=title:test7 title")
+        mockMvc.perform(get("/api/search?page=1&q=title:test7 title")
                         .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -49,14 +49,14 @@ public class TestGlobalSearchResourceController extends AbstractClassForDRRiderM
                 .andExpect(jsonPath("$.items.length()").value(1));
 
         //поиск по username вопроса user:
-        mockMvc.perform(get("/api/search?q=user:test15")
+        mockMvc.perform(get("/api/search?page=1&q=user:test15")
                         .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items.length()").value(4));
 
         //поиск по нескольким тэгам и слову
-        mockMvc.perform(get("/api/search?q=[testNameTag3][testNameTag4]test7 body")
+        mockMvc.perform(get("/api/search?page=1&q=[testNameTag3][testNameTag4]test7 body")
                         .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -67,7 +67,7 @@ public class TestGlobalSearchResourceController extends AbstractClassForDRRiderM
                 .andExpect(jsonPath("$.items.length()").value(1));
 
         //поиск по одному тэгу и слову
-        mockMvc.perform(get("/api/search?q=[testNameTag3]body")
+        mockMvc.perform(get("/api/search?page=1&q=[testNameTag3]body")
                         .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -87,7 +87,7 @@ public class TestGlobalSearchResourceController extends AbstractClassForDRRiderM
                 .andExpect(jsonPath("$.items.length()").value(3));
 
         //поиск по "точной фразе"
-        mockMvc.perform(get("/api/search?q=\"test7 body\"")
+        mockMvc.perform(get("/api/search?page=1&q=\"test7 body\"")
                         .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -98,7 +98,7 @@ public class TestGlobalSearchResourceController extends AbstractClassForDRRiderM
                 .andExpect(jsonPath("$.items.length()").value(1));
 
         //поиск сообщений с оценкой равно
-        mockMvc.perform(get("/api/search?q=score:-1")
+        mockMvc.perform(get("/api/search?page=1&q=score:-1")
                         .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -108,7 +108,7 @@ public class TestGlobalSearchResourceController extends AbstractClassForDRRiderM
                 .andExpect(jsonPath("$.items.length()").value(3));
 
         //поиск сообщений с оценкой больше или равно
-        mockMvc.perform(get("/api/search?q=score:1..")
+        mockMvc.perform(get("/api/search?page=1&q=score:1..")
                         .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -117,7 +117,7 @@ public class TestGlobalSearchResourceController extends AbstractClassForDRRiderM
                 .andExpect(jsonPath("$.items.length()").value(2));
 
         //поиск сообщений по просмотрам
-        mockMvc.perform(get("/api/search?q=views:1..2")
+        mockMvc.perform(get("/api/search?page=1&q=views:1..2")
                         .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -126,7 +126,7 @@ public class TestGlobalSearchResourceController extends AbstractClassForDRRiderM
                 .andExpect(jsonPath("$.items.length()").value(2));
 
         //поиск сообщений по просмотрам
-        mockMvc.perform(get("/api/search?q=views:1-2")
+        mockMvc.perform(get("/api/search?page=1&q=views:1-2")
                         .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -135,7 +135,7 @@ public class TestGlobalSearchResourceController extends AbstractClassForDRRiderM
                 .andExpect(jsonPath("$.items.length()").value(2));
 
         //поиск сообщений по ответам
-        mockMvc.perform(get("/api/search?q=answers:0")
+        mockMvc.perform(get("/api/search?page=1&q=answers:0")
                         .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -143,23 +143,9 @@ public class TestGlobalSearchResourceController extends AbstractClassForDRRiderM
                 .andExpect(jsonPath("$.items[1].id").value(6))
                 .andExpect(jsonPath("$.items[2].id").value(7))
                 .andExpect(jsonPath("$.items.length()").value(3));
-    }
-
-    @Test
-    @DataSet(
-            value = {
-                    "dataset/testQuestionResourceController/question_different_date.yml",
-                    "dataset/testQuestionResourceController/tag.yml",
-                    "dataset/GlobalSearchResourceController/questions_has_tag.yml",
-                    "dataset/QuestionResourceController/users.yml",
-                    "dataset/testQuestionResourceController/role.yml",
-                    "dataset/QuestionResourceController/votes_on_questions.yml"
-            }
-    )
-    public void getQuestionGlobalSearchByTagsName() throws Exception {
 
         //получение пагинированного списка по одному тэгу
-        mockMvc.perform(get("/api/search/tagged/testNameTag2")
+        mockMvc.perform(get("/api/search?page=1&q=[testNameTag2]")
                         .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -168,7 +154,7 @@ public class TestGlobalSearchResourceController extends AbstractClassForDRRiderM
                 .andExpect(jsonPath("$.items.length()").value(1));
 
         //получение пагинированного списка по нескольким тэгам
-        mockMvc.perform(get("/api/search/tagged/testNameTag3+testNameTag4")
+        mockMvc.perform(get("/api/search?page=1&q=[testNameTag3]+[testNameTag4]")
                         .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -184,7 +170,7 @@ public class TestGlobalSearchResourceController extends AbstractClassForDRRiderM
                 .andExpect(jsonPath("$.items[2].listTagDto[1].id").value(4))
                 .andExpect(jsonPath("$.items.length()").value(3));
 
-        mockMvc.perform(get("/api/search/tagged/testNameTag3+testNameTag4+-testNameTag2")
+        mockMvc.perform(get("/api/search?page=1&q=[testNameTag3]+[testNameTag4]+-[testNameTag2]")
                         .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -195,6 +181,5 @@ public class TestGlobalSearchResourceController extends AbstractClassForDRRiderM
                 .andExpect(jsonPath("$.items[1].listTagDto[0].id").value(3))
                 .andExpect(jsonPath("$.items[1].listTagDto[1].id").value(4))
                 .andExpect(jsonPath("$.items.length()").value(2));
-
     }
 }

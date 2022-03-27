@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +22,19 @@ public class QuestionPageDtoDaoByTagName implements PageDtoDao<QuestionViewDto> 
 
     @Override
     public List<QuestionViewDto> getPaginationItems(PaginationData properties) {
+        String tagName = (String) properties.getProps().get("q");
+        List<String> tagsList = new ArrayList<>();
+        List<String> ignoreTags = new ArrayList<>();
+
+        for(String s : Arrays.asList(tagName.split("\\+"))){
+            s = s.replaceAll("\\[|]","");
+            if(s.startsWith("-")){
+                ignoreTags.add(s.substring(1));
+            } else {
+                tagsList.add(s);
+            }
+        }
+
         int itemsOnPage = properties.getItemsOnPage();
         int offset = (properties.getCurrentPage() - 1) * itemsOnPage;
         return entityManager.createQuery(
@@ -36,9 +51,9 @@ public class QuestionPageDtoDaoByTagName implements PageDtoDao<QuestionViewDto> 
                         " t.name in (:ignoreTags)))" +
                         " ORDER BY q.persistDateTime desc"
                 )
-                .setParameter("tags", properties.getProps().get("tags"))
-                .setParameter("tagsSize",(long)((List<String>) properties.getProps().get("tags")).size())
-                .setParameter("ignoreTags", properties.getProps().get("ignoreTags"))
+                .setParameter("tags", tagsList)
+                .setParameter("tagsSize",(long)tagsList.size())
+                .setParameter("ignoreTags", ignoreTags)
                 .setFirstResult(offset)
                 .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)

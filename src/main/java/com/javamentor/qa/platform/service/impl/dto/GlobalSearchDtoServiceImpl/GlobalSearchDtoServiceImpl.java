@@ -23,13 +23,13 @@ public class GlobalSearchDtoServiceImpl implements GlobalSearchDtoService {
     private final List<GlobalSearchParser> list;
 
     @Override
-    public PageDTO<QuestionViewDto> getListQuestionDtoByParam(String q,int items) {
+    public PageDTO<QuestionViewDto> getListQuestionDtoByParam(String q,int items,int page) {
         PaginationData paginationData;
         String data;
         for(GlobalSearchParser parser : list){
             data = parser.parse(q);
             if(data != null){
-                paginationData = new PaginationData(1, items, data);
+                paginationData = new PaginationData(page, items, data);
                 paginationData.getProps().put("q", q);
                 return questionDtoService.getPageDto(paginationData);
             }
@@ -39,26 +39,6 @@ public class GlobalSearchDtoServiceImpl implements GlobalSearchDtoService {
         paginationData.getProps().put("q", q);
 
         return questionDtoService.getPageDto(paginationData);
-    }
-
-    @Override
-    public PageDTO<QuestionViewDto> getListQuestionDtoByTagName(String tagName,int items) {
-
-        List<String> tagsList = new ArrayList<>();
-        List<String> ignoreTags = new ArrayList<>();
-
-        for(String s : Arrays.asList(tagName.split("\\+"))){
-            if(s.startsWith("-")){
-                ignoreTags.add(s.substring(1));
-            } else {
-                tagsList.add(s);
-            }
-        }
-
-        PaginationData data = new PaginationData(1,items, QuestionPageDtoDaoByTagName.class.getSimpleName());
-        data.getProps().put("tags",tagsList);
-        data.getProps().put("ignoreTags",ignoreTags);
-        return questionDtoService.getPageDto(data);
     }
 
 }
