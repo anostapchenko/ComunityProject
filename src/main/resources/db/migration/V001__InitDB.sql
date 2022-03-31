@@ -16,6 +16,7 @@ create sequence user_seq start 1 increment 1;
 create sequence user_badges_seq start 1 increment 1;
 create sequence user_favorite_question_seq start 1 increment 1;
 create sequence vote_question_seq start 1 increment 1;
+create sequence bookmarks_seq start 1 increment 1;
 
 create table answer (
     id int8 not null,
