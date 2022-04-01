@@ -390,10 +390,12 @@ public class QuestionResourceController {
         Optional<Question> question = questionService.getById(id);
 
         if (question.isPresent()) {
-            if (!bookmarksService.addQuestionInBookmarks(user, question.get())) {
+            try {
+                bookmarksService.addQuestionInBookmarks(user, question.get());
+                return new ResponseEntity<>("Bookmark successfully added", HttpStatus.OK);
+            } catch (Exception e) {
                 return new ResponseEntity<>("The bookmark has not been added", HttpStatus.ACCEPTED);
             }
-            return new ResponseEntity<>("Bookmark successfully added", HttpStatus.OK);
         }
 
         return new ResponseEntity<>("There is no question with id: " + id.toString(), HttpStatus.BAD_REQUEST);

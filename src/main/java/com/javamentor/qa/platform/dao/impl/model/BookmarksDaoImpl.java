@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.List;
 
 @Repository
 public class BookmarksDaoImpl extends ReadWriteDaoImpl<BookMarks, Long> implements BookmarksDao {
@@ -17,11 +16,10 @@ public class BookmarksDaoImpl extends ReadWriteDaoImpl<BookMarks, Long> implemen
     @Override
     public boolean findBookmarksByUserAndQuestion(Long userId, Long questionId) {
         return entityManager
-                .createQuery("select b from BookMarks b where b.user.id =:userId and b.question.id =:questionId", BookMarks.class)
+                .createQuery("select count(b) from BookMarks b where b.user.id =:userId and b.question.id =:questionId", Long.class)
                 .setParameter("userId", userId)
                 .setParameter("questionId", questionId)
-                .getResultList()
-                .isEmpty();
+                .getSingleResult() == 0;
     }
 
     @Override

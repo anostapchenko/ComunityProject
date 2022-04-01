@@ -6,6 +6,6 @@ import com.javamentor.qa.platform.models.entity.user.User;
 
 public interface BookmarksService extends ReadWriteService<BookMarks, Long> {
 
-    boolean addQuestionInBookmarks(User user, Question question);
+    void addQuestionInBookmarks(User user, Question question) throws Exception;
 
 }

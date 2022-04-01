@@ -22,15 +22,15 @@ public class BookmarksServiceImpl  extends ReadWriteServiceImpl<BookMarks, Long>
     }
 
     @Override
-    public boolean addQuestionInBookmarks(User user, Question question) {
+    public void addQuestionInBookmarks(User user, Question question) throws Exception {
         if(bookmarksDao.findBookmarksByUserAndQuestion(user.getId(), question.getId())){
             BookMarks bookMarks = BookMarks.builder()
                     .question(question)
                     .user(user)
                     .build();
             bookmarksDao.persist(bookMarks);
-            return true;
+        } else {
+            throw new Exception("The bookmark has not been added");
         }
-        return false;
     }
 }
