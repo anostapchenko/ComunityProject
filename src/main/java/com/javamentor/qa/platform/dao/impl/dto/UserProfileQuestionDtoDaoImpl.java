@@ -1,6 +1,5 @@
 package com.javamentor.qa.platform.dao.impl.dto;
 
-import com.javamentor.qa.platform.dao.abstracts.dto.UserProfileQuestionDtoDao;
 import com.javamentor.qa.platform.dao.impl.dto.transformer.UserProfileQuestionDtoResultTransformer;
 import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
 import org.springframework.stereotype.Repository;
@@ -10,16 +9,15 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository("UserProfileQuestionDtoDaoImpl")
-public class UserProfileQuestionDtoDaoImpl implements UserProfileQuestionDtoDao {
+public class UserProfileQuestionDtoDaoImpl  {
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
-    @Override
-    public List<UserProfileQuestionDto> getAllUserProfileQuestionDtoByEmailWhereQuestionIsDeleted(String email) {
-        return entityManager.createQuery("select q," +
-                        "coalesce((select count(a.id) from Answer a where a.question.id = q.id),0) as countAnswer " +
-                        "from Question q where q.isDeleted=true and (select u.email from User u where q.user.id=u.id)=:email")
-                .setParameter("email", email)
+    public List<UserProfileQuestionDto> getAllUserProfileQuestionDtoByUserIdWhereQuestionIsDeleted(Long id) {
+        return (List<UserProfileQuestionDto>) entityManager.createQuery("select q.id,q.title ," +
+                        "coalesce((select count(a.id) from Answer a where a.question.id = q.id),0) as countAnswer, " +
+                        "q.persistDateTime from Question q  where q.isDeleted=true and q.user.id=:id")
+                .setParameter("id", id)
                 .unwrap(org.hibernate.query.Query.class)
                 .setResultTransformer(new UserProfileQuestionDtoResultTransformer())
                 .getResultList();

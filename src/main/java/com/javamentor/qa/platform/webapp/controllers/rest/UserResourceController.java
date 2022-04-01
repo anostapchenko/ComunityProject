@@ -7,8 +7,8 @@ import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
+import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
-import com.javamentor.qa.platform.service.abstracts.dto.UserProfileQuestionDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,10 +16,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -31,14 +31,11 @@ import java.util.Optional;
 @Tag(name = "User Resource Controller", description = "The User API")
 public class UserResourceController {
 
-    private final UserProfileQuestionDtoService userProfileQuestionDtoService;
     private final UserDtoService userDtoService;
     private final UserService userService;
 
-    public UserResourceController(UserProfileQuestionDtoService userProfileQuestionDtoService,
-                                  UserDtoService userDtoService,
+    public UserResourceController(UserDtoService userDtoService,
                                   UserService userService) {
-        this.userProfileQuestionDtoService = userProfileQuestionDtoService;
         this.userDtoService = userDtoService;
         this.userService = userService;
     }
@@ -165,9 +162,9 @@ public class UserResourceController {
                     }),
     })
     @GetMapping("/api/user/profile/delete/questions")
-    public ResponseEntity<List<UserProfileQuestionDto>> getAllUserProfileQuestionDtoIsDelete(Authentication auth) {
-        return new ResponseEntity<>(userProfileQuestionDtoService
-                .getUserProfileQuestionDtoIsDeleted(((UserDetails) auth.getPrincipal()).getUsername()),
+    public ResponseEntity<List<UserProfileQuestionDto>> getAllUserProfileQuestionDtoByUserIdIsDelete(@AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(userDtoService
+                .getUserProfileQuestionDtoByUserIdIsDeleted(user.getId()),
                 HttpStatus.OK);
     }
 
