@@ -29,8 +29,11 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1234,6 +1237,10 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(status().isOk());
     }
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Transactional
     @Test
     @DataSet(cleanBefore = true,
             value = {
@@ -1247,6 +1254,11 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
             strategy = SeedStrategy.CLEAN_INSERT
     )
     public void getQuestionSortedByWeightForTheWeek() throws Exception {
+
+        entityManager.createNativeQuery(
+                "update question set persist_date = LOCALTIMESTAMP where id < 6"
+                )
+                .executeUpdate();
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setPassword("test15");
         authenticationRequest.setUsername("test15@mail.ru");
