@@ -22,13 +22,15 @@ public class BookmarksServiceImpl  extends ReadWriteServiceImpl<BookMarks, Long>
     }
 
     @Override
-    public void addQuestionInBookmarks(User user, Question question) {
-        if(bookmarksDao.getBookmarksByUserAndQuestion(user.getId(), question.getId()).isEmpty()){
+    public boolean addQuestionInBookmarks(User user, Question question) {
+        if(bookmarksDao.findBookmarksByUserAndQuestion(user.getId(), question.getId())){
             BookMarks bookMarks = BookMarks.builder()
                     .question(question)
                     .user(user)
                     .build();
             bookmarksDao.persist(bookMarks);
+            return true;
         }
+        return false;
     }
 }

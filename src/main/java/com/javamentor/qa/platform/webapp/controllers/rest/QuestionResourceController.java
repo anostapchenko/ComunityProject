@@ -20,7 +20,11 @@ import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.TagDtoService;
-import com.javamentor.qa.platform.service.abstracts.model.*;
+import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
+import com.javamentor.qa.platform.service.abstracts.model.QuestionViewedService;
+import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
+import com.javamentor.qa.platform.service.abstracts.model.VoteQuestionService;
+import com.javamentor.qa.platform.service.abstracts.model.BookmarksService;
 import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
 import com.javamentor.qa.platform.webapp.converters.TagConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -370,6 +374,12 @@ public class QuestionResourceController {
     @ApiResponse(responseCode = "200", description = "Закладка успешно добавлена", content = {
             @Content(mediaType = "application/json")
     })
+    @ApiResponse(responseCode = "202", description = "Закладка уже была добавлена", content = {
+            @Content(mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "400", description = "По переданному id нет вопроса", content = {
+            @Content(mediaType = "application/json")
+    })
     @ApiResponse(responseCode = "403", description = "Пользователь не аутентифицирован", content = {
             @Content(mediaType = "application/json")
     })
@@ -380,7 +390,9 @@ public class QuestionResourceController {
         Optional<Question> question = questionService.getById(id);
 
         if (question.isPresent()) {
-            bookmarksService.addQuestionInBookmarks(user, question.get());
+            if (!bookmarksService.addQuestionInBookmarks(user, question.get())) {
+                return new ResponseEntity<>("The bookmark has not been added", HttpStatus.ACCEPTED);
+            }
             return new ResponseEntity<>("Bookmark successfully added", HttpStatus.OK);
         }
 

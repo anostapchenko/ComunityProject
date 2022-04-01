@@ -15,12 +15,13 @@ public class BookmarksDaoImpl extends ReadWriteDaoImpl<BookMarks, Long> implemen
     private EntityManager entityManager;
 
     @Override
-    public List<BookMarks> getBookmarksByUserAndQuestion(Long userId, Long questionId) {
+    public boolean findBookmarksByUserAndQuestion(Long userId, Long questionId) {
         return entityManager
                 .createQuery("select b from BookMarks b where b.user.id =:userId and b.question.id =:questionId", BookMarks.class)
                 .setParameter("userId", userId)
                 .setParameter("questionId", questionId)
-                .getResultList();
+                .getResultList()
+                .isEmpty();
     }
 
     @Override

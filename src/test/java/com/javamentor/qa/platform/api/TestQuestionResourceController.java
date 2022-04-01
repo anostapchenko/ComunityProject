@@ -1480,8 +1480,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                         .contentType("application/json")
                         .header("Authorization", token100))
                 .andDo(print())
-                .andExpect(status().isOk());
-
+                .andExpect(status().isAccepted());
 
         //Добавление другого вопроса тому же пользователю
         mockMvc.perform(get("/api/user/question/102/bookmark")
@@ -1496,8 +1495,6 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                         .header("Authorization", token101))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
-
-        bookmarksDao.getBookmarksByUserAndQuestion(100L, 1L);
 
         //Добавление вопроса другому пользователю
         mockMvc.perform(get("/api/user/question/102/bookmark")

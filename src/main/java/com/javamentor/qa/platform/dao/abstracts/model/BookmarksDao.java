@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface BookmarksDao extends ReadWriteDao<BookMarks, Long> {
 
-    List<BookMarks> getBookmarksByUserAndQuestion(Long userId, Long questionId);
+    boolean findBookmarksByUserAndQuestion(Long userId, Long questionId);
 
 }
