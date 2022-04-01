@@ -4,3 +4,8 @@ Build project:
   stage: build
   script:
     - mvn compile
+
+Test project:
+  stage: test
+  script:
+    - mvn test
