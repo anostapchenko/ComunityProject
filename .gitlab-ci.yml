@@ -1,5 +1,10 @@
 image: maven:latest
 
+stages:
+  - build&test
+  - package
+  - dockerise
+
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
 
