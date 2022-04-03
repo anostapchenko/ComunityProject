@@ -5,7 +5,9 @@ import com.javamentor.qa.platform.dao.impl.pagination.userdto.UserPageDtoDaoAllU
 import com.javamentor.qa.platform.dao.impl.pagination.userdto.UserPageDtoDaoByVoteImpl;
 import com.javamentor.qa.platform.models.dto.PageDTO;
 import com.javamentor.qa.platform.models.dto.UserDto;
+import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
 import com.javamentor.qa.platform.models.entity.pagination.PaginationData;
+import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,9 +19,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -143,6 +147,22 @@ public class UserResourceController {
         PaginationData data = new PaginationData(page, items,
                 UserPageDtoDaoAllUsersByRepImpl.class.getSimpleName());
         return new ResponseEntity<>(userDtoService.getPageDto(data), HttpStatus.OK);
+    }
+    @Operation(summary = "Получение всех вопросов авторизированного пользователя неотсортированных" +
+            "В запросе нет параметров,возвращается список обьектов UserProfileQuestionDto ",
+            description = "Получение всех вопросов авторизированного пользователя")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает список UserProfileQuestionDto(long questionId,String title, List<TagDto>, Long answerCount, LocalDateTime persistDateTime)",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json")
+                    }),
+    })
+    @GetMapping("/api/user/profile/questions")
+    public ResponseEntity<List<UserProfileQuestionDto>> getAllUserProfileQuestionDtoById(@AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(userDtoService.getAllUserProfileQuestionDtoById(user.getId()), HttpStatus.OK);
     }
 
 }

@@ -13,9 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+
 import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.*;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -39,8 +42,8 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.REFRESH)
     public void getApiUserDtoId() throws Exception {
         this.mockMvc.perform(get("/api/user/102")
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + getToken("user102@mail.ru", "test15")))
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + getToken("user102@mail.ru", "test15")))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -65,8 +68,8 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.REFRESH)
     public void getNotUserDtoId() throws Exception {
         this.mockMvc.perform(get("/api/user/105")
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + getToken("user102@mail.ru", "test15")))
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + getToken("user102@mail.ru", "test15")))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -83,8 +86,8 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.REFRESH)
     public void shouldReturnAllUsers() throws Exception {
         this.mockMvc.perform(get("/api/user/new?page=1")
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -125,8 +128,8 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.REFRESH)
     public void shouldReturnAllUsersWithNullReputaion() throws Exception {
         this.mockMvc.perform(get("/api/user/new?page=1")
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -168,8 +171,8 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.REFRESH)
     public void shouldReturnAllUsersWithoutDeletedUser() throws Exception {
         this.mockMvc.perform(get("/api/user/new?page=1")
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -205,18 +208,18 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.INSERT)
     public void ifReputationEmptyItems2() throws Exception {
         mockMvc.perform(
-                get(URL_VOTE + "page=1&items=2")
-                        .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
-        )
+                        get(URL_VOTE + "page=1&items=2")
+                                .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
+                )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items.length()").value(2))
                 .andExpect(jsonPath("$.items[0].id").value(100))
                 .andExpect(jsonPath("$.items[1].id").value(101));
         mockMvc.perform(
-                get(URL_VOTE + "page=2&items=2")
-                        .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
-        )
+                        get(URL_VOTE + "page=2&items=2")
+                                .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
+                )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items.length()").value(1))
@@ -238,18 +241,18 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.INSERT)
     public void ifNotNecessaryVotesItems2() throws Exception {
         mockMvc.perform(
-                get(URL_VOTE + "page=1&items=2")
-                        .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
-        )
+                        get(URL_VOTE + "page=1&items=2")
+                                .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
+                )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items.length()").value(2))
                 .andExpect(jsonPath("$.items[0].id").value(100))
                 .andExpect(jsonPath("$.items[1].id").value(101));
         mockMvc.perform(
-                get(URL_VOTE + "page=2&items=2")
-                        .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
-        )
+                        get(URL_VOTE + "page=2&items=2")
+                                .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
+                )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items.length()").value(1))
@@ -271,9 +274,9 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.INSERT)
     public void ifItemsNullThenArraySize10() throws Exception {
         mockMvc.perform(
-                get(URL_VOTE + "page=1")
-                        .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
-        )
+                        get(URL_VOTE + "page=1")
+                                .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
+                )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items.length()").value(10));
@@ -294,9 +297,9 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.INSERT)
     public void ifFirst3DownVoteAndLast3UpVote() throws Exception {
         mockMvc.perform(
-                get(URL_VOTE + "page=1&items=10")
-                        .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
-        )
+                        get(URL_VOTE + "page=1&items=10")
+                                .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
+                )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items.length()").value(10))
@@ -304,9 +307,9 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                 .andExpect(jsonPath("$.items[1].id").value(118))
                 .andExpect(jsonPath("$.items[2].id").value(119));
         mockMvc.perform(
-                get(URL_VOTE + "page=2&items=10")
-                        .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
-        )
+                        get(URL_VOTE + "page=2&items=10")
+                                .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
+                )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items.length()").value(10))
@@ -330,9 +333,9 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.INSERT)
     public void ifReputationCount15() throws Exception {
         mockMvc.perform(
-                get(URL_VOTE + "page=1")
-                        .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
-        )
+                        get(URL_VOTE + "page=1")
+                                .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
+                )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items.length()").value(3))
@@ -352,9 +355,9 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             strategy = SeedStrategy.INSERT)
     public void ifCurrentPageIncorrectThen400() throws Exception {
         mockMvc.perform(
-                get(URL_VOTE + "page=")
-                        .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
-        )
+                        get(URL_VOTE + "page=")
+                                .header("Authorization", "Bearer " + getToken(USERNAME, PASSWORD))
+                )
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -372,15 +375,15 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
     public void shouldReturnUserWithChangedPassword() throws Exception {
 //                          Ставим новый пароль
         this.mockMvc.perform(patch("/api/user/change/password?password=test534")
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test15")))
                 .andDo(print())
                 .andExpect(status().isOk())
         ;
 //                          Заходим под новым паролем
         this.mockMvc.perform(patch("/api/user/change/password?password=anotherTest534")
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test534")))
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + getToken("test15@mail.ru", "test534")))
                 .andDo(print())
                 .andExpect(status().isOk())
         ;
@@ -408,8 +411,8 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
         MyToken = MyToken.substring(MyToken.indexOf(":") + 2, MyToken.length() - 2);
 
         this.mockMvc.perform(get("/api/user/reputation?page=1&items=3")
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + MyToken))
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + MyToken))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -425,7 +428,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
 
         // нет обязательного параметра - page
         mockMvc.perform(get("/api/user/reputation?items=3")
-                .header("Authorization", "Bearer " + MyToken))
+                        .header("Authorization", "Bearer " + MyToken))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$").doesNotExist());
@@ -452,8 +455,8 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
         MyToken = MyToken.substring(MyToken.indexOf(":") + 2, MyToken.length() - 2);
 
         this.mockMvc.perform(get("/api/user/reputation?page=1&items=10")
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + MyToken))
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + MyToken))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -488,8 +491,8 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
         MyToken = MyToken.substring(MyToken.indexOf(":") + 2, MyToken.length() - 2);
 
         this.mockMvc.perform(get("/api/user/reputation?page=1&items=10")
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + MyToken))
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + MyToken))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -515,7 +518,7 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
             value = {
                     "dataset/testUserResourceController/shouldCacheIsUserExistByEmail/roles.yml",
                     "dataset/testUserResourceController/shouldCacheIsUserExistByEmail/users.yml"
-                    },
+            },
             strategy = SeedStrategy.CLEAN_INSERT)
     public void shouldCacheIsUserExistByEmail() throws Exception {
 
@@ -535,9 +538,9 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
 
         //Меняю пароль
         mockMvc.perform(MockMvcRequestBuilders
-                .patch("/api/user/change/password?password=newPassword321")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", token101))
+                        .patch("/api/user/change/password?password=newPassword321")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token101))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -587,7 +590,43 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
         userService.update(userService.getByEmail("test102@mail.ru").get());
         assertNull(cacheManager.getCache("User").get("test102@mail.ru"));
     }
+
+    @Test
+    @DataSet(cleanBefore = true, cleanAfter = true,
+            value = {
+                    "dataset/userresourcecontroller/users.yml",
+                    "dataset/userresourcecontroller/roles.yml",
+                    "dataset/testUserResourceController/getAllUserProfileQuestionDtoById/questions.yml",
+                    "dataset/testUserResourceController/getAllUserProfileQuestionDtoById/tags.yml",
+                    "dataset/testUserResourceController/getAllUserProfileQuestionDtoById/questions_has_tag.yml",
+                    "dataset/testUserResourceController/getAllUserProfileQuestionDtoById/answers.yml"
+            },
+            strategy = SeedStrategy.CLEAN_INSERT
+    )
+    public void getAllUserProfileQuestionDtoById() throws Exception {
+
+        String USER_TOKEN_TEST1 = "Bearer " + getToken("test15@mail.ru", "test15");
+        mockMvc.perform(get("/api/user/profile/questions")
+                        .header(AUTHORIZATION, USER_TOKEN_TEST1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(3))
+                .andExpect(jsonPath("$.[*].questionId").value(containsInRelativeOrder(101, 102, 103)))
+                .andExpect(jsonPath("$.[*].listTagDto.length()").value(containsInRelativeOrder(2, 2, 0)))
+                .andExpect(jsonPath("$.[*].countAnswer").value(containsInRelativeOrder(3, 0, 2)));
+
+        String USER_TOKEN_TEST2 = "Bearer " + getToken("test102@mail.ru", "test15");
+        mockMvc.perform(get("/api/user/profile/questions")
+                        .header(AUTHORIZATION, USER_TOKEN_TEST2)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0));
+    }
 }
+
+
 
 
 

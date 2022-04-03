@@ -1,0 +1,51 @@
+answer:
+  - id: 103
+    date_accept_time: 2021-12-13 15:09:52.715570
+    html_body: ""
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: false
+    persist_date: 2021-12-13 15:09:52.715570
+    update_date: 2021-12-13 15:09:52.715570
+    question_id: 101
+    user_id: 102
+  - id: 104
+    date_accept_time: 2021-12-13 15:09:52.715570
+    html_body: ""
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: false
+    persist_date: 2021-12-13 15:09:52.715570
+    update_date: 2021-12-13 15:09:52.715570
+    question_id: 101
+    user_id: 102
+  - id: 105
+    date_accept_time: 2021-12-13 15:09:52.715570
+    html_body: ""
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: false
+    persist_date: 2021-12-13 15:09:52.715570
+    update_date: 2021-12-13 15:09:52.715570
+    question_id: 101
+    user_id: 102
+  - id: 106
+    date_accept_time: 2021-12-13 15:09:52.715570
+    html_body: ""
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: false
+    persist_date: 2021-12-13 15:09:52.715570
+    update_date: 2021-12-13 15:09:52.715570
+    question_id: 103
+    user_id: 102
+  - id: 107
+    date_accept_time: 2021-12-13 15:09:52.715570
+    html_body: ""
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: false
+    persist_date: 2021-12-13 15:09:52.715570
+    update_date: 2021-12-13 15:09:52.715570
+    question_id: 103
+    user_id: 102
