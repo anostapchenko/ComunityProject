@@ -5,13 +5,11 @@ import com.javamentor.qa.platform.models.entity.BookMarks;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.model.BookmarksService;
+import com.javamentor.qa.platform.webapp.controllers.exceptions.AddBookmarkException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
-@Transactional
 public class BookmarksServiceImpl  extends ReadWriteServiceImpl<BookMarks, Long> implements BookmarksService {
 
     private final BookmarksDao bookmarksDao;
@@ -22,15 +20,15 @@ public class BookmarksServiceImpl  extends ReadWriteServiceImpl<BookMarks, Long>
     }
 
     @Override
-    public void addQuestionInBookmarks(User user, Question question) throws Exception {
-        if(bookmarksDao.findBookmarksByUserAndQuestion(user.getId(), question.getId())){
-            BookMarks bookMarks = BookMarks.builder()
-                    .question(question)
-                    .user(user)
-                    .build();
-            bookmarksDao.persist(bookMarks);
-        } else {
-            throw new Exception("The bookmark has not been added");
+    @Transactional
+    public void addQuestionInBookmarks(User user, Question question) {
+        if(!bookmarksDao.findBookmarksByUserAndQuestion(user.getId(), question.getId())){
+            throw new AddBookmarkException("The bookmark has not been added");
         }
+        BookMarks bookMarks = BookMarks.builder()
+                .question(question)
+                .user(user)
+                .build();
+        bookmarksDao.persist(bookMarks);
     }
 }

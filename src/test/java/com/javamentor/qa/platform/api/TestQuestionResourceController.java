@@ -1449,9 +1449,6 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(jsonPath("$.items[3].id").value(4));
     }
 
-    @Autowired
-    private BookmarksDao bookmarksDao;
-
     @Test
     @DataSet(
             value = {
@@ -1480,7 +1477,7 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                         .contentType("application/json")
                         .header("Authorization", token100))
                 .andDo(print())
-                .andExpect(status().isAccepted());
+                .andExpect(status().isBadRequest());
 
         //Добавление другого вопроса тому же пользователю
         mockMvc.perform(get("/api/user/question/102/bookmark")

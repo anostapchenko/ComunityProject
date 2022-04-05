@@ -374,10 +374,7 @@ public class QuestionResourceController {
     @ApiResponse(responseCode = "200", description = "Закладка успешно добавлена", content = {
             @Content(mediaType = "application/json")
     })
-    @ApiResponse(responseCode = "202", description = "Закладка уже была добавлена", content = {
-            @Content(mediaType = "application/json")
-    })
-    @ApiResponse(responseCode = "400", description = "По переданному id нет вопроса", content = {
+    @ApiResponse(responseCode = "400", description = "По переданному id нет вопроса или закладка уже существует", content = {
             @Content(mediaType = "application/json")
     })
     @ApiResponse(responseCode = "403", description = "Пользователь не аутентифицирован", content = {
@@ -390,12 +387,8 @@ public class QuestionResourceController {
         Optional<Question> question = questionService.getById(id);
 
         if (question.isPresent()) {
-            try {
-                bookmarksService.addQuestionInBookmarks(user, question.get());
-                return new ResponseEntity<>("Bookmark successfully added", HttpStatus.OK);
-            } catch (Exception e) {
-                return new ResponseEntity<>("The bookmark has not been added", HttpStatus.ACCEPTED);
-            }
+            bookmarksService.addQuestionInBookmarks(user, question.get());
+            return new ResponseEntity<>("Bookmark successfully added", HttpStatus.OK);
         }
 
         return new ResponseEntity<>("There is no question with id: " + id.toString(), HttpStatus.BAD_REQUEST);

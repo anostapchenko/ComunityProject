@@ -20,7 +20,7 @@ import javax.persistence.*;
 public class BookMarks {
 
     @Id
-    @GeneratedValue(generator = "bookmarks_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

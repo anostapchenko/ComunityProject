@@ -21,9 +21,4 @@ public class BookmarksDaoImpl extends ReadWriteDaoImpl<BookMarks, Long> implemen
                 .setParameter("questionId", questionId)
                 .getSingleResult() == 0;
     }
-
-    @Override
-    public void persist(BookMarks bookMarks) {
-        super.persist(bookMarks);
-    }
 }
