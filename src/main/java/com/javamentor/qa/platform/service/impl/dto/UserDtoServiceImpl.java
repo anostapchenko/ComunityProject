@@ -30,6 +30,15 @@ public class UserDtoServiceImpl extends DtoServiceImpl<UserDto> implements UserD
     public Optional<UserDto> findUserDtoById(Long id) {
         return userDtoDao.findUserDto(id);
     }
+    @Override
+    public List<UserProfileQuestionDto> getUserProfileQuestionDtoByUserIdIsDeleted(Long id) {
+        List<UserProfileQuestionDto> resultList=userDtoDao.getAllUserProfileQuestionDtoByUserIdWhereQuestionIsDeleted(id);
+        var map = tagDtoDao.getTagDtoByQuestionIds(
+                resultList.stream().map(UserProfileQuestionDto::getQuestionId).collect(Collectors.toList())
+        );
+        resultList.forEach(q -> q.setListTagDto(map.containsKey(q.getQuestionId())?map.get(q.getQuestionId()):new ArrayList<>()));
+        return resultList;
+    }
 
     @Override
     public List<UserProfileQuestionDto> getAllUserProfileQuestionDtoById(Long id) {
