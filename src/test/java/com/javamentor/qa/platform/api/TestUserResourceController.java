@@ -13,9 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+
 import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.*;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -586,6 +589,38 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
         //Обновляю и проверяю кэширование
         userService.update(userService.getByEmail("test102@mail.ru").get());
         assertNull(cacheManager.getCache("User").get("test102@mail.ru"));
+    }
+    @Test
+    @DataSet(cleanBefore = true, cleanAfter = true,
+            value = {
+                    "dataset/userresourcecontroller/roles.yml",
+                    "dataset/userresourcecontroller/users.yml",
+                    "dataset/testUserResourceController/testGetAllUserProfileQuestionDtoIsDelete/questions.yml",
+                    "dataset/testUserResourceController/testGetAllUserProfileQuestionDtoIsDelete/tags.yml",
+                    "dataset/testUserResourceController/testGetAllUserProfileQuestionDtoIsDelete/questions_has_tag.yml",
+                    "dataset/testUserResourceController/testGetAllUserProfileQuestionDtoIsDelete/answers.yml"
+            },
+            strategy = SeedStrategy.CLEAN_INSERT)
+    public void testGetAllUserProfileQuestionDtoIsDelete() throws Exception {
+
+        String USER_TOKEN_USERID_102 = "Bearer " + getToken("test102@mail.ru", "test15");
+        mockMvc.perform(get("/api/user/profile/delete/questions")
+                        .header(AUTHORIZATION, USER_TOKEN_USERID_102)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0));
+
+        String USER_TOKEN_USERID_101 = "Bearer " + getToken("test15@mail.ru", "test15");
+        mockMvc.perform(get("/api/user/profile/delete/questions")
+                        .header(AUTHORIZATION, USER_TOKEN_USERID_101)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(3))
+                .andExpect(jsonPath("$.[*].questionId").value(containsInRelativeOrder(103,105,106)))
+                .andExpect(jsonPath("$.[*].listTagDto.length()").value(containsInRelativeOrder(2,0,3)))
+                .andExpect(jsonPath("$.[*].countAnswer").value(containsInRelativeOrder(3,1,0)));
     }
 }
 
