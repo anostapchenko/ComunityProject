@@ -5,6 +5,7 @@ import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.javamentor.qa.platform.AbstractClassForDRRiderMockMVCTests;
+import com.javamentor.qa.platform.dao.abstracts.model.BookmarksDao;
 import com.javamentor.qa.platform.dao.abstracts.model.QuestionViewedDao;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
@@ -1446,5 +1447,57 @@ public class TestQuestionResourceController extends AbstractClassForDRRiderMockM
                 .andExpect(jsonPath("$.items[1].id").value(10))
                 .andExpect(jsonPath("$.items[2].id").value(3))
                 .andExpect(jsonPath("$.items[3].id").value(4));
+    }
+
+    @Test
+    @DataSet(
+            value = {
+                    "dataset/QuestionResourceController/Bookmarks/bookmarks.yml"
+            },
+            cleanBefore = true, cleanAfter = true,
+            strategy = SeedStrategy.CLEAN_INSERT)
+    @ExpectedDataSet(
+            value = {
+                    "dataset/QuestionResourceController/Bookmarks/bookmarksExp.yml"
+            })
+    public void testAddQuestionInBookmarks() throws Exception {
+
+        String token100 = "Bearer " + getToken("user100@mail.ru", "password");
+        String token101 = "Bearer " + getToken("user101@mail.ru", "user101");
+
+        //Добавление нового вопроса в закладки
+        mockMvc.perform(get("/api/user/question/101/bookmark")
+                        .contentType("application/json")
+                        .header("Authorization", token100))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        //Повторное добавление того же вопроса тому же пользователю
+        mockMvc.perform(get("/api/user/question/101/bookmark")
+                        .contentType("application/json")
+                        .header("Authorization", token100))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        //Добавление другого вопроса тому же пользователю
+        mockMvc.perform(get("/api/user/question/102/bookmark")
+                        .contentType("application/json")
+                        .header("Authorization", token100))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        //Добавление несуществующего вопроса
+        mockMvc.perform(get("/api/user/question/1/bookmark")
+                        .contentType("application/json")
+                        .header("Authorization", token101))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        //Добавление вопроса другому пользователю
+        mockMvc.perform(get("/api/user/question/102/bookmark")
+                        .contentType("application/json")
+                        .header("Authorization", token101))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

@@ -1,0 +1,10 @@
+bookmarks:
+  - id : 1
+    question_id : 101
+    user_id : 100
+  - id : 2
+    question_id : 102
+    user_id : 100
+  - id : 3
+    question_id : 102
+    user_id : 101

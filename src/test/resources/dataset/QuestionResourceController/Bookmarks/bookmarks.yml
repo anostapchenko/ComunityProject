@@ -1,0 +1,35 @@
+role:
+  - id: 100
+    name: "ROLE_USER"
+
+user_entity:
+  - id: 100
+    password: "$2y$10$V.SIL8/oJ/FpiKj.nD5LJO0YNFrx3NqE/uZmFUWJ9dgheXqM14KEC"
+    email: "user100@mail.ru"
+    is_deleted : false
+    is_enabled: true
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+  - id: 101
+    password: "$2a$10$TdNQOHURoq/ijg3HYlZb1OU8WOTEA5YwRofBlYMztGJxPu2aAneyu"
+    email: "user101@mail.ru"
+    is_deleted : false
+    is_enabled: true
+    last_redaction_date: 2021-12-09 19:41:18.252588
+    persist_date: 2021-12-09 19:41:18.252588
+    role_id: 100
+
+question:
+  - id: 101
+    title: "q1"
+    description: "It's Question 1"
+    is_deleted: false
+    user_id: 100
+    last_redaction_date: 2021-12-09 19:41:18.252588
+  - id: 102
+    title: "q2"
+    description: "It's Question 2"
+    is_deleted: false
+    user_id: 100
+    last_redaction_date: 2021-12-09 19:41:18.252588

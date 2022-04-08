@@ -24,6 +24,7 @@ import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionViewedService;
 import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
 import com.javamentor.qa.platform.service.abstracts.model.VoteQuestionService;
+import com.javamentor.qa.platform.service.abstracts.model.BookmarksService;
 import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
 import com.javamentor.qa.platform.webapp.converters.TagConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,8 +33,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -61,6 +60,7 @@ public class QuestionResourceController {
     private final TagConverter tagConverter;
     private final TagDtoService tagDtoService;
     private final QuestionViewedService questionViewedService;
+    private final BookmarksService bookmarksService;
 
     public QuestionResourceController(QuestionService questionService,
                                       VoteQuestionService voteQuestionService,
@@ -69,8 +69,8 @@ public class QuestionResourceController {
                                       QuestionConverter questionConverter,
                                       TagConverter tagConverter,
                                       TagDtoService tagDtoService,
-                                      QuestionViewedService questionViewedService
-    ) {
+                                      QuestionViewedService questionViewedService,
+                                      BookmarksService bookmarksService) {
         this.questionService = questionService;
         this.voteQuestionService = voteQuestionService;
         this.reputationService = reputationService;
@@ -79,6 +79,7 @@ public class QuestionResourceController {
         this.tagConverter = tagConverter;
         this.tagDtoService = tagDtoService;
         this.questionViewedService = questionViewedService;
+        this.bookmarksService = bookmarksService;
     }
 
     @GetMapping("api/user/question/count")
@@ -364,6 +365,33 @@ public class QuestionResourceController {
         data.getProps().put("trackedTags", trackedTag);
         data.getProps().put("ignoredTags", ignoredTag);
         return new ResponseEntity<>(questionDtoService.getPageDto(data), HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Добавление вопроса в закладки",
+            description = "Добавление вопроса в закладки"
+    )
+    @ApiResponse(responseCode = "200", description = "Закладка успешно добавлена", content = {
+            @Content(mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "400", description = "По переданному id нет вопроса или закладка уже существует", content = {
+            @Content(mediaType = "application/json")
+    })
+    @ApiResponse(responseCode = "403", description = "Пользователь не аутентифицирован", content = {
+            @Content(mediaType = "application/json")
+    })
+    @GetMapping("api/user/question/{id}/bookmark")
+    public ResponseEntity<String> addQuestionInBookmarks(@PathVariable Long id, Authentication auth) {
+
+        User user = (User) auth.getPrincipal();
+        Optional<Question> question = questionService.getById(id);
+
+        if (question.isPresent()) {
+            bookmarksService.addQuestionInBookmarks(user, question.get());
+            return new ResponseEntity<>("Bookmark successfully added", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("There is no question with id: " + id.toString(), HttpStatus.BAD_REQUEST);
     }
 }
 
