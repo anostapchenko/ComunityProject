@@ -626,12 +626,12 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
     @Test
     @DataSet(cleanBefore = true, cleanAfter = true,
             value = {
-                    "dataset/testUserResourceController/testGetAllUserProfileQuestionDtoIsDelete/roles.yml",
-                    "dataset/testUserResourceController/testGetAllUserProfileQuestionDtoIsDelete/users.yml",
-                    "dataset/testUserResourceController/testGetAllUserProfileQuestionDtoIsDelete/questions.yml",
-                    "dataset/testUserResourceController/testGetAllUserProfileQuestionDtoIsDelete/tags.yml",
-                    "dataset/testUserResourceController/testGetAllUserProfileQuestionDtoIsDelete/questions_has_tag.yml",
-                    "dataset/testUserResourceController/testGetAllUserProfileQuestionDtoIsDelete/answers.yml",
+                    "dataset/testUserResourceController/testGetAllBookMarksInUserProfile/roles.yml",
+                    "dataset/testUserResourceController/testGetAllBookMarksInUserProfile/users.yml",
+                    "dataset/testUserResourceController/testGetAllBookMarksInUserProfile/questions.yml",
+                    "dataset/testUserResourceController/testGetAllBookMarksInUserProfile/tags.yml",
+                    "dataset/testUserResourceController/testGetAllBookMarksInUserProfile/questions_has_tag.yml",
+                    "dataset/testUserResourceController/testGetAllBookMarksInUserProfile/answers.yml",
                     "dataset/testUserResourceController/testGetAllBookMarksInUserProfile/votes_on_questions.yml",
                     "dataset/testUserResourceController/testGetAllBookMarksInUserProfile/question_viewed.yml"
             },
