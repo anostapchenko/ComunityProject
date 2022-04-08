@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,7 +20,7 @@ public class UserProfileQuestionDto {
     public UserProfileQuestionDto(Long questionId, String title, long countAnswer, LocalDateTime persistDateTime) {
         this.questionId = questionId;
         this.title = title;
-        this.countAnswer =countAnswer;
+        this.countAnswer = countAnswer;
         this.persistDateTime = persistDateTime;
     }
 }

@@ -652,7 +652,43 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                 .andExpect(jsonPath("$.[*].countView").value(containsInRelativeOrder(4,1,0)));
     }
 
+
+    @Test
+    @DataSet(cleanBefore = true, cleanAfter = true,
+            value = {
+                    "dataset/userresourcecontroller/users.yml",
+                    "dataset/userresourcecontroller/roles.yml",
+                    "dataset/testUserResourceController/getAllUserProfileQuestionDtoById/questions.yml",
+                    "dataset/testUserResourceController/getAllUserProfileQuestionDtoById/tags.yml",
+                    "dataset/testUserResourceController/getAllUserProfileQuestionDtoById/questions_has_tag.yml",
+                    "dataset/testUserResourceController/getAllUserProfileQuestionDtoById/answers.yml"
+            },
+            strategy = SeedStrategy.CLEAN_INSERT
+    )
+    public void getAllUserProfileQuestionDtoById() throws Exception {
+
+        String USER_TOKEN_TEST1 = "Bearer " + getToken("test15@mail.ru", "test15");
+        mockMvc.perform(get("/api/user/profile/questions")
+                        .header(AUTHORIZATION, USER_TOKEN_TEST1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(3))
+                .andExpect(jsonPath("$.[*].questionId").value(containsInRelativeOrder(101, 102, 103)))
+                .andExpect(jsonPath("$.[*].listTagDto.length()").value(containsInRelativeOrder(2, 2, 0)))
+                .andExpect(jsonPath("$.[*].countAnswer").value(containsInRelativeOrder(3, 0, 2)));
+
+        String USER_TOKEN_TEST2 = "Bearer " + getToken("test102@mail.ru", "test15");
+        mockMvc.perform(get("/api/user/profile/questions")
+                        .header(AUTHORIZATION, USER_TOKEN_TEST2)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0));
+    }
 }
+
+
 
 
 

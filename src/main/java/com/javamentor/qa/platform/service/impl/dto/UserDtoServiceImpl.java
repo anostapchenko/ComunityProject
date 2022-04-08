@@ -19,8 +19,7 @@ public class UserDtoServiceImpl extends DtoServiceImpl<UserDto> implements UserD
     private final UserDtoDao userDtoDao;
     private final TagDtoDao tagDtoDao;
 
-    public UserDtoServiceImpl(UserDtoDao userDtoDao, Map<String, PageDtoDao<UserDto>> daoMap,
-                              TagDtoDao tagDtoDao) {
+    public UserDtoServiceImpl(UserDtoDao userDtoDao, Map<String, PageDtoDao<UserDto>> daoMap, TagDtoDao tagDtoDao) {
         super(daoMap);
         this.userDtoDao = userDtoDao;
         this.tagDtoDao = tagDtoDao;
@@ -37,6 +36,17 @@ public class UserDtoServiceImpl extends DtoServiceImpl<UserDto> implements UserD
                 resultList.stream().map(UserProfileQuestionDto::getQuestionId).collect(Collectors.toList())
         );
         resultList.forEach(q -> q.setListTagDto(map.containsKey(q.getQuestionId())?map.get(q.getQuestionId()):new ArrayList<>()));
+        return resultList;
+    }
+
+    @Override
+    public List<UserProfileQuestionDto> getAllUserProfileQuestionDtoById(Long id) {
+        List<UserProfileQuestionDto> resultList=userDtoDao.getAllUserProfileQuestionDtoById(id);
+        var map = tagDtoDao.getTagDtoByQuestionIds(
+                resultList.stream().map(UserProfileQuestionDto::getQuestionId).collect(Collectors.toList())
+        );
+        resultList.forEach(q ->
+                q.setListTagDto(map.containsKey(q.getQuestionId())?map.get(q.getQuestionId()):new ArrayList<>()));
         return resultList;
     }
 }

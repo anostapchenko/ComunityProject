@@ -17,6 +17,16 @@ public class UserDtoDaoImpl implements UserDtoDao {
     EntityManager entityManager;
 
     @Override
+    public List<UserProfileQuestionDto> getAllUserProfileQuestionDtoById(Long id) {
+        return entityManager.createQuery("select  new com.javamentor.qa.platform.models.dto.UserProfileQuestionDto(" +
+                "q.id,q.title," +
+                "coalesce((select count(a.id) from Answer a where a.question.id=q.id),0),q.persistDateTime ) " +
+                "from Question q where q.user.id=:id")
+                .setParameter("id",id)
+                .getResultList();
+    }
+
+    @Override
     public Optional<UserDto> findUserDto(Long id) {
 
         return SingleResultUtil.getSingleResultOrNull(entityManager.createQuery("SELECT NEW com.javamentor.qa.platform.models.dto.UserDto(" +

@@ -10,4 +10,5 @@ public interface UserDtoDao {
     Optional<UserDto> findUserDto(Long id);
 
     List<UserProfileQuestionDto> getAllUserProfileQuestionDtoByUserIdWhereQuestionIsDeleted(Long id);
+    List<UserProfileQuestionDto>getAllUserProfileQuestionDtoById(Long id);
 }
