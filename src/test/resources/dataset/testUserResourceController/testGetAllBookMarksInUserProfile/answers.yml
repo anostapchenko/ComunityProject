@@ -1,0 +1,61 @@
+answer:
+  - id : 1
+    date_accept_time : 2021-12-13 15:09:52.715570
+    html_body : "testbody"
+    is_deleted : false
+    is_deleted_by_moderator : false
+    is_helpful : false
+    persist_date : 2021-12-13 15:09:52.715570
+    update_date : 2021-12-13 15:09:52.715570
+    question_id : 101
+    user_id : 104
+  - id : 2
+    date_accept_time : 2021-12-13 15:09:52.715570
+    html_body : "testbody"
+    is_deleted : false
+    is_deleted_by_moderator : false
+    is_helpful : false
+    persist_date : 2021-12-13 15:09:52.715570
+    update_date : 2021-12-13 15:09:52.715570
+    question_id : 101
+    user_id : 105
+  - id : 3
+    date_accept_time : 2021-12-13 15:09:52.715570
+    html_body : "testbody"
+    is_deleted : false
+    is_deleted_by_moderator : false
+    is_helpful : false
+    persist_date : 2021-12-13 15:09:52.715570
+    update_date : 2021-12-13 15:09:52.715570
+    question_id : 101
+    user_id : 105
+  - id : 4
+    date_accept_time : 2021-12-13 15:09:52.715570
+    html_body : "testbody"
+    is_deleted : false
+    is_deleted_by_moderator : false
+    is_helpful : false
+    persist_date : 2021-12-13 15:09:52.715570
+    update_date : 2021-12-13 15:09:52.715570
+    question_id : 102
+    user_id : 105
+  - id : 1
+    date_accept_time : 2021-12-13 15:09:52.715570
+    html_body : "testbody"
+    is_deleted : false
+    is_deleted_by_moderator : false
+    is_helpful : false
+    persist_date : 2021-12-13 15:09:52.715570
+    update_date : 2021-12-13 15:09:52.715570
+    question_id : 102
+    user_id : 103
+  - id : 2
+    date_accept_time : 2021-12-13 15:09:52.715570
+    html_body : "testbody"
+    is_deleted : false
+    is_deleted_by_moderator : false
+    is_helpful : false
+    persist_date : 2021-12-13 15:09:52.715570
+    update_date : 2021-12-13 15:09:52.715570
+    question_id : 103
+    user_id : 105

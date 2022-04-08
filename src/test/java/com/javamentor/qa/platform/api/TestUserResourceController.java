@@ -622,6 +622,36 @@ public class TestUserResourceController extends AbstractClassForDRRiderMockMVCTe
                 .andExpect(jsonPath("$.[*].listTagDto.length()").value(containsInRelativeOrder(2,0,3)))
                 .andExpect(jsonPath("$.[*].countAnswer").value(containsInRelativeOrder(3,1,0)));
     }
+
+    @Test
+    @DataSet(cleanBefore = true, cleanAfter = true,
+            value = {
+                    "dataset/testUserResourceController/testGetAllBookMarksInUserProfile/roles.yml",
+                    "dataset/testUserResourceController/testGetAllBookMarksInUserProfile/users.yml",
+                    "dataset/testUserResourceController/testGetAllBookMarksInUserProfile/questions.yml",
+                    "dataset/testUserResourceController/testGetAllBookMarksInUserProfile/tags.yml",
+                    "dataset/testUserResourceController/testGetAllBookMarksInUserProfile/questions_has_tag.yml",
+                    "dataset/testUserResourceController/testGetAllBookMarksInUserProfile/answers.yml",
+                    "dataset/testUserResourceController/testGetAllBookMarksInUserProfile/votes_on_questions.yml",
+                    "dataset/testUserResourceController/testGetAllBookMarksInUserProfile/question_viewed.yml"
+            },
+            strategy = SeedStrategy.CLEAN_INSERT)
+
+    public void testGetAllBookMarksInUserProfile() throws Exception {
+        String USER_TOKEN = "Bearer " + getToken("test15@mail.ru", "test15");
+        mockMvc.perform(get("/api/user/profile/bookmarks")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(3))
+                .andExpect(jsonPath("$.[*].questionId").value(containsInRelativeOrder(101,102,103)))
+                .andExpect(jsonPath("$.[*].listTagDto.length()").value(containsInRelativeOrder(2,2,2)))
+                .andExpect(jsonPath("$.[*].countAnswer").value(containsInRelativeOrder(3,2,1)))
+                .andExpect(jsonPath("$.[*].countVote").value(containsInRelativeOrder(2,1,-1)))
+                .andExpect(jsonPath("$.[*].countView").value(containsInRelativeOrder(4,1,0)));
+    }
+
 }
 
 
